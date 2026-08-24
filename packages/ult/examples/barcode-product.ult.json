@@ -1,0 +1,216 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-barcode-product",
+  "name": "Barcode product label",
+  "author": "ULT contributors",
+  "description": "Shows CONSTRAINTS ON BOTH AXES. The Code-128 barcode is pinned left and right to the canvas margins (so its width is solved, not a guessed percentage) and top and bottom to the SKU and price lines (so its height is exactly the leftover space). Change the tape width or length and the barcode re-solves instead of drifting.",
+  "license": "CC0-1.0",
+  "tags": [
+    "product",
+    "barcode",
+    "inventory"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "sku",
+      "label": "SKU",
+      "type": "text",
+      "default": "SKU-000123"
+    },
+    {
+      "name": "code",
+      "label": "Barcode data",
+      "type": "text",
+      "default": "012345678905"
+    },
+    {
+      "name": "price",
+      "label": "Price",
+      "type": "number",
+      "default": 12.5,
+      "min": 0,
+      "step": 0.05
+    }
+  ],
+  "elements": [
+    {
+      "type": "text",
+      "id": "sku",
+      "place": {
+        "anchor": "t",
+        "origin": "t",
+        "dy": {
+          "u": "mm",
+          "v": 1.2
+        },
+        "w": {
+          "u": "%",
+          "v": 90,
+          "of": "w"
+        },
+        "size": {
+          "u": "%",
+          "v": 15,
+          "of": "h"
+        },
+        "min": {
+          "size": 7
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "sku"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "align": "center",
+      "autofit": true
+    },
+    {
+      "type": "barcode",
+      "id": "bc",
+      "place": {
+        "anchor": "c",
+        "origin": "c",
+        "dx": 0,
+        "dy": 0
+      },
+      "data": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "code"
+            }
+          }
+        ]
+      },
+      "showText": true
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "place": {
+        "anchor": "b",
+        "origin": "b",
+        "dy": {
+          "u": "mm",
+          "v": -1.2
+        },
+        "size": {
+          "u": "%",
+          "v": 20,
+          "of": "h"
+        },
+        "min": {
+          "size": 7
+        }
+      },
+      "text": {
+        "parts": [
+          "€ ",
+          {
+            "e": {
+              "t": "ident",
+              "name": "price"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "center"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "bc-left",
+      "axis": "x",
+      "from": {
+        "element": "bc",
+        "point": "l"
+      },
+      "to": {
+        "point": "l"
+      },
+      "distance": {
+        "u": "mm",
+        "v": 2
+      }
+    },
+    {
+      "id": "bc-right",
+      "axis": "x",
+      "from": {
+        "element": "bc",
+        "point": "r"
+      },
+      "to": {
+        "point": "r"
+      },
+      "distance": {
+        "u": "mm",
+        "v": -2
+      }
+    },
+    {
+      "id": "bc-top",
+      "axis": "y",
+      "from": {
+        "element": "bc",
+        "point": "t"
+      },
+      "to": {
+        "element": "sku",
+        "point": "b"
+      },
+      "distance": {
+        "u": "mm",
+        "v": 1
+      }
+    },
+    {
+      "id": "bc-bottom",
+      "axis": "y",
+      "from": {
+        "element": "bc",
+        "point": "b"
+      },
+      "to": {
+        "element": "price",
+        "point": "t"
+      },
+      "distance": {
+        "u": "mm",
+        "v": -1
+      }
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 30,
+      "labelLengthMm": 50
+    },
+    "minTapeWidthMm": 19,
+    "maxTapeWidthMm": 40,
+    "minLabelLengthMm": 35,
+    "maxLabelLengthMm": 90
+  },
+  "threshold": 128
+}

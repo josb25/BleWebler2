@@ -1,0 +1,316 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-hazard-label",
+  "name": "Hazard label",
+  "author": "ULT contributors",
+  "description": "Shows SYMBOLS, SHAPES and KNOCKOUT TEXT. The pictogram is a select parameter — the symbol name is a binding like any other field, so one template covers the whole family of warnings. A rect shape frames the label, the title is knocked out of a solid band, and the body is a wrapping text frame whose column is solved from the icon. Any SVG can replace the built-in icon; it is reduced to plain outlines on import.",
+  "license": "CC0-1.0",
+  "tags": [
+    "safety",
+    "warning",
+    "workshop"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "icon",
+      "label": "Pictogram",
+      "type": "select",
+      "default": "warning",
+      "options": [
+        "warning",
+        "high-voltage",
+        "flammable",
+        "biohazard",
+        "no-entry",
+        "keep-dry",
+        "fragile"
+      ]
+    },
+    {
+      "name": "title",
+      "label": "Title",
+      "type": "text",
+      "default": "DANGER"
+    },
+    {
+      "name": "body",
+      "label": "Message",
+      "type": "text",
+      "default": "High voltage. Authorised personnel only.",
+      "multiline": true
+    }
+  ],
+  "elements": [
+    {
+      "type": "shape",
+      "id": "border",
+      "place": {
+        "anchor": "c",
+        "origin": "c",
+        "dx": 0,
+        "dy": 0,
+        "w": {
+          "e": {
+            "t": "binary",
+            "op": "-",
+            "left": {
+              "t": "ident",
+              "name": "W"
+            },
+            "right": {
+              "t": "binary",
+              "op": "*",
+              "left": {
+                "t": "num",
+                "v": 2
+              },
+              "right": {
+                "t": "ident",
+                "name": "mm"
+              }
+            }
+          },
+          "src": "W - 2*mm"
+        },
+        "h": {
+          "e": {
+            "t": "binary",
+            "op": "-",
+            "left": {
+              "t": "ident",
+              "name": "H"
+            },
+            "right": {
+              "t": "binary",
+              "op": "*",
+              "left": {
+                "t": "num",
+                "v": 2
+              },
+              "right": {
+                "t": "ident",
+                "name": "mm"
+              }
+            }
+          },
+          "src": "H - 2*mm"
+        }
+      },
+      "shape": "rect",
+      "stroke": 2,
+      "fill": false,
+      "radius": 8,
+      "locked": true
+    },
+    {
+      "type": "symbol",
+      "id": "icon",
+      "place": {
+        "anchor": "l",
+        "origin": "l",
+        "dx": {
+          "u": "mm",
+          "v": 3
+        },
+        "dy": 0,
+        "size": {
+          "e": {
+            "t": "binary",
+            "op": "-",
+            "left": {
+              "t": "ident",
+              "name": "H"
+            },
+            "right": {
+              "t": "binary",
+              "op": "*",
+              "left": {
+                "t": "num",
+                "v": 8
+              },
+              "right": {
+                "t": "ident",
+                "name": "mm"
+              }
+            }
+          },
+          "src": "H - 8*mm"
+        },
+        "min": {
+          "size": 16
+        }
+      },
+      "name": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "icon"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "place": {
+        "anchor": "t",
+        "origin": "t",
+        "dy": {
+          "u": "mm",
+          "v": 2.5
+        },
+        "size": {
+          "u": "%",
+          "v": 18,
+          "of": "h"
+        },
+        "min": {
+          "size": 8
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "title"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left",
+      "invert": true,
+      "invertPad": 3
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "place": {
+        "anchor": "b",
+        "origin": "b",
+        "dy": {
+          "u": "mm",
+          "v": -2
+        },
+        "h": {
+          "u": "%",
+          "v": 40,
+          "of": "h"
+        },
+        "size": {
+          "u": "%",
+          "v": 15,
+          "of": "h"
+        },
+        "min": {
+          "size": 6
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "body"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "align": "left",
+      "valign": "top",
+      "autofit": true,
+      "wrap": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "title-left",
+      "axis": "x",
+      "from": {
+        "element": "title",
+        "point": "l"
+      },
+      "to": {
+        "element": "icon",
+        "point": "r"
+      },
+      "distance": {
+        "u": "mm",
+        "v": 2.5
+      }
+    },
+    {
+      "id": "title-right",
+      "axis": "x",
+      "from": {
+        "element": "title",
+        "point": "r"
+      },
+      "to": {
+        "point": "r"
+      },
+      "distance": {
+        "u": "mm",
+        "v": -3
+      }
+    },
+    {
+      "id": "body-left",
+      "axis": "x",
+      "from": {
+        "element": "body",
+        "point": "l"
+      },
+      "to": {
+        "element": "icon",
+        "point": "r"
+      },
+      "distance": {
+        "u": "mm",
+        "v": 2.5
+      }
+    },
+    {
+      "id": "body-right",
+      "axis": "x",
+      "from": {
+        "element": "body",
+        "point": "r"
+      },
+      "to": {
+        "point": "r"
+      },
+      "distance": {
+        "u": "mm",
+        "v": -3
+      }
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 25,
+      "labelLengthMm": 60
+    },
+    "minTapeWidthMm": 19,
+    "maxTapeWidthMm": 40,
+    "minLabelLengthMm": 45,
+    "maxLabelLengthMm": 90
+  },
+  "threshold": 128
+}

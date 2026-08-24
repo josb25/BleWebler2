@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "types": ["vite/client", "web-bluetooth", "w3c-web-usb"],
+    "baseUrl": ".",
+    "paths": {
+      "universal-label-core": ["../../packages/core/src/index.ts"],
+      "universal-label-core/transport/dummy": ["../../packages/core/src/core/transports/dummy-transport.ts"],
+      "universal-label-core/transport/web": ["../../packages/core/src/core/transports/bluetooth-transport.ts"],
+      "universal-label-core/transport/usb": ["../../packages/core/src/core/transports/web-usb-transport.ts"],
+      "universal-label-core/transport/web-serial": ["../../packages/core/src/core/transports/web-serial-transport.ts"],
+      "universal-label-renderer": ["../../packages/renderer/src/index.ts"],
+      "universal-label-ui": ["../../packages/ui-components/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.svelte"]
+}

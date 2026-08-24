@@ -1,0 +1,100 @@
+{
+  "name": "universal-label-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Printer-agnostic drivers and transports for local label printing.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./transport/node": {
+      "types": "./dist/core/transports/node-ble-transport.d.ts",
+      "import": "./dist/core/transports/node-ble-transport.js",
+      "require": "./dist/core/transports/node-ble-transport.js"
+    },
+    "./transport/web": {
+      "types": "./dist/core/transports/bluetooth-transport.d.ts",
+      "import": "./dist/core/transports/bluetooth-transport.js",
+      "require": "./dist/core/transports/bluetooth-transport.js"
+    },
+    "./transport/capacitor": {
+      "types": "./dist/core/transports/capacitor-ble-transport.d.ts",
+      "import": "./dist/core/transports/capacitor-ble-transport.js",
+      "require": "./dist/core/transports/capacitor-ble-transport.js"
+    },
+    "./transport/capacitor-usb": {
+      "types": "./dist/core/transports/capacitor-usb-transport.d.ts",
+      "import": "./dist/core/transports/capacitor-usb-transport.js",
+      "require": "./dist/core/transports/capacitor-usb-transport.js"
+    },
+    "./transport/capacitor-classic": {
+      "types": "./dist/core/transports/capacitor-classic-transport.d.ts",
+      "import": "./dist/core/transports/capacitor-classic-transport.js",
+      "require": "./dist/core/transports/capacitor-classic-transport.js"
+    },
+    "./transport/dummy": {
+      "types": "./dist/core/transports/dummy-transport.d.ts",
+      "import": "./dist/core/transports/dummy-transport.js",
+      "require": "./dist/core/transports/dummy-transport.js"
+    },
+    "./transport/usb": {
+      "types": "./dist/core/transports/web-usb-transport.d.ts",
+      "import": "./dist/core/transports/web-usb-transport.js",
+      "require": "./dist/core/transports/web-usb-transport.js"
+    },
+    "./transport/web-serial": {
+      "types": "./dist/core/transports/web-serial-transport.d.ts",
+      "import": "./dist/core/transports/web-serial-transport.js",
+      "require": "./dist/core/transports/web-serial-transport.js"
+    },
+    "./transport/node-serial": {
+      "types": "./dist/core/transports/node-serial-transport.d.ts",
+      "import": "./dist/core/transports/node-serial-transport.js",
+      "require": "./dist/core/transports/node-serial-transport.js"
+    },
+    "./transport/node-usb": {
+      "types": "./dist/core/transports/node-usb-transport.d.ts",
+      "import": "./dist/core/transports/node-usb-transport.js",
+      "require": "./dist/core/transports/node-usb-transport.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:print": "npm run build && npx ts-node --project tsconfig.test.json test-print.ts"
+  },
+  "keywords": [
+    "label",
+    "printer",
+    "ble",
+    "bluetooth",
+    "niimbot",
+    "marklife"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor-community/bluetooth-le": "^8.1.2",
+    "@capacitor/core": "^8.2.0",
+    "@types/node": "^25.3.5",
+    "@types/pako": "^2.0.4",
+    "@types/web-bluetooth": "^0.0.21",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "@mmote/niimbluelib": "0.0.1-alpha.42",
+    "@stoprocent/noble": "^2.8.0",
+    "crc-32": "^1.2.2",
+    "eventemitter3": "^5.0.1",
+    "pako": "^1.0.11",
+    "serialport": "^13.0.0",
+    "usb": "^3.0.1"
+  }
+}

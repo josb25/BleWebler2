@@ -1,0 +1,20 @@
+{
+  "name": "universal-label-template",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Universal Label Template specification and conformance examples.",
+  "license": "MIT",
+  "homepage": "https://josb25.github.io/BleWebler2/ult/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josb25/BleWebler2.git",
+    "directory": "packages/ult"
+  },
+  "files": [
+    "SPEC.md",
+    "examples"
+  ],
+  "exports": {
+    "./examples/*.ult.json": "./examples/*.ult.json"
+  }
+}

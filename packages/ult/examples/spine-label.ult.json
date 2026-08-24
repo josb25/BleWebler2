@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-spine-label",
+  "name": "Spine label (rotated)",
+  "author": "ULT contributors",
+  "description": "Shows ROTATION and MEDIA-RELATIVE layout. The text is rotated 90° to read along a binder spine, and adaptivity.relativeTo = \"media\" centres it on the whole physical label including the unprintable margins — which is what the eye actually judges — instead of on the printable area alone. Both elements are locked so a consumer edits the wording, not the layout.",
+  "license": "CC0-1.0",
+  "tags": [
+    "archive",
+    "binder",
+    "office"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "title",
+      "label": "Title",
+      "type": "text",
+      "default": "ARCHIVE"
+    },
+    {
+      "name": "year",
+      "label": "Year",
+      "type": "number",
+      "default": 2026,
+      "min": 1900,
+      "max": 2999,
+      "step": 1
+    }
+  ],
+  "elements": [
+    {
+      "type": "text",
+      "id": "spine",
+      "place": {
+        "anchor": "c",
+        "origin": "c",
+        "dx": 0,
+        "dy": 0,
+        "size": {
+          "e": {
+            "t": "call",
+            "callee": "min",
+            "args": [
+              {
+                "t": "binary",
+                "op": "*",
+                "left": {
+                  "t": "ident",
+                  "name": "W"
+                },
+                "right": {
+                  "t": "num",
+                  "v": 0.24
+                }
+              },
+              {
+                "t": "binary",
+                "op": "*",
+                "left": {
+                  "t": "ident",
+                  "name": "H"
+                },
+                "right": {
+                  "t": "num",
+                  "v": 0.09
+                }
+              }
+            ]
+          },
+          "src": "min(W * 0.24, H * 0.09)"
+        },
+        "min": {
+          "size": 6
+        },
+        "max": {
+          "size": 40
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "title"
+            }
+          },
+          " ",
+          {
+            "e": {
+              "t": "ident",
+              "name": "year"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "center",
+      "locked": true,
+      "rotation": 90
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 40,
+      "labelLengthMm": 15
+    },
+    "relativeTo": "media",
+    "minTapeWidthMm": 25,
+    "maxTapeWidthMm": 50,
+    "minLabelLengthMm": 12,
+    "maxLabelLengthMm": 25
+  },
+  "threshold": 128
+}

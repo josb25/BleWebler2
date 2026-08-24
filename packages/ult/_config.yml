@@ -1,0 +1,8 @@
+title: Universal Label Template
+description: A safe, adaptive JSON format for printer-independent label templates.
+theme: minima
+markdown: kramdown
+url: https://josb25.github.io
+baseurl: /BleWebler2/ult
+exclude:
+  - package.json

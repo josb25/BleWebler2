@@ -1,0 +1,27 @@
+{
+  "name": "blewebler2-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Electron shell for the BleWebler2 label designer.",
+  "main": "src/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174",
+    "build": "vite build",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "start": "npm run build && electron ."
+  },
+  "dependencies": {
+    "svelte": "^5.0.0",
+    "universal-label-core": "file:../../packages/core",
+    "universal-label-ui": "file:../../packages/ui-components"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "@types/w3c-web-usb": "1.0.14",
+    "@types/web-bluetooth": "0.0.21",
+    "electron": "44.0.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "^5.2.2",
+    "vite": "^8.2.2"
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-qr-url-card",
+  "name": "QR link card",
+  "author": "ULT contributors",
+  "description": "Shows AUTO-LENGTH on continuous tape. The QR is pinned to the left, the caption is anchored to the QR's right edge (relTo), and adaptivity.autoLength lets the canvas grow to whatever the caption measures — feed exactly as much tape as the text needs, plus autoLengthPadMm.",
+  "license": "CC0-1.0",
+  "tags": [
+    "qr",
+    "link",
+    "card"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "title",
+      "label": "Caption",
+      "type": "text",
+      "default": "Scan me"
+    },
+    {
+      "name": "url",
+      "label": "Link (URL)",
+      "type": "text",
+      "default": "https://example.com"
+    }
+  ],
+  "elements": [
+    {
+      "type": "qr",
+      "id": "qr",
+      "place": {
+        "anchor": "l",
+        "origin": "l",
+        "dx": {
+          "u": "mm",
+          "v": 1.5
+        },
+        "dy": 0,
+        "size": {
+          "e": {
+            "t": "binary",
+            "op": "-",
+            "left": {
+              "t": "ident",
+              "name": "H"
+            },
+            "right": {
+              "t": "binary",
+              "op": "*",
+              "left": {
+                "t": "num",
+                "v": 3
+              },
+              "right": {
+                "t": "ident",
+                "name": "mm"
+              }
+            }
+          },
+          "src": "H - 3*mm"
+        },
+        "min": {
+          "size": 40
+        }
+      },
+      "data": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "url"
+            }
+          }
+        ]
+      },
+      "ecLevel": "M"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "place": {
+        "relTo": "qr",
+        "anchor": "r",
+        "origin": "l",
+        "dx": {
+          "u": "mm",
+          "v": 2
+        },
+        "dy": 0,
+        "size": {
+          "u": "%",
+          "v": 30,
+          "of": "h"
+        },
+        "min": {
+          "size": 8
+        },
+        "max": {
+          "size": 40
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "title"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left"
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 15,
+      "labelLengthMm": 50
+    },
+    "minTapeWidthMm": 12,
+    "maxTapeWidthMm": 24,
+    "autoLength": true,
+    "autoLengthPadMm": 2
+  },
+  "threshold": 128
+}

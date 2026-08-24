@@ -1,0 +1,24 @@
+{
+  "name": "blewebler2-cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Command-line ULT renderer and local printer client for BleWebler2.",
+  "scripts": {
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
+    "build": "tsc --noEmit && node build.mjs",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.8",
+    "universal-label-core": "file:../../packages/core",
+    "universal-label-renderer": "file:../../packages/renderer"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "@types/w3c-web-usb": "1.0.14",
+    "esbuild": "0.28.2",
+    "typescript": "^5.2.2"
+  }
+}

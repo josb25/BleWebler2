@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "noUncheckedIndexedAccess": false,
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "skipLibCheck": true,
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "paths": {
+            "universal-label-core": ["../core/src/index.ts"],
+            "universal-label-core/transport/dummy": ["../core/src/core/transports/dummy-transport.ts"]
+        }
+    },
+    "include": ["src/**/*.ts"]
+}

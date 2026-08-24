@@ -1,0 +1,5 @@
+# Raw upstream BDF sources — a few MB of upstream font text. Not committed:
+# the shipped artifact is the generated JSON under src/raster/fonts/, and these
+# are only needed to regenerate it via `npm run fonts`. See README.md for the
+# download links. Licenses are preserved in LICENSES/ regardless.
+bdf/

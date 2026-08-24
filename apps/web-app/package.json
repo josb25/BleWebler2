@@ -1,0 +1,27 @@
+{
+  "name": "blewebler2-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "sync:android": "npm run build && cap sync android",
+    "open:android": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor-community/bluetooth-le": "^8.2.0",
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@leeskies/capacitor-usb-serial": "^0.2.0",
+    "svelte": "^5.0.0",
+    "universal-label-core": "file:../../packages/core",
+    "universal-label-ui": "file:../../packages/ui-components"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "typescript": "^5.2.2",
+    "vite": "^8.2.2"
+  }
+}

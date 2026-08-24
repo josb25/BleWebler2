@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-price-tag",
+  "name": "Price tag",
+  "author": "ULT contributors",
+  "description": "Shows CONSTRAINTS solving a span. The QR is pinned to the right edge and sized by expression; the product name's left and right edges are each constrained (canvas margin, and the QR's left edge), so its text column is *solved* rather than guessed — it can never overlap the QR, at any label length. Because the name wraps, the solved span becomes its wrap width.",
+  "license": "CC0-1.0",
+  "tags": [
+    "retail",
+    "price"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "product",
+      "label": "Product",
+      "type": "text",
+      "default": "Organic Bananas"
+    },
+    {
+      "name": "price",
+      "label": "Price",
+      "type": "number",
+      "default": 1.99,
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "name": "currency",
+      "label": "Currency",
+      "type": "select",
+      "default": "€",
+      "options": [
+        "€",
+        "$",
+        "£"
+      ]
+    },
+    {
+      "name": "url",
+      "label": "QR link",
+      "type": "text",
+      "default": "https://example.com"
+    }
+  ],
+  "elements": [
+    {
+      "type": "qr",
+      "id": "link",
+      "place": {
+        "anchor": "r",
+        "origin": "r",
+        "dx": {
+          "u": "mm",
+          "v": -1.5
+        },
+        "dy": 0,
+        "size": {
+          "e": {
+            "t": "call",
+            "callee": "min",
+            "args": [
+              {
+                "t": "binary",
+                "op": "-",
+                "left": {
+                  "t": "ident",
+                  "name": "H"
+                },
+                "right": {
+                  "t": "binary",
+                  "op": "*",
+                  "left": {
+                    "t": "num",
+                    "v": 3
+                  },
+                  "right": {
+                    "t": "ident",
+                    "name": "mm"
+                  }
+                }
+              },
+              {
+                "t": "binary",
+                "op": "*",
+                "left": {
+                  "t": "ident",
+                  "name": "W"
+                },
+                "right": {
+                  "t": "num",
+                  "v": 0.38
+                }
+              }
+            ]
+          },
+          "src": "min(H - 3*mm, W * 0.38)"
+        },
+        "min": {
+          "size": 20
+        }
+      },
+      "data": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "url"
+            }
+          }
+        ]
+      },
+      "ecLevel": "M"
+    },
+    {
+      "type": "text",
+      "id": "name",
+      "place": {
+        "anchor": "t",
+        "origin": "t",
+        "dy": {
+          "u": "mm",
+          "v": 1.2
+        },
+        "size": {
+          "u": "%",
+          "v": 30,
+          "of": "h"
+        },
+        "min": {
+          "size": 7
+        },
+        "max": {
+          "size": 34
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "product"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left",
+      "wrap": true
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "place": {
+        "anchor": "bl",
+        "origin": "bl",
+        "dx": {
+          "u": "mm",
+          "v": 1.5
+        },
+        "dy": {
+          "u": "mm",
+          "v": -1
+        },
+        "size": {
+          "u": "%",
+          "v": 34,
+          "of": "h"
+        },
+        "min": {
+          "size": 8
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "currency"
+            }
+          },
+          " ",
+          {
+            "e": {
+              "t": "ident",
+              "name": "price"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "name-left",
+      "axis": "x",
+      "from": {
+        "element": "name",
+        "point": "l"
+      },
+      "to": {
+        "point": "l"
+      },
+      "distance": {
+        "u": "mm",
+        "v": 1.5
+      }
+    },
+    {
+      "id": "name-right",
+      "axis": "x",
+      "from": {
+        "element": "name",
+        "point": "r"
+      },
+      "to": {
+        "element": "link",
+        "point": "l"
+      },
+      "distance": {
+        "u": "mm",
+        "v": -1.5
+      }
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 12,
+      "labelLengthMm": 40
+    },
+    "minTapeWidthMm": 9,
+    "maxTapeWidthMm": 24,
+    "minLabelLengthMm": 30,
+    "maxLabelLengthMm": 80
+  },
+  "threshold": 128
+}

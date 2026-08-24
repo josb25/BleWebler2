@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node", "w3c-web-usb"],
+    "baseUrl": ".",
+    "paths": {
+      "universal-label-core": ["../../packages/core/src/index.ts"],
+      "universal-label-core/transport/node": ["../../packages/core/src/core/transports/node-ble-transport.ts"],
+      "universal-label-core/transport/node-usb": ["../../packages/core/src/core/transports/node-usb-transport.ts"],
+      "universal-label-core/transport/node-serial": ["../../packages/core/src/core/transports/node-serial-transport.ts"],
+      "universal-label-core/transport/dummy": ["../../packages/core/src/core/transports/dummy-transport.ts"],
+      "universal-label-renderer": ["../../packages/renderer/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

@@ -1,0 +1,224 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-name-badge",
+  "name": "Name badge",
+  "author": "ULT contributors",
+  "description": "Shows RELATIVE ANCHORING (relTo) chained two deep and PER-AXIS LOCKS. The role sits under the name, the org sits under the role, so the stack stays together whatever the name measures. Each follower carries lockX so an editor user can slide the stack vertically but never break its horizontal centring. The hairline between name and role is a SHAPE stretched by constraints to the name's own box — a shape's box is its size, so it is the cleanest thing for a constraint to drive.",
+  "license": "CC0-1.0",
+  "tags": [
+    "event",
+    "name badge",
+    "conference"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "name",
+      "label": "Name",
+      "type": "text",
+      "default": "Jane Doe"
+    },
+    {
+      "name": "role",
+      "label": "Role",
+      "type": "text",
+      "default": "Volunteer"
+    },
+    {
+      "name": "org",
+      "label": "Organisation",
+      "type": "text",
+      "default": "City Library",
+      "help": "Leave empty to hide"
+    }
+  ],
+  "elements": [
+    {
+      "type": "text",
+      "id": "name",
+      "place": {
+        "anchor": "c",
+        "origin": "b",
+        "dx": 0,
+        "dy": {
+          "u": "mm",
+          "v": -0.5
+        },
+        "w": {
+          "u": "%",
+          "v": 92,
+          "of": "w"
+        },
+        "size": {
+          "u": "%",
+          "v": 32,
+          "of": "h"
+        },
+        "min": {
+          "size": 9
+        },
+        "max": {
+          "size": 48
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "name"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "center",
+      "autofit": true,
+      "wrap": true
+    },
+    {
+      "type": "shape",
+      "id": "rule",
+      "place": {
+        "relTo": "name",
+        "anchor": "b",
+        "origin": "t",
+        "dx": 0,
+        "dy": {
+          "u": "mm",
+          "v": 0.8
+        },
+        "h": 2
+      },
+      "shape": "line",
+      "stroke": 2,
+      "fill": false,
+      "locked": true
+    },
+    {
+      "type": "text",
+      "id": "role",
+      "place": {
+        "relTo": "rule",
+        "anchor": "b",
+        "origin": "t",
+        "dx": 0,
+        "dy": {
+          "u": "mm",
+          "v": 0.8
+        },
+        "size": {
+          "u": "%",
+          "v": 17,
+          "of": "h"
+        },
+        "min": {
+          "size": 7
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "role"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "align": "center",
+      "lockX": true
+    },
+    {
+      "type": "text",
+      "id": "org",
+      "place": {
+        "relTo": "role",
+        "anchor": "b",
+        "origin": "t",
+        "dx": 0,
+        "dy": {
+          "u": "mm",
+          "v": 0.8
+        },
+        "size": {
+          "u": "%",
+          "v": 12,
+          "of": "h"
+        },
+        "min": {
+          "size": 6
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "org"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "align": "center",
+      "lockX": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "rule-left",
+      "axis": "x",
+      "from": {
+        "element": "rule",
+        "point": "l"
+      },
+      "to": {
+        "element": "name",
+        "point": "l"
+      },
+      "distance": 0
+    },
+    {
+      "id": "rule-right",
+      "axis": "x",
+      "from": {
+        "element": "rule",
+        "point": "r"
+      },
+      "to": {
+        "element": "name",
+        "point": "r"
+      },
+      "distance": 0
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 25,
+      "labelLengthMm": 70
+    },
+    "minTapeWidthMm": 15,
+    "maxTapeWidthMm": 40,
+    "minLabelLengthMm": 50,
+    "maxLabelLengthMm": 100
+  },
+  "threshold": 128
+}

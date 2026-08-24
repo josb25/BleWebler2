@@ -1,0 +1,234 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-retail-price-tag",
+  "name": "Retail price tag (EAN-13)",
+  "author": "ULT contributors",
+  "description": "Shows a GS1 SYMBOLOGY and a TEXT FRAME. The barcode is a real EAN-13: give it 12 digits and the check digit is computed (a wrong one supplied is an error, not something to print), and its guard bars run taller than the data bars. The product name sits in a fixed text frame with vertical centring, so a one-line and a two-line name occupy exactly the same space.",
+  "license": "CC0-1.0",
+  "tags": [
+    "retail",
+    "price",
+    "barcode",
+    "shop"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "product",
+      "label": "Product",
+      "type": "text",
+      "default": "Organic Bananas"
+    },
+    {
+      "name": "price",
+      "label": "Price",
+      "type": "number",
+      "default": 1.99,
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "name": "currency",
+      "label": "Currency",
+      "type": "select",
+      "default": "€",
+      "options": [
+        "€",
+        "$",
+        "£"
+      ]
+    },
+    {
+      "name": "ean",
+      "label": "EAN (12 or 13 digits)",
+      "type": "text",
+      "default": "590123412345"
+    }
+  ],
+  "elements": [
+    {
+      "type": "text",
+      "id": "name",
+      "place": {
+        "anchor": "tl",
+        "origin": "tl",
+        "dx": {
+          "u": "mm",
+          "v": 2
+        },
+        "dy": {
+          "u": "mm",
+          "v": 1.5
+        },
+        "size": {
+          "u": "%",
+          "v": 20,
+          "of": "h"
+        },
+        "min": {
+          "size": 7
+        },
+        "max": {
+          "size": 26
+        },
+        "h": {
+          "u": "%",
+          "v": 30,
+          "of": "h"
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "product"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left",
+      "valign": "middle",
+      "autofit": true,
+      "wrap": true
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "place": {
+        "anchor": "bl",
+        "origin": "bl",
+        "dx": {
+          "u": "mm",
+          "v": 2
+        },
+        "dy": {
+          "u": "mm",
+          "v": -1.5
+        },
+        "size": {
+          "u": "%",
+          "v": 26,
+          "of": "h"
+        },
+        "min": {
+          "size": 9
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "currency"
+            }
+          },
+          " ",
+          {
+            "e": {
+              "t": "ident",
+              "name": "price"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left",
+      "invert": true,
+      "invertPad": 3
+    },
+    {
+      "type": "barcode",
+      "id": "ean",
+      "place": {
+        "anchor": "br",
+        "origin": "br",
+        "dx": {
+          "u": "mm",
+          "v": -2
+        },
+        "dy": {
+          "u": "mm",
+          "v": -1.5
+        },
+        "w": {
+          "u": "%",
+          "v": 52,
+          "of": "w"
+        },
+        "h": {
+          "u": "%",
+          "v": 46,
+          "of": "h"
+        }
+      },
+      "data": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "ean"
+            }
+          }
+        ]
+      },
+      "showText": true,
+      "symbology": "ean13"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "name-left",
+      "axis": "x",
+      "from": {
+        "element": "name",
+        "point": "l"
+      },
+      "to": {
+        "point": "l"
+      },
+      "distance": {
+        "u": "mm",
+        "v": 2
+      }
+    },
+    {
+      "id": "name-right",
+      "axis": "x",
+      "from": {
+        "element": "name",
+        "point": "r"
+      },
+      "to": {
+        "point": "r"
+      },
+      "distance": {
+        "u": "mm",
+        "v": -2
+      }
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 25,
+      "labelLengthMm": 50
+    },
+    "minTapeWidthMm": 19,
+    "maxTapeWidthMm": 40,
+    "minLabelLengthMm": 40,
+    "maxLabelLengthMm": 80
+  },
+  "threshold": 128
+}

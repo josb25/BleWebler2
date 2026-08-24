@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "skipLibCheck": true,
+        "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "universal-label-core": ["../../packages/core/src/index.ts"],
+            "universal-label-core/transport/dummy": ["../../packages/core/src/core/transports/dummy-transport.ts"],
+            "universal-label-core/transport/web": ["../../packages/core/src/core/transports/bluetooth-transport.ts"],
+            "universal-label-core/transport/usb": ["../../packages/core/src/core/transports/web-usb-transport.ts"],
+            "universal-label-core/transport/web-serial": ["../../packages/core/src/core/transports/web-serial-transport.ts"],
+      "universal-label-core/transport/capacitor": ["../../packages/core/src/core/transports/capacitor-ble-transport.ts"],
+      "universal-label-core/transport/capacitor-usb": ["../../packages/core/src/core/transports/capacitor-usb-transport.ts"],
+      "universal-label-core/transport/capacitor-classic": ["../../packages/core/src/core/transports/capacitor-classic-transport.ts"],
+            "universal-label-renderer": ["../../packages/renderer/src/index.ts"],
+            "universal-label-ui": ["../../packages/ui-components/src/index.ts"]
+        }
+    },
+    "include": ["src"]
+}

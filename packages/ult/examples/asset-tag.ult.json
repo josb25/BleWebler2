@@ -1,0 +1,269 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-asset-tag",
+  "name": "Asset tag (Code 39 + Data Matrix)",
+  "author": "ULT contributors",
+  "description": "Shows CODE 39, DATA MATRIX and a DASHED LINE. Code 39 is still what most asset scanners expect; the Data Matrix carries the same id in a fraction of the area and stays readable far smaller than a QR, which is why it is the standard for marking small parts. The dashed rule is a fold line for wrapping the tag around a cable.",
+  "license": "CC0-1.0",
+  "tags": [
+    "asset",
+    "inventory",
+    "it",
+    "barcode"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "asset",
+      "label": "Asset ID",
+      "type": "text",
+      "default": "AB-1234"
+    },
+    {
+      "name": "owner",
+      "label": "Owner",
+      "type": "text",
+      "default": "IT Dept"
+    }
+  ],
+  "elements": [
+    {
+      "type": "barcode",
+      "id": "c39",
+      "place": {
+        "anchor": "t",
+        "origin": "t",
+        "dy": {
+          "u": "mm",
+          "v": 1.5
+        },
+        "h": {
+          "u": "%",
+          "v": 40,
+          "of": "h"
+        }
+      },
+      "data": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "asset"
+            }
+          }
+        ]
+      },
+      "showText": false,
+      "symbology": "code39"
+    },
+    {
+      "type": "shape",
+      "id": "guide",
+      "place": {
+        "anchor": "c",
+        "origin": "c",
+        "dx": 0,
+        "dy": {
+          "u": "%",
+          "v": 9,
+          "of": "h"
+        },
+        "h": 2
+      },
+      "shape": "line",
+      "stroke": 1,
+      "fill": false,
+      "dash": 6,
+      "locked": true
+    },
+    {
+      "type": "datamatrix",
+      "id": "dm",
+      "place": {
+        "anchor": "br",
+        "origin": "br",
+        "dx": {
+          "u": "mm",
+          "v": -2
+        },
+        "dy": {
+          "u": "mm",
+          "v": -1.5
+        },
+        "size": {
+          "u": "%",
+          "v": 38,
+          "of": "h"
+        },
+        "min": {
+          "size": 20
+        }
+      },
+      "data": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "asset"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "id",
+      "place": {
+        "anchor": "bl",
+        "origin": "bl",
+        "dx": {
+          "u": "mm",
+          "v": 2
+        },
+        "dy": {
+          "u": "mm",
+          "v": -1.5
+        },
+        "size": {
+          "u": "%",
+          "v": 22,
+          "of": "h"
+        },
+        "min": {
+          "size": 7
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "asset"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left"
+    },
+    {
+      "type": "text",
+      "id": "owner",
+      "place": {
+        "relTo": "id",
+        "anchor": "t",
+        "origin": "b",
+        "dx": 0,
+        "dy": {
+          "u": "mm",
+          "v": -0.5
+        },
+        "size": {
+          "u": "%",
+          "v": 14,
+          "of": "h"
+        },
+        "min": {
+          "size": 6
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "ident",
+              "name": "owner"
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "align": "left",
+      "lockX": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c39-left",
+      "axis": "x",
+      "from": {
+        "element": "c39",
+        "point": "l"
+      },
+      "to": {
+        "point": "l"
+      },
+      "distance": {
+        "u": "mm",
+        "v": 2
+      }
+    },
+    {
+      "id": "c39-right",
+      "axis": "x",
+      "from": {
+        "element": "c39",
+        "point": "r"
+      },
+      "to": {
+        "point": "r"
+      },
+      "distance": {
+        "u": "mm",
+        "v": -2
+      }
+    },
+    {
+      "id": "guide-left",
+      "axis": "x",
+      "from": {
+        "element": "guide",
+        "point": "l"
+      },
+      "to": {
+        "point": "l"
+      },
+      "distance": {
+        "u": "mm",
+        "v": 2
+      }
+    },
+    {
+      "id": "guide-right",
+      "axis": "x",
+      "from": {
+        "element": "guide",
+        "point": "r"
+      },
+      "to": {
+        "point": "r"
+      },
+      "distance": {
+        "u": "mm",
+        "v": -2
+      }
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 19,
+      "labelLengthMm": 60
+    },
+    "minTapeWidthMm": 15,
+    "maxTapeWidthMm": 30,
+    "minLabelLengthMm": 50,
+    "maxLabelLengthMm": 90
+  },
+  "threshold": 128
+}

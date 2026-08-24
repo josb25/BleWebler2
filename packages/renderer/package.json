@@ -1,0 +1,35 @@
+{
+    "name": "universal-label-renderer",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Reference implementation of the Universal Label Template (ULT) format: parsing, the safe expression engine, adaptive layout, and 1-bit rasterization. Pure TypeScript — no UI framework, runs in the browser and in Node.",
+    "homepage": "https://github.com/josb25/BleWebler2/tree/main/packages/renderer",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/josb25/BleWebler2.git",
+        "directory": "packages/renderer"
+    },
+    "type": "module",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "default": "./src/index.ts"
+        }
+    },
+    "scripts": {
+        "check": "tsc --noEmit -p ./tsconfig.json",
+        "test": "vitest run",
+        "fonts": "node scripts/bundle-bdf.mjs"
+    },
+    "dependencies": {
+        "qrcode-generator": "^1.4.4",
+        "universal-label-core": "file:../core",
+        "universal-label-template": "file:../ult"
+    },
+    "devDependencies": {
+        "typescript": "^5.2.2",
+        "vitest": "^4.1.11"
+    }
+}

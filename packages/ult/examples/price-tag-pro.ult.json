@@ -1,0 +1,331 @@
+{
+  "version": 1,
+  "kind": "label-template",
+  "id": "example-price-tag-pro",
+  "name": "Price tag (pro)",
+  "author": "ULT contributors",
+  "description": "Shows the EXPRESSION LANGUAGE. Conditionals pick singular/plural and hide an empty unit, pad() and upper() format the SKU, and the sale flag drives both the wording and the size of the price. Everything is a pre-parsed AST — no source string is ever executed on import.",
+  "license": "CC0-1.0",
+  "tags": [
+    "retail",
+    "price",
+    "shop"
+  ],
+  "revision": 1,
+  "params": [
+    {
+      "name": "product",
+      "label": "Product",
+      "type": "text",
+      "default": "Coffee Beans"
+    },
+    {
+      "name": "price",
+      "label": "Price",
+      "type": "number",
+      "default": 8.5,
+      "min": 0,
+      "step": 0.05
+    },
+    {
+      "name": "unit",
+      "label": "Per unit",
+      "type": "text",
+      "default": "kg",
+      "help": "Leave empty to hide"
+    },
+    {
+      "name": "qty",
+      "label": "Pack size",
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "step": 1
+    },
+    {
+      "name": "sku",
+      "label": "SKU number",
+      "type": "number",
+      "default": 123,
+      "min": 0,
+      "step": 1
+    },
+    {
+      "name": "sale",
+      "label": "On sale",
+      "type": "boolean",
+      "default": false
+    }
+  ],
+  "elements": [
+    {
+      "type": "text",
+      "id": "name",
+      "place": {
+        "anchor": "tl",
+        "origin": "tl",
+        "dx": {
+          "u": "mm",
+          "v": 1.5
+        },
+        "dy": {
+          "u": "mm",
+          "v": 1.2
+        },
+        "w": {
+          "u": "%",
+          "v": 92,
+          "of": "w"
+        },
+        "size": {
+          "u": "%",
+          "v": 28,
+          "of": "h"
+        },
+        "min": {
+          "size": 7
+        },
+        "max": {
+          "size": 30
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "call",
+              "callee": "upper",
+              "args": [
+                {
+                  "t": "ident",
+                  "name": "product"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left",
+      "autofit": true
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "place": {
+        "anchor": "bl",
+        "origin": "bl",
+        "dx": {
+          "u": "mm",
+          "v": 1.5
+        },
+        "dy": {
+          "u": "mm",
+          "v": -1
+        },
+        "size": {
+          "e": {
+            "t": "binary",
+            "op": "*",
+            "left": {
+              "t": "ident",
+              "name": "H"
+            },
+            "right": {
+              "t": "cond",
+              "test": {
+                "t": "ident",
+                "name": "sale"
+              },
+              "then": {
+                "t": "num",
+                "v": 0.44
+              },
+              "else": {
+                "t": "num",
+                "v": 0.36
+              }
+            }
+          },
+          "src": "H * (sale ? 0.44 : 0.36)"
+        },
+        "min": {
+          "size": 8
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "cond",
+              "test": {
+                "t": "ident",
+                "name": "sale"
+              },
+              "then": {
+                "t": "str",
+                "v": "SALE "
+              },
+              "else": {
+                "t": "str",
+                "v": ""
+              }
+            }
+          },
+          "€ ",
+          {
+            "e": {
+              "t": "ident",
+              "name": "price"
+            }
+          },
+          {
+            "e": {
+              "t": "cond",
+              "test": {
+                "t": "ident",
+                "name": "unit"
+              },
+              "then": {
+                "t": "binary",
+                "op": "+",
+                "left": {
+                  "t": "str",
+                  "v": " / "
+                },
+                "right": {
+                  "t": "ident",
+                  "name": "unit"
+                }
+              },
+              "else": {
+                "t": "str",
+                "v": ""
+              }
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": true,
+      "italic": false,
+      "underline": false,
+      "align": "left"
+    },
+    {
+      "type": "text",
+      "id": "sku",
+      "place": {
+        "anchor": "br",
+        "origin": "br",
+        "dx": {
+          "u": "mm",
+          "v": -1.5
+        },
+        "dy": {
+          "u": "mm",
+          "v": -1
+        },
+        "size": {
+          "u": "%",
+          "v": 16,
+          "of": "h"
+        },
+        "min": {
+          "size": 6
+        }
+      },
+      "text": {
+        "parts": [
+          {
+            "e": {
+              "t": "binary",
+              "op": "+",
+              "left": {
+                "t": "str",
+                "v": "SKU-"
+              },
+              "right": {
+                "t": "call",
+                "callee": "pad",
+                "args": [
+                  {
+                    "t": "ident",
+                    "name": "sku"
+                  },
+                  {
+                    "t": "num",
+                    "v": 6
+                  },
+                  {
+                    "t": "str",
+                    "v": "0"
+                  }
+                ]
+              }
+            }
+          },
+          " · ",
+          {
+            "e": {
+              "t": "cond",
+              "test": {
+                "t": "binary",
+                "op": ">",
+                "left": {
+                  "t": "ident",
+                  "name": "qty"
+                },
+                "right": {
+                  "t": "num",
+                  "v": 1
+                }
+              },
+              "then": {
+                "t": "binary",
+                "op": "+",
+                "left": {
+                  "t": "ident",
+                  "name": "qty"
+                },
+                "right": {
+                  "t": "str",
+                  "v": " pcs"
+                }
+              },
+              "else": {
+                "t": "str",
+                "v": "single"
+              }
+            }
+          }
+        ]
+      },
+      "font": "bitmap",
+      "bitmapFont": "fixed",
+      "fontFamily": "sans-serif",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "align": "right"
+    }
+  ],
+  "adaptivity": {
+    "designedFor": {
+      "tapeWidthMm": 15,
+      "labelLengthMm": 50
+    },
+    "minTapeWidthMm": 12,
+    "maxTapeWidthMm": 24,
+    "minLabelLengthMm": 40,
+    "maxLabelLengthMm": 80
+  },
+  "threshold": 128
+}

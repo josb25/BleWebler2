@@ -1,0 +1,268 @@
+[
+ {
+  "id": "fixed-5x7",
+  "label": "Fixed 5×7",
+  "w": 5,
+  "h": 7,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-5x8",
+  "label": "Fixed 5×8",
+  "w": 5,
+  "h": 8,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-6x9",
+  "label": "Fixed 6×9",
+  "w": 6,
+  "h": 9,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-6x10",
+  "label": "Fixed 6×10",
+  "w": 6,
+  "h": 10,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-6x12",
+  "label": "Fixed 6×12",
+  "w": 6,
+  "h": 12,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-6x13",
+  "label": "Fixed 6×13",
+  "w": 6,
+  "h": 13,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-6x13b",
+  "label": "Fixed 6×13 Bold",
+  "w": 6,
+  "h": 13,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-7x13",
+  "label": "Fixed 7×13",
+  "w": 7,
+  "h": 13,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-7x13b",
+  "label": "Fixed 7×13 Bold",
+  "w": 7,
+  "h": 13,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-8x13",
+  "label": "Fixed 8×13",
+  "w": 8,
+  "h": 13,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-8x13b",
+  "label": "Fixed 8×13 Bold",
+  "w": 8,
+  "h": 13,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-7x14",
+  "label": "Fixed 7×14",
+  "w": 7,
+  "h": 14,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-7x14b",
+  "label": "Fixed 7×14 Bold",
+  "w": 7,
+  "h": 14,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-9x15",
+  "label": "Fixed 9×15",
+  "w": 9,
+  "h": 15,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-9x15b",
+  "label": "Fixed 9×15 Bold",
+  "w": 9,
+  "h": 15,
+  "glyphCount": 205
+ },
+ {
+  "id": "fixed-10x20",
+  "label": "Fixed 10×20",
+  "w": 10,
+  "h": 20,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u12n",
+  "label": "Terminus 12",
+  "w": 6,
+  "h": 12,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u12b",
+  "label": "Terminus 12 Bold",
+  "w": 6,
+  "h": 12,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u14n",
+  "label": "Terminus 14",
+  "w": 8,
+  "h": 14,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u14b",
+  "label": "Terminus 14 Bold",
+  "w": 8,
+  "h": 14,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u16n",
+  "label": "Terminus 16",
+  "w": 8,
+  "h": 16,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u16b",
+  "label": "Terminus 16 Bold",
+  "w": 8,
+  "h": 16,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u18n",
+  "label": "Terminus 18",
+  "w": 10,
+  "h": 18,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u18b",
+  "label": "Terminus 18 Bold",
+  "w": 10,
+  "h": 18,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u20n",
+  "label": "Terminus 20",
+  "w": 10,
+  "h": 20,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u20b",
+  "label": "Terminus 20 Bold",
+  "w": 10,
+  "h": 20,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u22n",
+  "label": "Terminus 22",
+  "w": 11,
+  "h": 22,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u22b",
+  "label": "Terminus 22 Bold",
+  "w": 11,
+  "h": 22,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u24n",
+  "label": "Terminus 24",
+  "w": 12,
+  "h": 24,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u24b",
+  "label": "Terminus 24 Bold",
+  "w": 12,
+  "h": 24,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u28n",
+  "label": "Terminus 28",
+  "w": 14,
+  "h": 28,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u28b",
+  "label": "Terminus 28 Bold",
+  "w": 14,
+  "h": 28,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u32n",
+  "label": "Terminus 32",
+  "w": 16,
+  "h": 32,
+  "glyphCount": 205
+ },
+ {
+  "id": "ter-u32b",
+  "label": "Terminus 32 Bold",
+  "w": 16,
+  "h": 32,
+  "glyphCount": 205
+ },
+ {
+  "id": "spleen-8x16",
+  "label": "Spleen 8×16",
+  "w": 8,
+  "h": 16,
+  "glyphCount": 205
+ },
+ {
+  "id": "spleen-12x24",
+  "label": "Spleen 12×24",
+  "w": 12,
+  "h": 24,
+  "glyphCount": 200
+ },
+ {
+  "id": "spleen-16x32",
+  "label": "Spleen 16×32",
+  "w": 16,
+  "h": 32,
+  "glyphCount": 204
+ },
+ {
+  "id": "spleen-32x64",
+  "label": "Spleen 32×64",
+  "w": 32,
+  "h": 64,
+  "glyphCount": 204
+ }
+]

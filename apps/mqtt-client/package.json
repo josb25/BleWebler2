@@ -1,0 +1,27 @@
+{
+  "name": "blewebler2-mqtt",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Headless MQTT-to-printer service for validated ULT jobs.",
+  "scripts": {
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
+    "build": "tsc --noEmit && node build.mjs",
+    "check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.8",
+    "mqtt": "5.15.2",
+    "universal-label-core": "file:../../packages/core",
+    "universal-label-renderer": "file:../../packages/renderer"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "@types/w3c-web-usb": "1.0.14",
+    "esbuild": "0.28.2",
+    "typescript": "^5.2.2",
+    "vitest": "^4.1.11"
+  }
+}
