@@ -6,6 +6,7 @@ import { DummyTransport } from 'universal-label-core/transport/dummy';
 import { NodeBleTransport } from 'universal-label-core/transport/node';
 import { NodeSerialTransport } from 'universal-label-core/transport/node-serial';
 import { NodeUsbTransport } from 'universal-label-core/transport/node-usb';
+import { validateTemplateDocument } from '../../../packages/renderer/src/template/document-validation.js';
 import { parseTemplate } from '../../../packages/renderer/src/template/validate.js';
 import { rasterizeDesign } from '../../../packages/renderer/src/raster/rasterize.js';
 import { resolveTemplate, type LabelTemplate, type TemplateParam } from '../../../packages/renderer/src/template/template.js';
@@ -17,6 +18,7 @@ type TransportName = 'dummy' | 'ble' | 'usb' | 'serial';
 interface CliOptions {
   help: boolean;
   list: boolean;
+  validate: boolean;
   template?: string;
   transport: TransportName;
   deviceId?: string;
@@ -36,10 +38,12 @@ the default, so running a command never selects physical hardware by accident.
 
 Usage:
   npm run cli -- --template <file.ult.json> [options]
+  npm run cli -- --template <file.ult.json> --validate
   npm run cli -- --list --transport ble
 
 Options:
   --template <path>         ULT 1.0 template file
+  --validate                validate safely across the adaptive size matrix
   --transport <name>        dummy (default), ble, usb, or serial
   --list                    list discoverable BLE devices and exit
   --device-id <id>          exact BLE device id (required for BLE printing)
@@ -70,7 +74,31 @@ async function main(): Promise<void> {
   if (!options.template) throw new Error('Missing --template. Run with --help for usage.');
 
   const templatePath = resolve(process.env.INIT_CWD ?? process.cwd(), options.template);
-  const template = await loadTemplate(templatePath);
+  const loaded = await loadTemplate(templatePath);
+  const template = loaded.template;
+  const params = coerceParams(options.params, template.params);
+  if (options.validate) {
+    const validation = validateTemplateDocument(loaded.raw, params, measureTextNode);
+    if (validation.expressionErrors.length > 0) {
+      throw new Error(`Expression source/AST mismatch: ${validation.expressionErrors.join('; ')}`);
+    }
+    const report = validation.lint;
+    if (!report) throw new Error(`Invalid ULT template: ${validation.parseErrors.join('; ')}`);
+    const sizes = report.sizesTested
+      .map(size => `${size.label} (${size.labelLengthMm}x${size.tapeWidthMm} mm)`)
+      .join(', ');
+    process.stdout.write(`Checked ${report.sizesTested.length} sizes: ${sizes}\n`);
+    for (const finding of report.findings) {
+      const location = `${finding.atSize.label} (${finding.atSize.labelLengthMm}x${finding.atSize.tapeWidthMm} mm)`;
+      process[ finding.severity === 'error' ? 'stderr' : 'stdout' ]
+        .write(`${finding.severity.toUpperCase()} ${location} — ${finding.elementId}: ${finding.message}\n`);
+    }
+    const errorCount = report.findings.filter(finding => finding.severity === 'error').length;
+    if (errorCount > 0) throw new Error(`Template failed adaptive validation with ${errorCount} error(s).`);
+    process.stdout.write(`Template "${template.name}" is valid across the adaptive size matrix.\n`);
+    return;
+  }
+
   const manager = new PrintManager();
   const transport = await createTransport(options);
   await connect(manager, transport, options);
@@ -83,7 +111,6 @@ async function main(): Promise<void> {
     );
     const heightPx = capabilities.canvasHeightPx;
     const widthPx = Math.max(1, Math.round(labelLengthMm * capabilities.dpmm));
-    const params = coerceParams(options.params, template.params);
     const resolved = resolveTemplate(template, {
       widthPx,
       heightPx,
@@ -111,7 +138,7 @@ async function main(): Promise<void> {
   }
 }
 
-async function loadTemplate(path: string): Promise<LabelTemplate> {
+async function loadTemplate(path: string): Promise<{ template: LabelTemplate; raw: unknown }> {
   const input = await readFile(path);
   if (input.byteLength > MAX_TEMPLATE_BYTES) throw new Error('Template exceeds the 2 MiB CLI limit.');
   let value: unknown;
@@ -122,7 +149,8 @@ async function loadTemplate(path: string): Promise<LabelTemplate> {
   }
   const parsed = parseTemplate(value);
   if (!parsed.ok) throw new Error(`Invalid ULT template: ${parsed.errors.join('; ')}`);
-  return parsed.template;
+  for (const warning of parsed.warnings) process.stderr.write(`Warning: ${warning}\n`);
+  return { template: parsed.template, raw: value };
 }
 
 async function createTransport(options: CliOptions): Promise<IDeviceTransport> {
@@ -145,7 +173,7 @@ async function connect(manager: PrintManager, transport: IDeviceTransport, optio
 }
 
 function parseArgs(args: string[]): CliOptions {
-  const out: CliOptions = { help: false, list: false, transport: 'dummy', copies: 1, params: {} };
+  const out: CliOptions = { help: false, list: false, validate: false, transport: 'dummy', copies: 1, params: {} };
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
     const value = () => {
@@ -156,6 +184,7 @@ function parseArgs(args: string[]): CliOptions {
     switch (arg) {
       case '--help': case '-h': out.help = true; break;
       case '--list': out.list = true; break;
+      case '--validate': out.validate = true; break;
       case '--template': out.template = value(); break;
       case '--transport': {
         const candidate = value();

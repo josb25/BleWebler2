@@ -92,6 +92,7 @@ Run the additional applications from the repository root:
 ## Project documents
 
 - [ULT 1.0 specification](packages/ult/SPEC.md) — adaptive, printer-independent template format
+- [AI-assisted ULT authoring skill](.agents/skills/authoring-ult-templates/SKILL.md) — agent-neutral workflow for creating and validating templates
 - [Contributing](CONTRIBUTING.md) — development workflow, DCO sign-off, and provenance requirements
 - [Project licence](LICENSE) — MIT licence for original project code
 - [Licensing](LICENSING.md) — project, dependency, and contribution terms

@@ -67,6 +67,10 @@ export {
     type ParseResult, type ParseOk, type ParseErr
 } from './template/validate';
 export {
+    validateTemplateDocument, expressionSourceErrors,
+    type TemplateDocumentValidation
+} from './template/document-validation';
+export {
     WEB_FONTS, DEFAULT_WEB_FONT, isWebFontId, webFont, webFontFamily, fontAttributions,
     type WebFont
 } from './raster/fonts/webfonts';
