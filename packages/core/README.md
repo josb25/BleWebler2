@@ -2,6 +2,14 @@
 
 The printer-agnostic runtime behind BleWebler2. It separates byte transport, printer protocol encoding, and print orchestration so the renderer and interface do not depend on one manufacturer.
 
+## Install
+
+```sh
+npm install universal-label-core
+```
+
+All first-party drivers ship together in this package. Marklife, Niimbot, and the virtual printer therefore share one driver contract, one version, and one test pipeline; consumers do not assemble a set of manufacturer packages.
+
 ## Architecture
 
 - `IDeviceTransport` moves bytes and reports connection state without interpreting printer commands.
@@ -26,6 +34,18 @@ Import transports through subpath exports so a browser build never loads Node.js
 | Node.js USB | `universal-label-core/transport/node-usb` | `NodeUsbTransport` |
 | Node.js serial | `universal-label-core/transport/node-serial` | `NodeSerialTransport` |
 
+Platform bindings are optional peer dependencies. Install only the binding required by the chosen transport:
+
+| Transport | Additional dependency |
+| --- | --- |
+| Capacitor BLE | `@capacitor/core` and `@capacitor-community/bluetooth-le` |
+| Capacitor USB serial | `@capacitor/core` and `@leeskies/capacitor-usb-serial` |
+| Node.js BLE | `@stoprocent/noble` |
+| Node.js USB | `usb` |
+| Node.js serial | `serialport` |
+
+Web transports and the virtual transport need no native binding. Capacitor Android RFCOMM uses BleWebler2's small app-owned native plugin because Capacitor has no standard Classic Bluetooth transport contract.
+
 ## Basic connection
 
 ```ts
@@ -42,6 +62,6 @@ Printing accepts a renderer-produced `UniversalPage` and `UniversalPrintOptions`
 
 ## Extending the core
 
-- [Driver package policy](../../docs/DRIVERS.md)
+- [Driver architecture](../../docs/DRIVERS.md)
 - [Driver implementation notes](src/drivers/README.md)
 - [Root project documentation](../../README.md)

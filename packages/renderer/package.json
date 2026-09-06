@@ -1,7 +1,7 @@
 {
     "name": "universal-label-renderer",
     "version": "0.1.0",
-    "private": true,
+    "private": false,
     "description": "Reference implementation of the Universal Label Template (ULT) format: parsing, the safe expression engine, adaptive layout, and 1-bit rasterization. Pure TypeScript — no UI framework, runs in the browser and in Node.",
     "homepage": "https://github.com/josb25/BleWebler2/tree/main/packages/renderer",
     "repository": {
@@ -10,26 +10,53 @@
         "directory": "packages/renderer"
     },
     "type": "module",
-    "main": "./src/index.ts",
-    "types": "./src/index.ts",
+    "main": "./lib/index.js",
+    "module": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "files": [
+        "lib",
+        "README.md",
+        "LICENSE",
+        "THIRD-PARTY-NOTICES.md",
+        "fonts/LICENSES"
+    ],
     "exports": {
         ".": {
-            "types": "./src/index.ts",
-            "default": "./src/index.ts"
+            "types": "./lib/index.d.ts",
+            "import": "./lib/index.js",
+            "default": "./lib/index.js"
         }
     },
     "scripts": {
+        "build": "node scripts/build.mjs",
         "check": "tsc --noEmit -p ./tsconfig.json",
         "test": "vitest run",
-        "fonts": "node scripts/bundle-bdf.mjs"
+        "fonts": "node scripts/bundle-bdf.mjs",
+        "prepack": "npm run build"
     },
     "dependencies": {
         "qrcode-generator": "^1.4.4",
-        "universal-label-core": "file:../core",
-        "universal-label-template": "file:../ult"
+        "universal-label-core": "^0.1.0"
     },
     "devDependencies": {
+        "esbuild": "0.28.2",
         "typescript": "^5.2.2",
+        "universal-label-template": "0.1.0",
         "vitest": "^4.1.11"
+    },
+    "keywords": [
+        "label",
+        "template",
+        "renderer",
+        "raster",
+        "barcode"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/josb25/BleWebler2/issues"
+    },
+    "publishConfig": {
+        "access": "public",
+        "provenance": true
     }
 }

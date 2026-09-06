@@ -81,7 +81,7 @@ Before submitting a change:
 | [`packages/renderer`](packages/renderer) | Adaptive template model, layout, validation, and rasterization |
 | [`packages/ui-components`](packages/ui-components) | Svelte label designer |
 
-The core package exposes runtime-specific transports through explicit subpath exports so browser builds do not load native Node.js modules.
+The core package ships all first-party drivers together and exposes runtime-specific transports through explicit subpath exports. Native bindings are optional, so browser builds do not load or install Node.js modules they cannot use. The renderer and ULT specification are independently consumable; the Svelte UI stays an application-internal workspace package. See [package architecture](docs/PACKAGES.md).
 
 Run the additional applications from the repository root:
 
@@ -97,7 +97,8 @@ Run the additional applications from the repository root:
 - [Project licence](LICENSE) — MIT licence for original project code
 - [Licensing](LICENSING.md) — project, dependency, and contribution terms
 - [Third-party notices](THIRD-PARTY-NOTICES.md) — bundled software, icons, and fonts
-- [Driver packages](docs/DRIVERS.md) — extension boundary for independently maintained drivers
+- [Package architecture](docs/PACKAGES.md) — public package boundaries and release policy
+- [Driver architecture](docs/DRIVERS.md) — first-party and community driver policy
 
 ## Contributing
 
