@@ -14,7 +14,7 @@
      * All gesture logic lives in EditorCanvas; this only reports pointer-downs.
      */
     import type { AnyElement, LabelDesign } from 'universal-label-renderer';
-    import { rotatedBounds } from 'universal-label-renderer';
+    import { printsNothing, rotatedBounds } from 'universal-label-renderer';
     import { domMeasureText } from 'universal-label-renderer';
     import { rasterizeElementPreview } from 'universal-label-renderer';
 
@@ -36,6 +36,7 @@
     let renderToken = 0;
 
     const bounds = $derived(rotatedBounds(element, domMeasureText));
+    const empty = $derived(printsNothing(element));
 
     // Re-render the preview when content changes — position is excluded so
     // dragging never re-rasterizes.
@@ -90,8 +91,9 @@
     class:selected
     class:locked={element.locked}
     class:invalid={bounds.error !== undefined}
+    class:empty
     style={frameStyle}
-    title={bounds.error}
+    title={bounds.error ?? (empty ? 'This element currently prints nothing' : undefined)}
     onpointerdown={e => onpointerdownelement(e, element)}
 >
     {#if selected && !element.locked}
@@ -141,6 +143,18 @@
     .frame.invalid {
         outline: 2px dashed var(--danger);
     }
+    .frame.empty:not(.invalid):not(.selected) {
+        outline: 1px dashed var(--muted);
+        outline-offset: 1px;
+    }
+    .frame.empty:not(.invalid)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--muted) 50%, transparent calc(50% + 0.5px));
+        opacity: 0.65;
+        pointer-events: none;
+    }
     .handle {
         position: absolute;
         right: -12px;
@@ -178,5 +192,54 @@
         height: 8px;
         margin-left: -1px;
         background: var(--accent);
+    }
+
+    @media (pointer: coarse) {
+        .handle {
+            right: -22px;
+            bottom: -22px;
+            width: 44px;
+            height: 44px;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+        .handle::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 11px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 40%);
+        }
+        .rotate-handle {
+            top: -39px;
+            width: 44px;
+            height: 44px;
+            margin-left: -22px;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+        .rotate-handle::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--accent);
+            box-shadow: 0 1px 3px rgb(0 0 0 / 40%);
+        }
+        .rotate-handle::after {
+            top: 26px;
+            height: 13px;
+        }
     }
 </style>

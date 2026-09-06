@@ -11,10 +11,12 @@
     interface Props {
         editor: EditorStore;
         activeTab: string;
+        /** Phone-only compact presentation; regular ribbon callers stay unchanged. */
+        compact?: boolean;
         /** When provided, the File tab exposes reusable-design settings. */
         onSaveTemplate?: () => void;
     }
-    let { editor, activeTab = 'Insert', onSaveTemplate }: Props = $props();
+    let { editor, activeTab = 'Insert', compact = false, onSaveTemplate }: Props = $props();
 
     let activeCapabilities = $derived(DEFAULT_PRINTER_CAPS[settings.defaultPrinter] || DEFAULT_PRINTER_CAPS['none']);
     let allPapers = $derived([...DEFAULT_PAPER_PROFILES, ...settings.customPapers]);
@@ -102,7 +104,7 @@
     const widthMm = $derived(editor.design ? Math.round((editor.design.widthPx / editor.authoringDpmm) * 10) / 10 : 0);
 </script>
 
-<div class="toolbar" class:insert={activeTab === 'Insert'} class:file={activeTab === 'File'} class:layout={activeTab === 'Layout'}>
+<div class="toolbar" class:compact class:insert={activeTab === 'Insert'} class:file={activeTab === 'File'} class:layout={activeTab === 'Layout'}>
     {#if activeTab === 'File'}
         <div class="group">
             <button onclick={() => editor.save()} disabled={editor.design.elements.length === 0}><Icon name="save" /> Save</button>
@@ -290,6 +292,33 @@
             width: 100%;
         }
         .toolbar.insert .group:first-child button { width: 100%; }
+        .toolbar.compact.insert {
+            display: block;
+            padding: 2px 2px 8px;
+        }
+        .toolbar.compact.insert .group:first-child {
+            display: flex;
+            flex-wrap: nowrap;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+            scroll-snap-type: x proximity;
+        }
+        .toolbar.compact.insert .group:first-child::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+        .toolbar.compact.insert .group:first-child button {
+            width: auto;
+            min-width: max-content;
+            white-space: nowrap;
+            scroll-snap-align: start;
+        }
+        .toolbar.compact.insert .group:last-child {
+            display: none;
+        }
         .snap-toggle {
             min-height: 40px;
             padding: 4px 2px;

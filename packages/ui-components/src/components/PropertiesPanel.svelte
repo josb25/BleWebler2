@@ -21,6 +21,7 @@
         editor: EditorStore;
     }
     let { editor }: Props = $props();
+    let advancedOpen = $state(false);
 
     const el = $derived(editor.selected);
 
@@ -158,8 +159,19 @@
             <button class="danger" disabled={el.locked} onclick={() => editor.deleteSelected()}><Icon name="trash" size={15} /> Delete</button>
         </div>
 
-        <!-- Position: one rule per coordinate, canvas- or element-relative. -->
-        <PositionPanel {editor} />
+        <section class="advanced" class:open={advancedOpen}>
+            <button
+                type="button"
+                class="advanced-toggle"
+                aria-expanded={advancedOpen}
+                onclick={() => advancedOpen = !advancedOpen}
+            >
+                <span>Advanced layout</span>
+                <Icon name={advancedOpen ? 'chevron-up' : 'chevron-down'} size={15} />
+            </button>
+            <div class="advanced-body">
+                <!-- Position: one rule per coordinate, canvas- or element-relative. -->
+                <PositionPanel {editor} />
 
         <div class="row">
             <span class="lbl">Rotate</span>
@@ -266,6 +278,8 @@
                 </div>
             {/if}
         {/if}
+            </div>
+        </section>
 
         {#if editor.isTemplateMode && el.type !== 'image'}
             {@const bound = editor.selectedAuthoring?.bind}
@@ -599,6 +613,7 @@
             <div class="row">
                 <span class="lbl">Symbol</span>
                 <select
+                    class="symbol-select"
                     value={el.path ? '__custom' : el.name}
                     onchange={e => {
                         const v = e.currentTarget.value;
@@ -612,6 +627,21 @@
                         <option value="__custom">{el.path.label ?? 'Imported SVG'}</option>
                     {/if}
                 </select>
+            </div>
+            <div class="symbol-grid" aria-label="Choose symbol">
+                {#each SYMBOL_NAMES as name (name)}
+                    <button
+                        type="button"
+                        class:on={!el.path && el.name === name}
+                        title={SYMBOLS[name].label}
+                        aria-label={SYMBOLS[name].label}
+                        onclick={() => commit({ name, path: undefined })}
+                    >
+                        <svg viewBox={SYMBOLS[name].viewBox.join(' ')} aria-hidden="true">
+                            <path d={SYMBOLS[name].d} fill-rule={SYMBOLS[name].fillRule ?? 'nonzero'} />
+                        </svg>
+                    </button>
+                {/each}
             </div>
             <ResponsivePanel {editor} section="size" />
             <div class="row">
@@ -686,6 +716,14 @@
         padding: 10px;
         background: var(--panel);
         border-radius: 8px;
+    }
+    .advanced,
+    .advanced-body {
+        display: contents;
+    }
+    .advanced-toggle,
+    .symbol-grid {
+        display: none;
     }
     .row {
         display: flex;
@@ -834,5 +872,53 @@
         border: 1px dashed var(--accent);
         border-radius: 8px;
         background: color-mix(in srgb, var(--accent) 5%, transparent);
+    }
+
+    @media (max-width: 859px) {
+        .panel > .row.head { order: -10; }
+        .advanced {
+            display: block;
+            order: 10;
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+        }
+        .advanced-toggle {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 44px;
+            background: var(--panel-2);
+        }
+        .advanced-body { display: none; }
+        .advanced.open .advanced-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-top: 8px;
+        }
+        .symbol-select { display: none; }
+        .symbol-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(44px, 1fr));
+            gap: 6px;
+        }
+        .symbol-grid button {
+            display: grid;
+            place-items: center;
+            min-width: 44px;
+            min-height: 44px;
+            padding: 8px;
+        }
+        .symbol-grid button.on {
+            color: var(--accent-fg, #fff);
+            background: var(--accent);
+            border-color: transparent;
+        }
+        .symbol-grid svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
     }
 </style>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-    addElement, createDesign, createElement, isLabelDesign,
+    addElement, createDesign, createElement, isLabelDesign, printsNothing,
     removeElement, reorderElement, updateElement, type LabelDesign
 } from './design';
 import { History } from './history';
@@ -41,6 +41,19 @@ describe('design model', () => {
         expect(reorderElement(d, c.id, 'back').elements.map(e => e.id)).toEqual([c.id, a.id, b.id]);
         expect(reorderElement(d, a.id, 'forward').elements.map(e => e.id)).toEqual([b.id, a.id, c.id]);
         expect(reorderElement(d, a.id, 'backward').elements.map(e => e.id)).toEqual([a.id, b.id, c.id]);
+    });
+
+    it('identifies payload elements that currently cannot print ink', () => {
+        const d = createDesign(96, 320);
+        const text = createElement('text', d);
+        const image = createElement('image', d);
+        const shape = createElement('shape', d);
+        if (text.type !== 'text' || image.type !== 'image') throw new Error('Unexpected element type');
+
+        expect(printsNothing({ ...text, text: '   ' })).toBe(true);
+        expect(printsNothing({ ...text, text: 'Label' })).toBe(false);
+        expect(printsNothing({ ...image, src: '' })).toBe(true);
+        expect(printsNothing(shape)).toBe(false);
     });
 });
 

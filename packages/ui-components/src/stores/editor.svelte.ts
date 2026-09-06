@@ -405,10 +405,37 @@ export class EditorStore {
     // ---- element operations ----
 
     addNew(type: ElementType): AnyElement {
+        const previous = this.selected;
+        const previousBounds = previous ? measureElement(previous, measurer()) : null;
         const el = createTemplateElement(type, this.widthPx, this.heightPx);
         this.commit({ ...this.template, elements: [...this.template.elements, el] });
         this.selectedId = el.id;
-        return getElement(this.design, el.id) ?? { ...(el as unknown as AnyElement) };
+        const added = getElement(this.design, el.id) ?? { ...(el as unknown as AnyElement) };
+        const addedBounds = measureElement(added, measurer());
+        const gap = 8;
+
+        // New content should appear where the user is already looking. Prefer
+        // beside the current selection, then fall back to the label centre.
+        let x = (this.widthPx - addedBounds.width) / 2;
+        let y = (this.heightPx - addedBounds.height) / 2;
+        if (previous && previousBounds) {
+            const right = previous.x + previousBounds.width + gap;
+            const left = previous.x - addedBounds.width - gap;
+            if (right + addedBounds.width <= this.widthPx) x = right;
+            else if (left >= 0) x = left;
+            y = previous.y + (previousBounds.height - addedBounds.height) / 2;
+        }
+
+        // Keep ordinary elements wholly reachable. Oversized elements remain
+        // centred rather than being pinned to one edge.
+        x = addedBounds.width <= this.widthPx
+            ? Math.min(this.widthPx - addedBounds.width, Math.max(0, x))
+            : (this.widthPx - addedBounds.width) / 2;
+        y = addedBounds.height <= this.heightPx
+            ? Math.min(this.heightPx - addedBounds.height, Math.max(0, y))
+            : (this.heightPx - addedBounds.height) / 2;
+        this.applyElementPatch(el.id, { x: Math.round(x), y: Math.round(y) }, false);
+        return getElement(this.design, el.id) ?? added;
     }
 
     updateSelected(patch: Partial<AnyElement>): void {

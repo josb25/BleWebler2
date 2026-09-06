@@ -135,8 +135,52 @@
         target.addEventListener('pointercancel', onUp);
     }
 
-    /** 'printer' | 'settings' | 'paper' | 'tools' | 'params' | null */
-    let sheet = $state<'printer' | 'settings' | 'paper' | 'tools' | 'params' | null>(null);
+    /** App-level bottom sheets. */
+    let sheet = $state<'printer' | 'settings' | 'paper' | 'tools' | 'params' | 'design-options' | null>(null);
+
+    type MobileDrawerState = 'peek' | 'half' | 'full';
+    let mobileDrawer = $state<MobileDrawerState>('peek');
+    let drawerDragged = false;
+
+    function stepMobileDrawer(direction: 'up' | 'down'): void {
+        const states: MobileDrawerState[] = ['peek', 'half', 'full'];
+        const current = states.indexOf(mobileDrawer);
+        mobileDrawer = states[Math.min(states.length - 1, Math.max(0, current + (direction === 'up' ? 1 : -1)))];
+    }
+
+    function startDrawerDrag(event: PointerEvent): void {
+        const startY = event.clientY;
+        drawerDragged = false;
+        const target = event.currentTarget as HTMLElement;
+        try { target.setPointerCapture(event.pointerId); } catch { /* not capturable */ }
+        const finish = (up: PointerEvent) => {
+            const delta = up.clientY - startY;
+            if (Math.abs(delta) > 36) {
+                drawerDragged = true;
+                stepMobileDrawer(delta < 0 ? 'up' : 'down');
+            }
+            target.removeEventListener('pointerup', finish);
+            target.removeEventListener('pointercancel', finish);
+            try { target.releasePointerCapture(up.pointerId); } catch { /* already gone */ }
+        };
+        target.addEventListener('pointerup', finish);
+        target.addEventListener('pointercancel', finish);
+    }
+
+    function toggleMobileDrawer(): void {
+        if (drawerDragged) {
+            drawerDragged = false;
+            return;
+        }
+        stepMobileDrawer(mobileDrawer === 'full' ? 'down' : 'up');
+    }
+
+    $effect(() => {
+        // Selecting an element exposes its useful fields immediately. Closing
+        // the selection returns to the compact insert rail.
+        const selectedId = editor.selectedId;
+        untrack(() => { mobileDrawer = selectedId ? 'half' : 'peek'; });
+    });
 
     // ---- consumer-view actions ------------------------------------------
     // The library entry behind the template being filled in.
@@ -583,6 +627,17 @@
     // The loaded media is an app-level setting, independent of whatever label or
     // template happens to be open.
     let paperLabel = $derived(settings.paper?.name ?? 'Select paper');
+    const mobilePaperLabel = $derived.by(() => {
+        const paper = settings.paper;
+        if (!paper) return 'Paper';
+        const width = paper.labelWidthMm ?? paper.tapeWidthMm;
+        return paper.labelLengthMm ? `${width}×${paper.labelLengthMm} mm` : `${width} mm`;
+    });
+    const mobilePrinterLabel = $derived.by(() => {
+        if (snap.state === 'connected' && battery) return battery;
+        if (snap.state === 'disconnected') return 'Printer';
+        return snap.state.charAt(0).toUpperCase() + snap.state.slice(1);
+    });
 
     let activeExtra = $derived(extraTabs.find(t => t.id === view));
 
@@ -638,8 +693,8 @@
             <button class="icon-btn" title="Back to designs" aria-label="Back" onclick={backToLibrary}><Icon name="arrow-left" /></button>
             <h1 class="use-title">Design details</h1>
             <span class="spacer"></span>
-            <button class="chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text">{paperLabel}</span></button>
-            <button class="chip state-{snap.state}" title="Printer" onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text">{chipLabel}</span></button>
+            <button class="chip paper-chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text desktop-label">{paperLabel}</span><span class="chip-text mobile-label">{mobilePaperLabel}</span></button>
+            <button class="chip printer-chip state-{snap.state}" title={battery ? `${chipLabel} · Battery ${battery}` : chipLabel} onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text desktop-label">{chipLabel}</span><span class="chip-text mobile-label">{mobilePrinterLabel}</span></button>
             <button class="print-btn" onclick={printTemplateDesign}>
                 <Icon name="printer" /> Print
             </button>
@@ -665,8 +720,8 @@
             {/if}
             <button class="icon-btn" onclick={() => editor.undo()} disabled={!editor.canUndo} title="Undo (Ctrl+Z)" aria-label="Undo"><Icon name="undo" /></button>
             <button class="icon-btn" onclick={() => editor.redo()} disabled={!editor.canRedo} title="Redo (Ctrl+Y)" aria-label="Redo"><Icon name="redo" /></button>
-            <button class="chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text">{paperLabel}</span></button>
-            <button class="chip state-{snap.state}" title="Printer" onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text">{chipLabel}</span></button>
+            <button class="chip paper-chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text desktop-label">{paperLabel}</span><span class="chip-text mobile-label">{mobilePaperLabel}</span></button>
+            <button class="chip printer-chip state-{snap.state}" title={battery ? `${chipLabel} · Battery ${battery}` : chipLabel} onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text desktop-label">{chipLabel}</span><span class="chip-text mobile-label">{mobilePrinterLabel}</span></button>
             <button class="print-btn" onclick={() => (view = view === 'print' ? 'editor' : 'print')}>
                 <Icon name={view === 'print' ? 'pencil' : 'printer'} />
                 {view === 'print' ? 'Design' : 'Print'}
@@ -675,16 +730,16 @@
             <button class="icon-btn" title="Back" aria-label="Back" onclick={() => { goBack(); history.pushState(null, ''); }}><Icon name="arrow-left" /></button>
             <h1>{activeExtra.label}</h1>
             <span class="spacer"></span>
-            <button class="chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text">{paperLabel}</span></button>
-            <button class="chip state-{snap.state}" onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text">{chipLabel}</span></button>
+            <button class="chip paper-chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text desktop-label">{paperLabel}</span><span class="chip-text mobile-label">{mobilePaperLabel}</span></button>
+            <button class="chip printer-chip state-{snap.state}" title={battery ? `${chipLabel} · Battery ${battery}` : chipLabel} onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text desktop-label">{chipLabel}</span><span class="chip-text mobile-label">{mobilePrinterLabel}</span></button>
         {:else}
             <h1 class="brand"><span class="brand-mark" aria-hidden="true"><Icon name="tag" size="1em" /></span> {title}</h1>
             <span class="spacer"></span>
             {#each extraTabs as extra (extra.id)}
                 <button class="ghost" onclick={() => (view = extra.id)}>{extra.label}</button>
             {/each}
-            <button class="chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text">{paperLabel}</span></button>
-            <button class="chip state-{snap.state}" onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text">{chipLabel}</span></button>
+            <button class="chip paper-chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text desktop-label">{paperLabel}</span><span class="chip-text mobile-label">{mobilePaperLabel}</span></button>
+            <button class="chip printer-chip state-{snap.state}" title={battery ? `${chipLabel} · Battery ${battery}` : chipLabel} onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text desktop-label">{chipLabel}</span><span class="chip-text mobile-label">{mobilePrinterLabel}</span></button>
         {/if}
         <button class="icon-btn" onclick={() => (sheet = 'settings')} title="Settings" aria-label="Settings" style="margin-left: 4px;"><Icon name="settings" size={20} /></button>
     </header>
@@ -789,10 +844,18 @@
                                     </button>
                                 {/if}
                             </div>
-                            <!-- Mobile-only: a panel below the canvas that automatically
-                                 shows the selection's properties, or the add-element tools
-                                 when nothing is selected. -->
-                            <div class="area-mobile">
+                            <!-- Mobile/portrait-tablet composition of the same
+                                 toolbar and properties components used above. -->
+                            <div class="area-mobile drawer-{mobileDrawer}">
+                                <div class="drawer-grab">
+                                    <button
+                                        type="button"
+                                        aria-label="Resize inspector"
+                                        title="Resize inspector"
+                                        onpointerdown={startDrawerDrag}
+                                        onclick={toggleMobileDrawer}
+                                    ><span></span></button>
+                                </div>
                                 <div class="mobile-switch">
                                     <span class="panel-title">
                                         {editor.selected ? `Editing ${editor.selected.type}` : 'Add element'}
@@ -801,13 +864,15 @@
                                     {#if editor.selected}
                                         <button class="done" onclick={() => (editor.selectedId = null)}>Done</button>
                                     {/if}
-                                    <button class="more" title="More tools" aria-label="More tools" onclick={() => (sheet = 'tools')}><Icon name="more" /></button>
+                                    <button class="more" title="Design options" aria-label="Design options" onclick={() => (sheet = 'design-options')}><Icon name="more" /></button>
                                 </div>
-                                {#if editor.selected}
-                                    <PropertiesPanel {editor} />
-                                {:else}
-                                    <Toolbar {editor} activeTab="Insert" />
-                                {/if}
+                                <div class="mobile-panel-content">
+                                    {#if editor.selected}
+                                        <PropertiesPanel {editor} />
+                                    {:else}
+                                        <Toolbar {editor} activeTab="Insert" compact />
+                                    {/if}
+                                </div>
                             </div>
                         </div>
                     {:else if tplSheet === 'preview'}
@@ -820,14 +885,21 @@
                 <!-- Excel-style sheet tabs, shown for *every* editable document.
                      The consumer detail page is a separate surface above. -->
                 <div class="sheet-tabs">
-                    <button class="sheet" class:active={tplSheet === 'design'} onclick={() => (tplSheet = 'design')}><Icon name="pencil" size={14} /> Design</button>
-                    <button class="sheet" class:active={tplSheet === 'preview'} onclick={() => openTemplateSheet('preview')}><Icon name="type" size={14} /> Test fields</button>
-                    <button class="sheet" class:active={tplSheet === 'adapt'} onclick={() => openTemplateSheet('adapt')}><Icon name="save" size={14} /> Compatibility</button>
-                    <span class="spacer"></span>
-                    <button class="sheet-action" onclick={() => { editor.makeTemplate(); sheet = 'params'; }}>
-                        Fields ({editor.templateMeta?.params.length ?? 0})
-                    </button>
-                    <button class="sheet-action primary" onclick={() => openTemplateSheet('adapt')}><Icon name="save" size={14} /> Save design…</button>
+                    <div class="desktop-sheet-tabs">
+                        <button class="sheet" class:active={tplSheet === 'design'} onclick={() => (tplSheet = 'design')}><Icon name="pencil" size={14} /> Design</button>
+                        <button class="sheet" class:active={tplSheet === 'preview'} onclick={() => openTemplateSheet('preview')}><Icon name="type" size={14} /> Test fields</button>
+                        <button class="sheet" class:active={tplSheet === 'adapt'} onclick={() => openTemplateSheet('adapt')}><Icon name="save" size={14} /> Compatibility</button>
+                        <span class="spacer"></span>
+                        <button class="sheet-action" onclick={() => { editor.makeTemplate(); sheet = 'params'; }}>
+                            Fields ({editor.templateMeta?.params.length ?? 0})
+                        </button>
+                        <button class="sheet-action primary" onclick={() => openTemplateSheet('adapt')}><Icon name="save" size={14} /> Save design…</button>
+                    </div>
+                    {#if tplSheet !== 'design'}
+                        <button class="mobile-sheet-menu" onclick={() => (sheet = 'design-options')}>
+                            <Icon name="more" size={16} /> Design options
+                        </button>
+                    {/if}
                 </div>
             </div>
         {:else if view === 'print'}
@@ -863,7 +935,20 @@
     <Onboarding {session} {transports} {editor} onclose={() => { /* settings.onboarded is already set */ }} />
 {/if}
 
-{#if sheet === 'printer'}
+{#if sheet === 'design-options'}
+    <Sheet title="Design options" onclose={() => (sheet = null)}>
+        <nav class="design-options" aria-label="Design sections">
+            <button class:active={tplSheet === 'design'} onclick={() => { tplSheet = 'design'; sheet = null; }}><Icon name="pencil" size={16} /> Design</button>
+            <button class:active={tplSheet === 'preview'} onclick={() => { sheet = null; openTemplateSheet('preview'); }}><Icon name="type" size={16} /> Test fields</button>
+            <button class:active={tplSheet === 'adapt'} onclick={() => { sheet = null; openTemplateSheet('adapt'); }}><Icon name="save" size={16} /> Compatibility &amp; save</button>
+            <button onclick={() => { editor.makeTemplate(); sheet = 'params'; }}>Fields ({editor.templateMeta?.params.length ?? 0})</button>
+        </nav>
+        <h2>Layout</h2>
+        <Toolbar {editor} activeTab="Layout" />
+        <h2>File</h2>
+        <Toolbar {editor} activeTab="File" onSaveTemplate={() => { sheet = null; openTemplateSheet('adapt'); }} />
+    </Sheet>
+{:else if sheet === 'printer'}
     <Sheet title="Printer" onclose={() => (sheet = null)}>
         <ConnectPanel {session} {transports} />
     </Sheet>
@@ -1241,6 +1326,8 @@
     }
 
     .app {
+        position: relative;
+        z-index: 0;
         display: flex;
         flex-direction: column;
         min-height: 100dvh;
@@ -1564,11 +1651,23 @@
     .sheet-tabs {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 4px;
         flex-wrap: wrap;
         padding: 6px 10px;
         border-top: 1px solid var(--border);
         background: var(--panel);
+    }
+    .desktop-sheet-tabs {
+        display: none;
+    }
+    .mobile-sheet-menu {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        width: min(100%, 420px);
+        min-height: 44px;
     }
     .sheet-tabs .spacer { flex: 1; }
     .sheet-tabs .sheet {
@@ -1596,6 +1695,57 @@
         min-height: 32px;
         padding: 5px 12px;
         font-size: 13px;
+    }
+    .mobile-label { display: none; }
+    .design-options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+    .design-options button {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        min-height: 44px;
+        text-align: left;
+    }
+    .design-options button.active {
+        background: var(--accent);
+        color: var(--accent-fg, #fff);
+        border-color: transparent;
+    }
+    @media (max-width: 859px) {
+        .desktop-label { display: none; }
+        .mobile-label { display: inline; }
+        .app.mode-editor:not(.mode-detail) {
+            height: 100dvh;
+            min-height: 0;
+            overflow: hidden;
+            padding-bottom: 0;
+        }
+        .app.mode-editor:not(.mode-detail) main {
+            min-height: 0;
+            overflow: hidden;
+            padding-bottom: 0;
+        }
+        .app.mode-editor:not(.mode-detail) .editor-view,
+        .app.mode-editor:not(.mode-detail) .tpl-workspace {
+            height: 100%;
+        }
+        .app.mode-editor:not(.mode-detail) .tpl-workspace {
+            flex: 1;
+            overflow: hidden;
+        }
+        .app.mode-editor:not(.mode-detail) .editor-layout {
+            height: 100%;
+            grid-template-rows: minmax(0, 1fr);
+            box-sizing: border-box;
+        }
+        .app.mode-editor:not(.mode-detail) .tpl-pane,
+        .app.mode-editor:not(.mode-detail) .print-view {
+            height: 100%;
+        }
     }
     @media (max-width: 640px) {
         header:not(.hero) {
@@ -1666,10 +1816,9 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 12px;
-        padding: 12px;
+        padding: 12px 12px calc(156px + env(safe-area-inset-bottom));
         grid-template-areas:
-            "canvas"
-            "mobile";
+            "canvas";
     }
     .area-canvas { grid-area: canvas; }
     .area-chips { grid-area: chips; }
@@ -1677,7 +1826,6 @@
     /* Mobile is a single column: no side columns, so nothing to drag. */
     .splitter { display: none; }
     .side-head { display: none; }
-    .area-mobile { grid-area: mobile; }
     /* Mobile: element-list column and always-on props column are hidden;
        the canvas + the Add/Selection panel are the whole editor. */
     .area-chips,
@@ -1693,11 +1841,60 @@
         box-shadow: var(--shadow);
     }
     .area-mobile {
-        padding: 12px;
+        position: fixed;
+        z-index: 220;
+        left: max(8px, calc((100vw - 720px) / 2));
+        right: max(8px, calc((100vw - 720px) / 2));
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        height: 156px;
+        padding: 0 12px calc(10px + env(safe-area-inset-bottom));
+        box-sizing: border-box;
+        border-radius: 18px 18px 0 0;
+        box-shadow: 0 -8px 28px rgb(0 0 0 / 18%);
+        transition: height 180ms ease;
+        overflow: hidden;
     }
+    .area-mobile.drawer-half { height: min(52dvh, 520px); }
+    .area-mobile.drawer-full { height: calc(100dvh - 112px); }
+    .drawer-grab {
+        display: grid;
+        place-items: center;
+        min-height: 26px;
+        touch-action: none;
+        cursor: ns-resize;
+    }
+    .drawer-grab button {
+        display: grid;
+        place-items: center;
+        width: 64px;
+        height: 26px;
+        min-height: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    .drawer-grab button:hover { transform: none; }
+    .drawer-grab span {
+        width: 34px;
+        height: 4px;
+        border-radius: 99px;
+        background: var(--border);
+    }
+    .mobile-panel-content {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+    }
+    .area-mobile.drawer-peek .mobile-panel-content { overflow-y: hidden; }
     .area-canvas {
         overflow: hidden;
-        min-height: 260px;
+        min-height: clamp(340px, calc(100dvh - 285px), 660px);
         display: flex;
         flex-direction: column;
     }
@@ -1706,32 +1903,24 @@
         .app { padding-inline: 8px; }
         .editor-layout {
             gap: 8px;
-            padding: 8px 0;
+            padding: 8px 0 calc(156px + env(safe-area-inset-bottom));
         }
-        .area-mobile { padding: 10px; }
+        .area-mobile {
+            left: 0;
+            right: 0;
+            padding-inline: 10px;
+        }
         .mobile-switch .more {
             min-width: 40px;
             min-height: 40px;
         }
-        .sheet-tabs {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            padding-inline: 4px;
-            gap: 6px;
-        }
-        .sheet-tabs .spacer { display: none; }
-        .sheet-tabs .sheet,
-        .sheet-tabs .sheet-action {
-            width: 100%;
-            min-width: 0;
-            justify-content: center;
-            min-height: 42px;
-            padding-inline: 9px;
-            line-height: 1.2;
-            white-space: normal;
-            overflow-wrap: anywhere;
-        }
-        .sheet-tabs .sheet-action.primary { grid-column: 1 / -1; }
+        .design-options { grid-template-columns: 1fr; }
+    }
+
+    /* Portrait tablets have a single-row header, so a fully opened inspector
+       can use the extra vertical space phones reserve for their second row. */
+    @media (min-width: 641px) and (max-width: 859px) {
+        .area-mobile.drawer-full { height: calc(100dvh - 56px); }
     }
 
     .print-view {
@@ -1806,6 +1995,14 @@
         .editor-view { height: 100%; }
         .tpl-workspace { flex: 1; overflow: hidden; }
         .tpl-pane { height: 100%; }
+        .sheet-tabs { justify-content: flex-start; }
+        .desktop-sheet-tabs {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            width: 100%;
+        }
+        .mobile-sheet-menu { display: none; }
 
         /* Desktop: hide the mobile panel, restore the two side columns. */
         .area-mobile {
@@ -1936,6 +2133,36 @@
             background: var(--scrollbar);
             border-radius: 4px;
         }
+    }
+
+    /* Keep the same desktop composition on landscape tablets and compact
+       windows, but give the canvas useful room. User-selected sidebar widths
+       return unchanged once the window reaches a conventional desktop size. */
+    @media (min-width: 860px) and (max-width: 1199px) {
+        .editor-layout {
+            grid-template-columns: min(var(--left-w), 190px) 5px minmax(300px, 1fr) 5px min(var(--right-w), 260px);
+        }
+        .editor-layout.left-shut {
+            grid-template-columns: 34px 5px minmax(300px, 1fr) 5px min(var(--right-w), 260px);
+        }
+        .editor-layout.right-shut {
+            grid-template-columns: min(var(--left-w), 190px) 5px minmax(300px, 1fr) 5px 34px;
+        }
+        .editor-layout.left-shut.right-shut {
+            grid-template-columns: 34px 5px minmax(300px, 1fr) 5px 34px;
+        }
+    }
+
+    /* Landscape tablets keep the desktop composition when it fits. Only the
+       invisible hit zones grow for touch; desktop visuals do not. */
+    @media (min-width: 860px) and (pointer: coarse) {
+        .splitter::after { inset: 0 -8px; }
+        .side-toggle::after {
+            content: '';
+            position: absolute;
+            inset: -7px;
+        }
+        .side-toggle { position: relative; }
     }
 
     /* The editor intentionally locks to the viewport; a catalogue detail page

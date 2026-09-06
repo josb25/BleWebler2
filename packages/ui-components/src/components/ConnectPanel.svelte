@@ -233,4 +233,17 @@
         gap: 6px;
         flex: none;
     }
+    @media (max-width: 520px) {
+        .option,
+        .connected {
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .option .text { flex: 1 1 190px; }
+        .connected .text { flex: 1 1 calc(100% - 90px); }
+        .actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+    }
 </style>

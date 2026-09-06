@@ -87,6 +87,7 @@
     let initialPinchZoom = 0;
     let snapLinesX = $state<number[]>([]);
     let snapLinesY = $state<number[]>([]);
+    let snapTargetIds = $state<string[]>([]);
     /**
      * Id of the element being dragged. `gesture` is a plain variable (not $state)
      * so it can't drive reactivity — this mirrors it for the anchor guide.
@@ -359,6 +360,7 @@
                 editor.endTransform();
                 snapLinesX = [];
                 snapLinesY = [];
+                snapTargetIds = [];
             }
             try { (event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId); } catch(e) {}
             gesture = null;
@@ -411,14 +413,15 @@
 
         let activeSnapX: number[] = [];
         let activeSnapY: number[] = [];
+        const activeTargets = new Set<string>();
 
         if (editor.snapMode) {
-            const xTargets: {t: number, pos: number}[] = [
+            const xTargets: {t: number, pos: number, elementId?: string}[] = [
                 { t: 0, pos: 0 },
                 { t: (design.widthPx - bounds.width) / 2, pos: design.widthPx / 2 },
                 { t: design.widthPx - bounds.width, pos: design.widthPx }
             ];
-            const yTargets: {t: number, pos: number}[] = [
+            const yTargets: {t: number, pos: number, elementId?: string}[] = [
                 { t: 0, pos: 0 },
                 { t: (design.heightPx - bounds.height) / 2, pos: design.heightPx / 2 },
                 { t: design.heightPx - bounds.height, pos: design.heightPx }
@@ -427,37 +430,40 @@
             for (const other of design.elements) {
                 if (other.id === start.id) continue;
                 const ob = rotatedBounds(other, domMeasureText);
-                xTargets.push({ t: ob.x, pos: ob.x });
-                xTargets.push({ t: ob.x + ob.width - bounds.width, pos: ob.x + ob.width });
-                yTargets.push({ t: ob.y, pos: ob.y });
-                yTargets.push({ t: ob.y + ob.height - bounds.height, pos: ob.y + ob.height });
+                xTargets.push({ t: ob.x, pos: ob.x, elementId: other.id });
+                xTargets.push({ t: ob.x + ob.width - bounds.width, pos: ob.x + ob.width, elementId: other.id });
+                yTargets.push({ t: ob.y, pos: ob.y, elementId: other.id });
+                yTargets.push({ t: ob.y + ob.height - bounds.height, pos: ob.y + ob.height, elementId: other.id });
             }
 
             let snappedX: number | null = null;
-            for (const {t, pos} of xTargets) {
+            for (const {t, pos, elementId} of xTargets) {
                 if (snappedX === null && Math.abs(x - t) <= tolerance) {
                     snappedX = t;
                     x = t;
                 }
                 if (snappedX !== null && Math.abs(t - snappedX) < 0.001) {
                     activeSnapX.push(pos);
+                    if (elementId) activeTargets.add(elementId);
                 }
             }
 
             let snappedY: number | null = null;
-            for (const {t, pos} of yTargets) {
+            for (const {t, pos, elementId} of yTargets) {
                 if (snappedY === null && Math.abs(y - t) <= tolerance) {
                     snappedY = t;
                     y = t;
                 }
                 if (snappedY !== null && Math.abs(t - snappedY) < 0.001) {
                     activeSnapY.push(pos);
+                    if (elementId) activeTargets.add(elementId);
                 }
             }
         }
 
         snapLinesX = activeSnapX;
         snapLinesY = activeSnapY;
+        snapTargetIds = [...activeTargets];
 
         // Grid snapping applies after guide snapping (guides take priority when
         // both are on and a guide is within tolerance).
@@ -566,6 +572,16 @@
         {/each}
         {#each snapLinesY as sy}
             <div class="snap-line-y" style="top: {sy * editor.zoom}px;"></div>
+        {/each}
+        {#each snapTargetIds as id (id)}
+            {@const target = design.elements.find(element => element.id === id)}
+            {#if target}
+                {@const targetBounds = rotatedBounds(target, domMeasureText)}
+                <div
+                    class="snap-target"
+                    style="left:{targetBounds.x * editor.zoom}px;top:{targetBounds.y * editor.zoom}px;width:{targetBounds.width * editor.zoom}px;height:{targetBounds.height * editor.zoom}px;"
+                ></div>
+            {/if}
         {/each}
 
         <!-- Anchor guide: where this element is pinned, and how far off it sits. -->
@@ -737,6 +753,15 @@
         border-top: 1px dashed var(--accent);
         pointer-events: none;
         z-index: 100;
+    }
+    .snap-target {
+        position: absolute;
+        pointer-events: none;
+        z-index: 99;
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 3px;
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
     }
     .zoom-overlay {
         position: absolute;

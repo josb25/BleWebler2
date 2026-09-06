@@ -174,4 +174,11 @@
         text-decoration: underline;
     }
 
+    /* The editor owns the viewport edges for its inspector and sheet actions.
+       Privacy remains available from every document-style app page without
+       floating over controls while a design is open. */
+    :global(body:has(.app.mode-editor)) .privacy-link {
+        display: none;
+    }
+
 </style>

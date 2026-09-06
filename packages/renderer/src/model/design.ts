@@ -241,6 +241,18 @@ export type AnyElement =
     | ImageElement | ShapeElement | SymbolElement;
 export type ElementType = AnyElement['type'];
 
+/** True when the element has geometry but no payload that can put down ink. */
+export function printsNothing(element: AnyElement): boolean {
+    switch (element.type) {
+        case 'text': return element.text.trim().length === 0;
+        case 'barcode':
+        case 'qr':
+        case 'datamatrix': return element.data.trim().length === 0;
+        case 'image': return element.src.trim().length === 0;
+        default: return false;
+    }
+}
+
 import type { InkBinding, InkSlot, PaperProfile } from 'universal-label-core';
 
 export interface LabelDesign {
