@@ -1,13 +1,14 @@
 <script lang="ts">
     /**
-     * The menu bar across the top of the editor: File, Edit, Insert, Layout,
-     * View and Window, each a dropdown of plain commands, Photoshop-style.
+     * The menu bar across the top of the editor: File, Edit, Insert, Layout
+     * and View, each a dropdown of plain commands, Photoshop-style.
      *
      * The menus only *name* things; every command is an editor-store call or
      * a shared action from `lib/editor-actions`, so the palette, the options
      * bar and the phone toolbar do exactly the same thing by other routes.
      */
     import type { EditorStore } from '../stores/editor.svelte';
+    import type { EditorCommands } from '../editor-commands';
     import { globalSettings as settings } from '../stores/settings.svelte';
     import {
         clearCanvas, exportLabel, importLabel, saveAs,
@@ -21,16 +22,16 @@
 
     interface Props {
         editor: EditorStore;
+        commands: EditorCommands;
         onSaveTemplate: () => void;
-        onOpenSheet: (sheet: 'paper' | 'params' | 'printer' | 'settings') => void;
+        onDesignFields: () => void;
         onSheetTab: (tab: 'design' | 'preview' | 'adapt') => void;
-        onBack: () => void;
-        onPrint: () => void;
         onZoom: (action: 'in' | 'out' | 'fit' | 'reset') => void;
         onInsert: (tool: PlacingTool, shapeKind?: ShapeKind) => void;
         onImage: () => void;
+        embedded?: boolean;
     }
-    let { editor, onSaveTemplate, onOpenSheet, onSheetTab, onBack, onPrint, onZoom, onInsert, onImage }: Props = $props();
+    let { editor, commands, onSaveTemplate, onDesignFields, onSheetTab, onZoom, onInsert, onImage, embedded = false }: Props = $props();
 
     const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
     const mod = isMac ? '⌘' : 'Ctrl+';
@@ -49,7 +50,7 @@
     const menus = $derived<Menu[]>([
         {
             id: 'file', label: 'File', items: [
-                item('Save', () => editor.save(), { shortcut: `${mod}S`, disabled: empty }),
+                item('Save', commands.save, { shortcut: `${mod}S`, disabled: empty }),
                 item('Save as…', () => saveAs(editor), { disabled: empty }),
                 item('Auto-save', () => (editor.autoSave = !editor.autoSave), { checked: editor.autoSave }),
                 sep,
@@ -57,18 +58,17 @@
                 item('Export (JSON)', () => exportLabel(editor)),
                 sep,
                 item('Reusable design…', onSaveTemplate, { disabled: empty }),
-                item('Design fields…', () => { editor.makeTemplate(); onOpenSheet('params'); }),
+                item('Design fields…', () => { editor.makeTemplate(); onDesignFields(); }),
                 sep,
                 item('Clear canvas', () => clearCanvas(editor), { disabled: empty }),
                 sep,
-                item('Print…', onPrint, { shortcut: `${mod}P` }),
-                item('Back to designs', onBack)
+                item('Settings…', commands.settings)
             ]
         },
         {
             id: 'edit', label: 'Edit', items: [
-                item('Undo', () => editor.undo(), { shortcut: `${mod}Z`, disabled: !editor.canUndo }),
-                item('Redo', () => editor.redo(), { shortcut: `${mod}Y`, disabled: !editor.canRedo }),
+                item('Undo', commands.undo, { shortcut: `${mod}Z`, disabled: !editor.canUndo }),
+                item('Redo', commands.redo, { shortcut: `${mod}Y`, disabled: !editor.canRedo }),
                 sep,
                 item('Delete', () => editor.deleteSelected(), { shortcut: 'Del', disabled: !sel }),
                 item(sel?.locked ? 'Unlock' : 'Lock', () => editor.toggleLock(), { disabled: !sel }),
@@ -98,13 +98,13 @@
         },
         {
             id: 'layout', label: 'Layout', items: [
-                item('Paper setup…', () => onOpenSheet('paper')),
                 ...(editor.isContinuousMedia
-                    ? [item('Auto length', () => editor.setAutoLength(!editor.autoLength), { checked: editor.autoLength })]
+                    ? [
+                        item('Auto length', () => editor.setAutoLength(!editor.autoLength), { checked: editor.autoLength }),
+                        sep
+                    ]
                     : []),
-                sep,
-                item('Snap to guides', () => (editor.snapMode = !editor.snapMode), { checked: editor.snapMode }),
-                item('Snap to grid', () => (editor.gridEnabled = !editor.gridEnabled), { checked: editor.gridEnabled })
+                item('Snap to guides', () => (editor.snapMode = !editor.snapMode), { checked: editor.snapMode })
             ]
         },
         {
@@ -114,20 +114,14 @@
                 item('Fit label', () => onZoom('fit'), { shortcut: `${mod}0` }),
                 item('Actual pixels (100%)', () => onZoom('reset'), { shortcut: `${mod}1` }),
                 sep,
-                item('Show grid', () => (editor.gridEnabled = !editor.gridEnabled), { checked: editor.gridEnabled }),
+                item('Grid', () => (editor.gridEnabled = !editor.gridEnabled), { checked: editor.gridEnabled }),
                 sep,
                 item('Design', () => onSheetTab('design')),
                 item('Test fields', () => onSheetTab('preview')),
-                item('Compatibility', () => onSheetTab('adapt'))
-            ]
-        },
-        {
-            id: 'window', label: 'Window', items: [
-                item('Panels', () => { settings.rightOpen = !settings.rightOpen; settings.save(); }, { checked: settings.rightOpen }),
-                item('Layers', () => { settings.leftOpen = !settings.leftOpen; settings.save(); }, { checked: settings.leftOpen }),
+                item('Compatibility', () => onSheetTab('adapt')),
                 sep,
-                item('Printer…', () => onOpenSheet('printer')),
-                item('Settings…', () => onOpenSheet('settings'))
+                item('Panels', () => { settings.rightOpen = !settings.rightOpen; settings.save(); }, { checked: settings.rightOpen }),
+                item('Layers', () => { settings.leftOpen = !settings.leftOpen; settings.save(); }, { checked: settings.leftOpen })
             ]
         }
     ]);
@@ -153,7 +147,7 @@
 
 <svelte:window onpointerdown={onWindowPointerDown} onkeydown={onWindowKeydown} />
 
-<nav class="menubar" bind:this={root} aria-label="Editor menu">
+<nav class="menubar" class:embedded bind:this={root} aria-label="Editor menu">
     {#each menus as menu (menu.id)}
         <div class="menu" class:open={open === menu.id}>
             <button
@@ -203,6 +197,13 @@
         font-size: 13px;
         user-select: none;
     }
+    .menubar.embedded {
+        min-height: 0;
+        padding: 0;
+        background: transparent;
+        border-bottom: none;
+        color: inherit;
+    }
     .menu { position: relative; }
     .title {
         min-height: 26px;
@@ -219,7 +220,18 @@
         box-shadow: none;
         background: var(--panel-2);
     }
+    .embedded .title {
+        color: inherit;
+    }
+    .embedded .title:hover:not(:disabled) {
+        background: rgb(255 255 255 / 14%);
+        color: inherit;
+    }
     .menu.open .title { color: var(--accent); }
+    .embedded .menu.open .title {
+        background: rgb(255 255 255 / 14%);
+        color: inherit;
+    }
     .dropdown {
         position: absolute;
         top: calc(100% + 2px);
