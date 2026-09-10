@@ -361,7 +361,7 @@
         const labelLengthMm = df.labelLengthMm ?? templates.labelLengthMm;
         const heightPx = Math.min(activeCapabilities?.canvasHeightPx ?? Math.round(tapeWidthMm * pxPerMm), Math.round(tapeWidthMm * pxPerMm));
         const widthPx = Math.max(8, Math.round(labelLengthMm * pxPerMm));
-        const { design } = resolveTemplate(tpl, { widthPx, heightPx, tapeWidthMm, labelLengthMm, params, measureText: domMeasureText });
+        const { design } = resolveTemplate(tpl, { widthPx, heightPx, tapeWidthMm, dpmm: pxPerMm, labelLengthMm, params, measureText: domMeasureText });
         return { ...design, paper };
     }
 
