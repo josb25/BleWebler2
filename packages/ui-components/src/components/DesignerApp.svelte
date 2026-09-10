@@ -23,6 +23,12 @@
     import type { EditorStore } from '../stores/editor.svelte';
     import EditorCanvas from './EditorCanvas.svelte';
     import Toolbar from './Toolbar.svelte';
+    import MenuBar from './MenuBar.svelte';
+    import OptionsBar from './OptionsBar.svelte';
+    import ToolPalette from './ToolPalette.svelte';
+    import DockPanel from './DockPanel.svelte';
+    import StatusBar from './StatusBar.svelte';
+    import { insertElement, type EditorTool, type PlacingTool, type ShapeKind } from '../lib/editor-actions';
     import ElementChips from './ElementChips.svelte';
     import PropertiesPanel from './PropertiesPanel.svelte';
     import PreviewBar from './PreviewBar.svelte';
@@ -84,7 +90,11 @@
 
     /** 'library' | 'editor' | 'print' | 'templates' | 'template-fill' | an extra-tab id. */
     let view = $state<string>('library');
-    let activeTab = $state<'File' | 'Insert' | 'Layout'>('Insert');
+    /** The palette tool. Everything but `move` places an element on the next label click. */
+    let tool = $state<EditorTool>('move');
+    let shapeKind = $state<ShapeKind>('rect');
+    /** The Properties panel of the dock; the Layers panel folds with settings.leftOpen. */
+    let propsOpen = $state(true);
     /** Excel-style sheet within the template workbench. */
     let tplSheet = $state<'design' | 'preview' | 'adapt'>('design');
     /** When true the editor shell hosts the minimal template *usage* view. */
@@ -104,6 +114,34 @@
         if (side === 'left') settings.leftW = SIDEBAR.leftDefault;
         else settings.rightW = SIDEBAR.rightDefault;
         settings.save();
+    }
+
+    // ---- Photoshop-style tools ----
+
+    /** Place the active tool's element where the label was clicked, then return to Move. */
+    function onStageTap(point: { x: number; y: number }): void {
+        if (tool === 'move' || tool === 'image') return;
+        insertElement(editor, tool, shapeKind, point);
+        tool = 'move';
+    }
+
+    function insertAtCentre(): void {
+        if (tool === 'move' || tool === 'image') return;
+        insertElement(editor, tool, shapeKind);
+        tool = 'move';
+    }
+
+    function insertFromMenu(kind: PlacingTool, shape?: ShapeKind): void {
+        if (shape) shapeKind = shape;
+        insertElement(editor, kind, shape ?? shapeKind);
+        tool = 'move';
+    }
+
+    function zoomAction(action: 'in' | 'out' | 'fit' | 'reset'): void {
+        if (action === 'fit') { canvasView?.fit(); return; }
+        if (action === 'reset') { editor.zoom = 1; return; }
+        const factor = action === 'in' ? 1.25 : 1 / 1.25;
+        editor.zoom = Math.max(0.25, Math.min(16, Math.round(editor.zoom * factor * 100) / 100));
     }
 
     function startResize(e: PointerEvent, side: 'left' | 'right'): void {
@@ -568,6 +606,27 @@
     function onKeydown(event: KeyboardEvent): void {
         if (view !== 'editor' || templateUse || sheet !== null || isEditingField()) return;
         const ctrl = event.ctrlKey || event.metaKey;
+        const key = event.key.toLowerCase();
+        // Single-letter tool shortcuts, as in Photoshop; Escape drops back to Move.
+        if (!ctrl && !event.altKey && tplSheet === 'design') {
+            const byKey: Record<string, EditorTool> = { v: 'move', t: 'text', b: 'barcode', q: 'qr', m: 'datamatrix', u: 'shape', s: 'symbol' };
+            if (event.key === 'Escape') {
+                if (tool !== 'move') tool = 'move'; else editor.selectedId = null;
+                event.preventDefault();
+                return;
+            }
+            if (!event.shiftKey && byKey[key]) {
+                tool = byKey[key];
+                event.preventDefault();
+                return;
+            }
+        }
+        if (ctrl && key === 's') { editor.save(); event.preventDefault(); return; }
+        if (ctrl && key === 'p') { view = 'print'; event.preventDefault(); return; }
+        if (ctrl && (key === '=' || key === '+')) { zoomAction('in'); event.preventDefault(); return; }
+        if (ctrl && key === '-') { zoomAction('out'); event.preventDefault(); return; }
+        if (ctrl && key === '0') { zoomAction('fit'); event.preventDefault(); return; }
+        if (ctrl && key === '1') { zoomAction('reset'); event.preventDefault(); return; }
         if (ctrl && event.key.toLowerCase() === 'z' && !event.shiftKey) {
             editor.undo();
         } else if (ctrl && (event.key.toLowerCase() === 'y' || (event.key.toLowerCase() === 'z' && event.shiftKey))) {
@@ -744,19 +803,28 @@
         <button class="icon-btn" onclick={() => (sheet = 'settings')} title="Settings" aria-label="Settings" style="margin-left: 4px;"><Icon name="settings" size={20} /></button>
     </header>
 
-    <!-- The ribbon belongs to the design sheet for labels and templates. -->
+    <!-- Desktop: Photoshop-style menu bar and the active tool's options bar.
+         Hidden on mobile, which keeps its bottom drawer. -->
     {#if view === 'editor' && !templateUse && tplSheet === 'design'}
-        <!-- Desktop: OnlyOffice/Docs-style ribbon (tab strip + the active tab's
-             tools). Hidden on mobile, which uses the slim insert bar below. -->
-        <div class="ribbon-card">
-            <div class="ribbon-tabs">
-                {#each ['File', 'Insert', 'Layout'] as const as tab (tab)}
-                    <button class="tab" class:active={activeTab === tab} onclick={() => (activeTab = tab)}>{tab}</button>
-                {/each}
-            </div>
-            <div class="ribbon-body">
-                <Toolbar {editor} {activeTab} onSaveTemplate={() => openTemplateSheet('adapt')} />
-            </div>
+        <div class="ps-bars">
+            <MenuBar
+                {editor}
+                onSaveTemplate={() => openTemplateSheet('adapt')}
+                onOpenSheet={s => (sheet = s)}
+                onSheetTab={t => { if (t === 'design') tplSheet = 'design'; else openTemplateSheet(t); }}
+                onBack={backToLibrary}
+                onPrint={() => (view = 'print')}
+                onZoom={zoomAction}
+                onInsert={insertFromMenu}
+            />
+            <OptionsBar
+                {editor}
+                {tool}
+                {shapeKind}
+                onshapekind={k => (shapeKind = k)}
+                ontool={t => (tool = t)}
+                oninsertcentre={insertAtCentre}
+            />
         </div>
     {/if}
 
@@ -785,39 +853,27 @@
                     {#if tplSheet === 'design'}
                         <div
                             class="editor-layout"
-                            class:left-shut={!settings.leftOpen}
                             class:right-shut={!settings.rightOpen}
-                            style="--left-w:{settings.leftW}px; --right-w:{settings.rightW}px;"
+                            style="--right-w:{settings.rightW}px;"
                         >
-                            <!-- Desktop-only: element list column -->
-                            <div class="area-chips">
-                                {#if settings.leftOpen}
-                                    <div class="side-head">
-                                        <button class="side-toggle" title="Hide the layer list" aria-label="Hide the layer list" onclick={() => toggleSide('left')}>
-                                            <Icon name="chevron-down" size={14} />
-                                        </button>
-                                    </div>
-                                    <ElementChips {editor} />
-                                {:else}
-                                    <button class="rail" title="Show the layer list" aria-label="Show the layer list" onclick={() => toggleSide('left')}>
-                                        <Icon name="chevron-up" size={14} />
-                                        <span class="rail-label">Layers</span>
-                                    </button>
-                                {/if}
+                            <!-- Desktop-only: the tool palette -->
+                            <div class="area-tools">
+                                <ToolPalette
+                                    {editor}
+                                    {tool}
+                                    {shapeKind}
+                                    ontool={t => (tool = t)}
+                                    onshapekind={k => (shapeKind = k)}
+                                    onzoom={zoomAction}
+                                />
                             </div>
-                            <!-- svelte-ignore a11y_no_static_element_interactions -->
-                            <div
-                                class="splitter left"
-                                title="Drag to resize · double-click to reset"
-                                onpointerdown={e => startResize(e, 'left')}
-                                ondblclick={() => resetSide('left')}
-                            ></div>
                             <div class="area-canvas">
                                 <EditorCanvas
                                     bind:this={canvasView}
                                     {editor}
                                     unprintableLeadingPx={activeCapabilities?.physical?.headToCutterPx || 0}
                                     {unprintableTopBottomPx}
+                                    onstagetap={onStageTap}
                                 />
                             </div>
                             <!-- Desktop-only: side column — the template's fill-in
@@ -832,15 +888,23 @@
                             <div class="area-props">
                                 {#if settings.rightOpen}
                                     <div class="side-head">
-                                        <button class="side-toggle" title="Hide this panel" aria-label="Hide this panel" onclick={() => toggleSide('right')}>
+                                        <span class="side-title">Panels</span>
+                                        <button class="side-toggle" title="Hide the panels" aria-label="Hide the panels" onclick={() => toggleSide('right')}>
                                             <Icon name="chevron-up" size={14} />
                                         </button>
                                     </div>
-                                    <PropertiesPanel {editor} />
+                                    <div class="dock">
+                                        <DockPanel title="Properties" open={propsOpen} ontoggle={() => (propsOpen = !propsOpen)} grow>
+                                            <PropertiesPanel {editor} />
+                                        </DockPanel>
+                                        <DockPanel title="Layers" badge={editor.design.elements.length} open={settings.leftOpen} ontoggle={() => toggleSide('left')} grow={!propsOpen}>
+                                            <ElementChips {editor} embedded />
+                                        </DockPanel>
+                                    </div>
                                 {:else}
-                                    <button class="rail" title="Show the properties panel" aria-label="Show the properties panel" onclick={() => toggleSide('right')}>
+                                    <button class="rail" title="Show the panels" aria-label="Show the panels" onclick={() => toggleSide('right')}>
                                         <Icon name="chevron-down" size={14} />
-                                        <span class="rail-label">Properties</span>
+                                        <span class="rail-label">Panels</span>
                                     </button>
                                 {/if}
                             </div>
@@ -900,6 +964,9 @@
                             <Icon name="more" size={16} /> Design options
                         </button>
                     {/if}
+                </div>
+                <div class="status-host">
+                    <StatusBar {editor} printerLabel={chipLabel} printerState={snap.state} onzoom={zoomAction} onprinter={() => (sheet = 'printer')} />
                 </div>
             </div>
         {:else if view === 'print'}
@@ -1562,17 +1629,6 @@
     /* ---- Desktop ribbon (OnlyOffice/Docs-style) ----
        Desktop-only: full-bleed and flush (real app chrome, not a floating card).
        Hidden on mobile, which uses .mobile-insert instead. */
-    .ribbon-card {
-        display: none;
-        background: var(--panel);
-        overflow: hidden;
-    }
-    .ribbon-tabs {
-        display: flex;
-        gap: 4px;
-        padding: 6px 8px 0;
-        border-bottom: 1px solid var(--border);
-    }
 
     /* ---- Mobile panel below the canvas (auto Add / Selection) ---- */
     .mobile-switch {
@@ -1590,49 +1646,6 @@
         min-width: 40px;
         font-size: 18px;
         line-height: 1;
-    }
-    .tab {
-        position: relative;
-        background: transparent;
-        color: var(--muted);
-        border: none;
-        border-radius: 8px 8px 0 0;
-        padding: 9px 18px;
-        font-size: 14px;
-        font-weight: 600;
-        box-shadow: none;
-        transition: color 0.15s ease, background 0.15s ease;
-    }
-    /* Cancel the global button lift/press so tabs feel anchored. */
-    .tab:hover,
-    .tab:active {
-        transform: none;
-        box-shadow: none;
-    }
-    .tab:hover:not(.active) {
-        color: var(--text);
-        background: var(--panel-2);
-    }
-    .tab.active {
-        color: var(--accent);
-        background: transparent;
-    }
-    /* Clean underline indicator sitting on the tab strip's bottom border. */
-    .tab.active::after {
-        content: '';
-        position: absolute;
-        left: 12px;
-        right: 12px;
-        bottom: -1px;
-        height: 3px;
-        background: var(--accent);
-        border-radius: 3px 3px 0 0;
-    }
-    .ribbon-body {
-        padding: 12px 14px;
-        display: flex;
-        align-items: center;
-        min-height: 52px;
     }
 
     /* ---- Template workbench (Excel-style sheet tabs) ---- */
@@ -1821,14 +1834,17 @@
             "canvas";
     }
     .area-canvas { grid-area: canvas; }
-    .area-chips { grid-area: chips; }
+    .area-tools { grid-area: tools; }
     .area-props { grid-area: props; }
     /* Mobile is a single column: no side columns, so nothing to drag. */
     .splitter { display: none; }
     .side-head { display: none; }
-    /* Mobile: element-list column and always-on props column are hidden;
-       the canvas + the Add/Selection panel are the whole editor. */
-    .area-chips,
+    /* Mobile: the tool palette, the dock, the menu/options bars and the
+       status bar are desktop chrome; the canvas + the Add/Selection panel
+       are the whole editor. */
+    .ps-bars,
+    .area-tools,
+    .status-host,
     .area-props {
         display: none;
     }
@@ -2008,20 +2024,15 @@
         .area-mobile {
             display: none;
         }
-        .ribbon-card {
-            display: block;
-            margin: 0;
-            border: none;
-            border-bottom: 1px solid var(--border);
-            border-radius: 0;
-            box-shadow: none;
-        }
 
         .editor-layout {
             /* Sidebar widths come from the settings; a shut one becomes a slim
                rail that still shows how to bring it back. */
-            grid-template-columns: var(--left-w) 5px 1fr 5px var(--right-w);
-            grid-template-areas: "chips ldrag canvas rdrag props";
+            grid-template-columns: 48px 1fr 5px var(--right-w);
+            grid-template-areas: "tools canvas rdrag props";
+            /* Photoshop's neutral workspace grey, derived from the theme so it
+               sits between the panels and the paper in both light and dark. */
+            --workspace: color-mix(in srgb, var(--bg) 78%, #7d7d7d);
             align-items: stretch;
             gap: 0;
             padding: 0;
@@ -2029,31 +2040,56 @@
             box-sizing: border-box;
         }
         .area-canvas,
-        .area-chips,
+        .area-tools,
         .area-props {
             border: none;
             border-radius: 0;
             box-shadow: none;
             background: var(--panel);
         }
-        .area-chips {
+        .area-tools {
             display: block;
             border-right: 1px solid var(--border);
-            overflow-y: auto;
-            padding: 16px;
+            overflow: visible;
+            padding: 0;
         }
         .area-props {
-            display: block;
+            display: flex;
+            flex-direction: column;
             border-left: 1px solid var(--border);
-            overflow-y: auto;
-            padding: 16px;
+            overflow: hidden;
+            padding: 0;
+        }
+        .dock {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
         }
         .area-canvas {
-            /* The workspace itself gets the recessed background so the label
-               "floats" against it, Docs-style. */
-            background: var(--bg);
-            padding: 20px;
+            /* The recessed workspace the label floats on. */
+            background: var(--workspace);
+            padding: 0;
         }
+        .area-canvas :global(.viewport) {
+            border-radius: 0;
+            background-color: var(--workspace);
+            background-image: none;
+        }
+        /* Zoom lives in the status bar and the palette on desktop. */
+        .area-canvas :global(.zoom-overlay) { display: none; }
+        .ps-bars { display: block; }
+        .status-host { display: block; }
+        /* Document tabs sit above the canvas, like Photoshop's, not below. */
+        .sheet-tabs {
+            order: -1;
+            justify-content: flex-start;
+            padding: 6px 8px 0;
+            border-top: none;
+            border-bottom: 1px solid var(--border);
+            background: var(--panel-2);
+        }
+        .sheet-tabs .sheet { border-radius: 6px 6px 0 0; }
         /* The drag edge. Wider hit area than it looks, so it is grabbable
            without being a visual divider in its own right. */
         .splitter {
@@ -2063,7 +2099,6 @@
             background: transparent;
             touch-action: none;
         }
-        .splitter.left { grid-area: ldrag; }
         .splitter.right { grid-area: rdrag; }
         .splitter::after {
             content: '';
@@ -2074,20 +2109,25 @@
         .splitter:active::after {
             background: color-mix(in srgb, var(--accent) 45%, transparent);
         }
-        .editor-layout.left-shut .splitter.left,
         .editor-layout.right-shut .splitter.right { cursor: default; }
-        .editor-layout.left-shut .splitter.left::after,
         .editor-layout.right-shut .splitter.right::after { background: none; }
 
-        /* A shut sidebar collapses to this rail. */
-        .editor-layout.left-shut { grid-template-columns: 34px 5px 1fr 5px var(--right-w); }
-        .editor-layout.right-shut { grid-template-columns: var(--left-w) 5px 1fr 5px 34px; }
-        .editor-layout.left-shut.right-shut { grid-template-columns: 34px 5px 1fr 5px 34px; }
+        /* A shut dock collapses to this rail. */
+        .editor-layout.right-shut { grid-template-columns: 48px 1fr 5px 34px; }
 
         .side-head {
             display: flex;
-            justify-content: flex-end;
-            margin: -6px -6px 6px 0;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 6px 4px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .side-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: var(--muted);
         }
         .side-toggle {
             padding: 3px 6px;
@@ -2096,8 +2136,7 @@
             color: var(--muted);
         }
         .side-toggle:hover { transform: none; color: var(--fg); }
-        /* Point the chevron along the axis the panel folds away on. */
-        .area-chips .side-toggle :global(svg) { transform: rotate(90deg); }
+        /* Point the chevron along the axis the dock folds away on. */
         .area-props .side-toggle :global(svg) { transform: rotate(-90deg); }
 
         .rail {
@@ -2121,14 +2160,11 @@
             letter-spacing: 0.03em;
             white-space: nowrap;
         }
-        .editor-layout.left-shut .area-chips,
         .editor-layout.right-shut .area-props { padding: 8px 0; overflow: hidden; }
 
-        .area-chips::-webkit-scrollbar,
         .area-props::-webkit-scrollbar {
             width: 8px;
         }
-        .area-chips::-webkit-scrollbar-thumb,
         .area-props::-webkit-scrollbar-thumb {
             background: var(--scrollbar);
             border-radius: 4px;
