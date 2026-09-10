@@ -20,7 +20,7 @@
     const ZOOM_STEPS = [25, 50, 100, 200, 300, 400, 600, 800];
     const percent = $derived(Math.round(editor.zoom * 100));
     const mmW = $derived(Math.round((editor.design.widthPx / editor.pxPerMm) * 10) / 10);
-    const mmH = $derived(Math.round((editor.design.heightPx / editor.pxPerMm) * 10) / 10);
+    const mmH = $derived(Math.round(editor.tapeWidthMm * 10) / 10);
     const sel = $derived(editor.selected);
 
     function setPercent(v: number): void {

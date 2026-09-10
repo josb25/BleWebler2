@@ -28,7 +28,7 @@
     import ToolPalette from './ToolPalette.svelte';
     import DockPanel from './DockPanel.svelte';
     import StatusBar from './StatusBar.svelte';
-    import { insertElement, type EditorTool, type PlacingTool, type ShapeKind } from '../lib/editor-actions';
+    import { addImageFromFile, insertElement, type EditorTool, type PlacingTool, type ShapeKind } from '../lib/editor-actions';
     import ElementChips from './ElementChips.svelte';
     import PropertiesPanel from './PropertiesPanel.svelte';
     import PreviewBar from './PreviewBar.svelte';
@@ -93,6 +93,7 @@
     /** The palette tool. Everything but `move` places an element on the next label click. */
     let tool = $state<EditorTool>('move');
     let shapeKind = $state<ShapeKind>('rect');
+    let imageInput = $state<HTMLInputElement | null>(null);
     /** The Properties panel of the dock; the Layers panel folds with settings.leftOpen. */
     let propsOpen = $state(true);
     /** Excel-style sheet within the template workbench. */
@@ -134,6 +135,17 @@
     function insertFromMenu(kind: PlacingTool, shape?: ShapeKind): void {
         if (shape) shapeKind = shape;
         insertElement(editor, kind, shape ?? shapeKind);
+        tool = 'move';
+    }
+
+    function chooseImage(): void {
+        imageInput?.click();
+    }
+
+    function onImageFiles(event: Event): void {
+        const input = event.currentTarget as HTMLInputElement;
+        addImageFromFile(editor, input.files);
+        input.value = '';
         tool = 'move';
     }
 
@@ -609,14 +621,19 @@
         const key = event.key.toLowerCase();
         // Single-letter tool shortcuts, as in Photoshop; Escape drops back to Move.
         if (!ctrl && !event.altKey && tplSheet === 'design') {
-            const byKey: Record<string, EditorTool> = { v: 'move', t: 'text', b: 'barcode', q: 'qr', m: 'datamatrix', u: 'shape', s: 'symbol' };
+            const byKey: Partial<Record<string, EditorTool>> = { v: 'move', t: 'text', b: 'barcode', q: 'qr', m: 'datamatrix', u: 'shape', s: 'symbol' };
             if (event.key === 'Escape') {
                 if (tool !== 'move') tool = 'move'; else editor.selectedId = null;
                 event.preventDefault();
                 return;
             }
             if (!event.shiftKey && byKey[key]) {
-                tool = byKey[key];
+                tool = byKey[key]!;
+                event.preventDefault();
+                return;
+            }
+            if (!event.shiftKey && key === 'i') {
+                chooseImage();
                 event.preventDefault();
                 return;
             }
@@ -816,6 +833,7 @@
                 onPrint={() => (view = 'print')}
                 onZoom={zoomAction}
                 onInsert={insertFromMenu}
+                onImage={chooseImage}
             />
             <OptionsBar
                 {editor}
@@ -859,12 +877,12 @@
                             <!-- Desktop-only: the tool palette -->
                             <div class="area-tools">
                                 <ToolPalette
-                                    {editor}
                                     {tool}
                                     {shapeKind}
                                     ontool={t => (tool = t)}
                                     onshapekind={k => (shapeKind = k)}
                                     onzoom={zoomAction}
+                                    onimage={chooseImage}
                                 />
                             </div>
                             <div class="area-canvas">
@@ -968,6 +986,7 @@
                 <div class="status-host">
                     <StatusBar {editor} printerLabel={chipLabel} printerState={snap.state} onzoom={zoomAction} onprinter={() => (sheet = 'printer')} />
                 </div>
+                <input bind:this={imageInput} type="file" accept="image/*" hidden onchange={onImageFiles} />
             </div>
         {:else if view === 'print'}
             <div class="print-view">

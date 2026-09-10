@@ -10,22 +10,21 @@
      * The image tool is the exception: an image needs a file first, so it
      * opens the picker straight away rather than waiting for a click.
      */
-    import type { EditorStore } from '../stores/editor.svelte';
     import Icon, { type IconName } from './Icon.svelte';
     import {
-        addImageFromFile, SHAPE_KINDS, TOOL_LABELS, TOOL_SHORTCUTS,
+        SHAPE_KINDS, TOOL_LABELS, TOOL_SHORTCUTS,
         type EditorTool, type ShapeKind
     } from '../lib/editor-actions';
 
     interface Props {
-        editor: EditorStore;
         tool: EditorTool;
         shapeKind: ShapeKind;
         ontool: (tool: EditorTool) => void;
         onshapekind: (kind: ShapeKind) => void;
         onzoom: (action: 'in' | 'out' | 'fit') => void;
+        onimage: () => void;
     }
-    let { editor, tool, shapeKind, ontool, onshapekind, onzoom }: Props = $props();
+    let { tool, shapeKind, ontool, onshapekind, onzoom, onimage }: Props = $props();
 
     const TOOLS: { id: EditorTool; icon: IconName }[] = [
         { id: 'move', icon: 'move' },
@@ -40,10 +39,9 @@
     const SHAPE_ICONS: Record<ShapeKind, IconName> = { rect: 'square', ellipse: 'circle', line: 'line' };
 
     let flyout = $state(false);
-    let fileInput = $state<HTMLInputElement | null>(null);
 
     function pick(id: EditorTool): void {
-        if (id === 'image') { fileInput?.click(); return; }
+        if (id === 'image') { onimage(); return; }
         if (id === 'shape' && tool === 'shape') { flyout = !flyout; return; }
         flyout = false;
         ontool(id);
@@ -55,11 +53,6 @@
         flyout = false;
     }
 
-    function onFiles(e: Event): void {
-        const input = e.currentTarget as HTMLInputElement;
-        addImageFromFile(editor, input.files);
-        input.value = '';
-    }
 </script>
 
 <div class="palette" role="toolbar" aria-label="Tools" aria-orientation="vertical">
@@ -98,7 +91,6 @@
     <button type="button" class="tool" title="Zoom in (Ctrl +)" aria-label="Zoom in" onclick={() => onzoom('in')}><Icon name="zoom-in" size={18} /></button>
     <button type="button" class="tool" title="Zoom out (Ctrl −)" aria-label="Zoom out" onclick={() => onzoom('out')}><Icon name="zoom-out" size={18} /></button>
     <button type="button" class="tool" title="Fit label (Ctrl 0)" aria-label="Fit label" onclick={() => onzoom('fit')}><Icon name="maximize" size={18} /></button>
-    <input bind:this={fileInput} type="file" accept="image/*" hidden onchange={onFiles} />
 </div>
 
 <style>

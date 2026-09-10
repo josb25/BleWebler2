@@ -28,8 +28,9 @@
         onPrint: () => void;
         onZoom: (action: 'in' | 'out' | 'fit' | 'reset') => void;
         onInsert: (tool: PlacingTool, shapeKind?: ShapeKind) => void;
+        onImage: () => void;
     }
-    let { editor, onSaveTemplate, onOpenSheet, onSheetTab, onBack, onPrint, onZoom, onInsert }: Props = $props();
+    let { editor, onSaveTemplate, onOpenSheet, onSheetTab, onBack, onPrint, onZoom, onInsert, onImage }: Props = $props();
 
     const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
     const mod = isMac ? '⌘' : 'Ctrl+';
@@ -92,7 +93,7 @@
                 item('Ellipse', () => onInsert('shape', 'ellipse')),
                 item('Symbol', () => onInsert('symbol'), { shortcut: 'S' }),
                 sep,
-                item('Image…', () => document.getElementById('menubar-image-input')?.click())
+                item('Image…', onImage, { shortcut: 'I' })
             ]
         },
         {
