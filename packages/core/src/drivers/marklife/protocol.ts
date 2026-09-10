@@ -50,6 +50,31 @@ export const endJob = (): Uint8Array => cmd(0x1f, 0xc0, 0x01, 0x01);
  */
 export const endJobAlternate = (): Uint8Array => cmd(0x10, 0xff, 0xf1, 0x45);
 
+// ---- legacy "L11" job framing --------------------------------------------
+//
+// What the manufacturer's app sends to the models in LEGACY_L11_PREFIXES
+// (see the driver). Same 96-dot head as a P12, older command set.
+
+/** 15 zero bytes: wakes the module before a job. */
+export const legacyWakeup = (): Uint8Array => new Uint8Array(15);
+
+/** Open a job on the legacy path. Pairs with {@link endJobAlternate}. */
+export const legacyStartJob = (): Uint8Array => cmd(0x10, 0xff, 0xf1, 0x02);
+
+/** ESC/POS `GS FF`: advance to the next gap. Sent after the raster on gapped media. */
+export const gapAlign = (): Uint8Array => cmd(0x1d, 0x0c);
+
+/**
+ * Density on the module dialect. The official app only ever sends the gears
+ * 2 (light), 6 (normal) and 10 (dark) to this family.
+ */
+export const setLegacyDensity = (gear: number): Uint8Array =>
+    cmd(0x10, 0xff, 0x10, 0x00, gear & 0xff);
+
+/** Map this driver's 1–15 density onto the three gears the app uses. */
+export const legacyDensityGear = (level: number): number =>
+    level <= 5 ? 2 : level <= 10 ? 6 : 10;
+
 /** Feed `dots` of blank media. ESC/POS `ESC J`, honoured by this family. */
 export const feedDots = (dots: number): Uint8Array =>
     cmd(0x1b, 0x4a, Math.max(0, Math.min(255, Math.round(dots))));

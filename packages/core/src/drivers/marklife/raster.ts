@@ -96,3 +96,29 @@ export function encodeRaster(image: RgbaImage): Uint8Array {
 
     return out;
 }
+
+/**
+ * The uncompressed ESC/POS `GS v 0` raster the manufacturer's app sends on its
+ * legacy path:
+ *
+ * ```
+ *   1D 76 30 m                opcode, mode (0 = normal)
+ *   SS SS                     bytes per row, little-endian
+ *   HH HH                     rows,          little-endian
+ *   <1-bpp bitmap>            MSB leftmost, rows padded to a byte
+ * ```
+ *
+ * Note the byte order: unlike {@link encodeRaster}, both fields here are
+ * little-endian, because this header is inherited from ESC/POS.
+ */
+export function encodeRasterGsV0(image: RgbaImage, mode = 0): Uint8Array {
+    const { bitmap, bytesPerRow } = packMonochrome(image);
+    const out = new Uint8Array(8 + bitmap.length);
+    out.set([
+        0x1d, 0x76, 0x30, mode & 0x03,
+        bytesPerRow & 0xff, (bytesPerRow >> 8) & 0xff,
+        image.height & 0xff, (image.height >> 8) & 0xff
+    ]);
+    out.set(bitmap, 8);
+    return out;
+}

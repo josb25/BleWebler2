@@ -13,7 +13,7 @@
 import { describe, it, expect } from 'vitest';
 import { inflate } from 'pako';
 import * as Protocol from './protocol';
-import { encodeRaster, packMonochrome } from './raster';
+import { encodeRaster, encodeRasterGsV0, packMonochrome } from './raster';
 
 const hex = (b: Uint8Array): string =>
     [...b].map(v => v.toString(16).padStart(2, '0')).join(' ');
@@ -47,6 +47,15 @@ describe('marklife command set', () => {
         expect(hex(Protocol.feedDots(30))).toBe('1b 4a 1e');
         expect(hex(Protocol.feedDots(9999))).toBe('1b 4a ff');
         expect(hex(Protocol.feedDots(-5))).toBe('1b 4a 00');
+    });
+
+    it('frames the legacy L11 job the way the manufacturer app does', () => {
+        expect(Protocol.legacyWakeup().length).toBe(15);
+        expect(Protocol.legacyWakeup().every(b => b === 0)).toBe(true);
+        expect(hex(Protocol.legacyStartJob())).toBe('10 ff f1 02');
+        expect(hex(Protocol.gapAlign())).toBe('1d 0c');
+        expect(hex(Protocol.setLegacyDensity(6))).toBe('10 ff 10 00 06');
+        expect([1, 5, 6, 10, 11, 15].map(Protocol.legacyDensityGear)).toEqual([2, 2, 6, 6, 10, 10]);
     });
 
     it('uses the module dialect for device queries', () => {
@@ -105,6 +114,14 @@ describe('marklife raster', () => {
         // 0x28 0x91 is zlib's CMF/FLG for windowBits 10. The default (15)
         // produces 0x78 0x9c and prints nothing.
         expect(hex(raster.slice(10, 12))).toBe('28 91');
+    });
+
+    it('writes the GS v 0 header little-endian with the raw bitmap behind it', () => {
+        // 96-dot head, 258 rows: 12 bytes per row, 0x0102 rows -> low byte first.
+        const raster = encodeRasterGsV0(black(96, 258));
+        expect(hex(raster.slice(0, 8))).toBe('1d 76 30 00 0c 00 02 01');
+        expect(raster.length).toBe(8 + 12 * 258);
+        expect(raster.slice(8).every(b => b === 0xff)).toBe(true);
     });
 
     it('round-trips: the payload really is the bitmap', () => {
