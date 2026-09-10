@@ -346,10 +346,12 @@ export class MarklifeDriver implements IPrinterDriver {
         return {
             maxDensity: 15,
             canvasHeightPx,
-            supportsSpeedMode: true,
+            supportsSpeedMode: matched?.capabilities.supportsSpeedMode ?? true,
             colorSupport: { type: 'monochrome' },
             dpmm: 8,
-            driverName: "Marklife (Protocol 0x1F)",
+            driverName: this.usesLegacyL11()
+                ? "Marklife (Legacy L11)"
+                : "Marklife (Protocol 0x1F)",
             // `?? {}` rather than a default offset: an unrecognised printer has
             // an unknown cutter distance, and inventing one puts the tear in
             // the wrong place on every label it prints.
@@ -622,19 +624,32 @@ export class MarklifeDriver implements IPrinterDriver {
         if (this.usesLegacyL11()) {
             // One buffer, framed exactly as the manufacturer's app frames it.
             const gap = this.lastOptions?.paper?.type === 'gap';
+            const feedBeforeMm = this.lastOptions?.feedOverrides?.feedBeforeMm;
+            const feedAfterMm = this.lastOptions?.feedOverrides?.feedAfterMm;
+            const beforeFeed = !gap && typeof feedBeforeMm === 'number' && feedBeforeMm > 0
+                ? Protocol.feedDots(this.mmToDots(feedBeforeMm))
+                : new Uint8Array();
+            const afterDots = typeof feedAfterMm === 'number' ? this.mmToDots(feedAfterMm) : 100;
+            const afterFeed = gap
+                ? Protocol.gapAlign()
+                : afterDots > 0 ? Protocol.feedDots(afterDots) : new Uint8Array();
             const job = MarklifeDriver.concat(
                 Protocol.legacyWakeup(),
                 Protocol.legacyStartJob(),
+                beforeFeed,
                 encodeRasterGsV0({ width: hardwareWidth, height: hardwareHeight, data: hardwareData }),
-                gap ? Protocol.gapAlign() : Protocol.feedDots(100),
+                afterFeed,
                 Protocol.endJobAlternate()
             );
+            // The official app paces this family at 30 ms even when the BLE
+            // flow-control characteristic is available.
             await this.flowControl.sendData(
                 job,
                 this.transport,
                 this.connectionRequirements.services[0],
                 this.writeCharacteristicId,
-                this.hasFlowControl
+                this.hasFlowControl,
+                30
             );
             return;
         }

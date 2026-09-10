@@ -40,7 +40,9 @@ export class MarklifeFlowControl {
         transport: IDeviceTransport,
         serviceUUID: string,
         writeCharacteristicId: string,
-        useFlowControl: boolean
+        useFlowControl: boolean,
+        /** Pause between chunks in ms; defaults to 5 with credits, 30 without. */
+        interChunkDelayMs?: number
     ): Promise<void> {
         // If it's a USB transport, rely on the native hardware flow control of USB Bulk Endpoints
         // and bypass our artificial chunking entirely for maximum print speed.
@@ -74,7 +76,7 @@ export class MarklifeFlowControl {
 
             offset += this.chunkSize;
 
-            const delay = useFlowControl ? 5 : 30;
+            const delay = interChunkDelayMs ?? (useFlowControl ? 5 : 30);
             await new Promise(r => setTimeout(r, delay));
         }
     }
