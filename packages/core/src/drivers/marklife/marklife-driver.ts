@@ -2,7 +2,7 @@ import { IPrinterDriver, PrinterCapabilities, UniversalPrintOptions, UniversalIm
 import { singlePlane, type UniversalPage } from '../../types/ink';
 import { IDeviceTransport } from '../../core/transports/transport.interface';
 import * as Protocol from './protocol';
-import { encodeRaster } from './raster';
+import { encodeRaster, encodeRasterGsV0 } from './raster';
 import { MarklifeFlowControl } from "./marklife-flow-control";
 import type { PrinterStatus, StatusField, PrinterFault } from '../printer-status';
 import { PrinterError, toPrinterError } from '../printer-error';
@@ -15,8 +15,8 @@ export interface DeviceProfile {
 export const MARKLIFE_PROFILES: DeviceProfile[] = [
     { prefixes: ['P80', 'P80S', 'L80'], canvasHeightPx: 576 },
     { prefixes: ['P50', 'P50S', 'D50', 'M57', 'S8', 'L50', 'X2', 'S2', 'SB_S2', 'Jammuk_S2', 'LPW40'], canvasHeightPx: 384 },
-    { prefixes: ['P11', 'P12', 'P15', 'P7', 'L13', 'LP15', 'iSPACE-LP15'], canvasHeightPx: 96 },
-    { prefixes: ['LuckP_D1', 'LP90', 'D210', 'IP_D80', '210', 'DP_D80', 'DP_8028', 'HM-24-28', 'T3', 'ET-Z0535', 'ET-Z0537', 'X4', 'L100'], canvasHeightPx: 384 } // Assumed wide for unknown labels
+    { prefixes: ['P11', 'P12', 'P15', 'P7', 'L13', 'LP15', 'iSPACE-LP15', 'LP90'], canvasHeightPx: 96 },
+    { prefixes: ['LuckP_D1', 'D210', 'IP_D80', '210', 'DP_D80', 'DP_8028', 'HM-24-28', 'T3', 'ET-Z0535', 'ET-Z0537', 'X4', 'L100'], canvasHeightPx: 384 } // Assumed wide for unknown labels
 ];
 
 const buildFamily = (
@@ -34,7 +34,7 @@ const buildFamily = (
     }));
 };
 
-const marklife15mm = buildFamily('Marklife', 'Marklife 15mm Series', ['P11', 'P12', 'P15', 'P7', 'L13', 'LP15', 'iSPACE-LP15'], {
+const marklife15mm = buildFamily('Marklife', 'Marklife 15mm Series', ['P11', 'P12', 'P15', 'P7', 'L13', 'LP15', 'iSPACE-LP15', 'LP90'], {
     capabilities: {
         canvasHeightPx: 96,
         dpmm: 8,
@@ -63,6 +63,19 @@ if (p12) {
 const p15 = marklife15mm.find(m => m.model === 'P15');
 if (p15) {
     p15.manualUrl = 'https://fcc.report/FCC-ID/2A2AI-P15/7600816.pdf';
+}
+
+const lp90 = marklife15mm.find(m => m.model === 'LP90');
+if (lp90) {
+    // Korean-market 15 mm unit. The manufacturer's own app files it with the
+    // P12 everywhere that matters — same 96-dot head, same label sizes, same
+    // density table — but drives it through its older "L11" command path
+    // (see LEGACY_L11_PREFIXES below) rather than the P12's 1F job control.
+    lp90.notes = `Sold in Korea; the manufacturer's app treats it as a P12-class 96-dot printer.
+
+Driven with the manufacturer's legacy job framing (\`10 FF F1 02\` … \`10 FF F1 45\`)
+and an uncompressed \`GS v 0\` raster, which is exactly what the official app sends
+to this model.`;
 }
 
 const l13 = marklife15mm.find(m => m.model === 'L13');
@@ -136,7 +149,7 @@ const marklife72mm = buildFamily('Marklife', 'Marklife 72mm Series', ['P80', 'P8
     supportLevel: 'Untested'
 });
 
-const marklifeOEM = buildFamily('Marklife', 'Marklife OEM / Unknown', ['LuckP_D1', 'LP90', 'D210', 'IP_D80', '210', 'DP_D80', 'DP_8028', 'HM-24-28', 'T3', 'ET-Z0535', 'ET-Z0537', 'X4', 'L100', 'M1', 'P1S', 'A50', 'D200', 'LPC74', 'D100'], {
+const marklifeOEM = buildFamily('Marklife', 'Marklife OEM / Unknown', ['LuckP_D1', 'D210', 'IP_D80', '210', 'DP_D80', 'DP_8028', 'HM-24-28', 'T3', 'ET-Z0535', 'ET-Z0537', 'X4', 'L100', 'M1', 'P1S', 'A50', 'D200', 'LPC74', 'D100'], {
     capabilities: {
         canvasHeightPx: 384,
         dpmm: 8,
@@ -157,6 +170,17 @@ export const MARKLIFE_HARDWARE_MODELS = [
 
 // Models with dedicated schematic artwork are registered by the artwork module;
 // the UI uses its neutral fallback for all other models.
+
+/**
+ * Models the manufacturer's app drives through its older "L11" path instead of
+ * the `1F` job framing: a 15-byte wake-up, `10 FF F1 02` to open the job, an
+ * uncompressed `GS v 0` raster, `1D 0C` (gap) or `1B 4A n` (continuous) to
+ * position the label, and `10 FF F1 45` to close. None of the `1F 80`, `1F C0`,
+ * `1F 11` or `1F 70` commands are sent to these models by the official app.
+ *
+ * Matched on the advertised name prefix, the same way the official app does.
+ */
+const LEGACY_L11_PREFIXES = ['LP90'];
 
 /**
  * Marklife's `0x1F` protocol, and the `10 FF` INFO command family beside it.
@@ -219,6 +243,20 @@ export class MarklifeDriver implements IPrinterDriver {
     /** Convert a millimetre feed distance to printer dots (8 dpmm). */
     private mmToDots(mm: number): number {
         return Math.max(0, Math.round(mm * 8));
+    }
+
+    /** True for models on the manufacturer's legacy "L11" command path. */
+    private usesLegacyL11(): boolean {
+        const name = (this.transport?.getDeviceName() ?? '').toUpperCase();
+        return LEGACY_L11_PREFIXES.some(prefix => name.startsWith(prefix));
+    }
+
+    /** Concatenate command fragments into one job buffer. */
+    private static concat(...parts: Uint8Array[]): Uint8Array {
+        const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
+        let offset = 0;
+        for (const part of parts) { out.set(part, offset); offset += part.length; }
+        return out;
     }
     private dataListener: ((data: Uint8Array, characteristicId?: string) => void) | null = null;
 
@@ -308,10 +346,12 @@ export class MarklifeDriver implements IPrinterDriver {
         return {
             maxDensity: 15,
             canvasHeightPx,
-            supportsSpeedMode: true,
+            supportsSpeedMode: matched?.capabilities.supportsSpeedMode ?? true,
             colorSupport: { type: 'monochrome' },
             dpmm: 8,
-            driverName: "Marklife (Protocol 0x1F)",
+            driverName: this.usesLegacyL11()
+                ? "Marklife (Legacy L11)"
+                : "Marklife (Protocol 0x1F)",
             // `?? {}` rather than a default offset: an unrecognised printer has
             // an unknown cutter distance, and inventing one puts the tear in
             // the wrong place on every label it prints.
@@ -478,6 +518,15 @@ export class MarklifeDriver implements IPrinterDriver {
 
     public async printInit(options: UniversalPrintOptions): Promise<void> {
         this.lastOptions = options;
+
+        if (this.usesLegacyL11()) {
+            // The official app sends no 1F-family setup to these models. Density
+            // travels on the module dialect, as one of three gears.
+            if (options.density) {
+                await this.sendCommand(Protocol.setLegacyDensity(Protocol.legacyDensityGear(options.density)));
+            }
+            return;
+        }
         // Anything that is not explicitly gapped is treated as continuous:
         // hunting for a gap that is not there makes the printer feed forever,
         // which is a far worse failure than printing across one.
@@ -572,6 +621,39 @@ export class MarklifeDriver implements IPrinterDriver {
             }
         }
 
+        if (this.usesLegacyL11()) {
+            // One buffer, framed exactly as the manufacturer's app frames it.
+            const gap = this.lastOptions?.paper?.type === 'gap';
+            const feedBeforeMm = this.lastOptions?.feedOverrides?.feedBeforeMm;
+            const feedAfterMm = this.lastOptions?.feedOverrides?.feedAfterMm;
+            const beforeFeed = !gap && typeof feedBeforeMm === 'number' && feedBeforeMm > 0
+                ? Protocol.feedDots(this.mmToDots(feedBeforeMm))
+                : new Uint8Array();
+            const afterDots = typeof feedAfterMm === 'number' ? this.mmToDots(feedAfterMm) : 100;
+            const afterFeed = gap
+                ? Protocol.gapAlign()
+                : afterDots > 0 ? Protocol.feedDots(afterDots) : new Uint8Array();
+            const job = MarklifeDriver.concat(
+                Protocol.legacyWakeup(),
+                Protocol.legacyStartJob(),
+                beforeFeed,
+                encodeRasterGsV0({ width: hardwareWidth, height: hardwareHeight, data: hardwareData }),
+                afterFeed,
+                Protocol.endJobAlternate()
+            );
+            // The official app paces this family at 30 ms even when the BLE
+            // flow-control characteristic is available.
+            await this.flowControl.sendData(
+                job,
+                this.transport,
+                this.connectionRequirements.services[0],
+                this.writeCharacteristicId,
+                this.hasFlowControl,
+                30
+            );
+            return;
+        }
+
         const raster = encodeRaster({
             width: hardwareWidth,
             height: hardwareHeight,
@@ -590,6 +672,13 @@ export class MarklifeDriver implements IPrinterDriver {
 
     public async printEnd(): Promise<void> {
         if (!this.transport || !this.writeCharacteristicId) throw new Error("Transport not bound");
+
+        if (this.usesLegacyL11()) {
+            // The job was closed inside printPage; just let the mechanism finish.
+            await new Promise(r => setTimeout(r, 300));
+            this.flowControl.reset();
+            return;
+        }
 
         // Wait a small moment for the last image buffers to settle in hardware
         await new Promise(r => setTimeout(r, 200));
