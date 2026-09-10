@@ -29,6 +29,7 @@
     import DockPanel from './DockPanel.svelte';
     import StatusBar from './StatusBar.svelte';
     import { addImageFromFile, insertElement, type EditorTool, type PlacingTool, type ShapeKind } from '../lib/editor-actions';
+    import { createEditorCommands } from '../editor-commands';
     import ElementChips from './ElementChips.svelte';
     import PropertiesPanel from './PropertiesPanel.svelte';
     import PreviewBar from './PreviewBar.svelte';
@@ -187,6 +188,10 @@
 
     /** App-level bottom sheets. */
     let sheet = $state<'printer' | 'settings' | 'paper' | 'tools' | 'params' | 'design-options' | null>(null);
+    const editorCommands = untrack(() => createEditorCommands(editor, {
+        print: () => (view = 'print'),
+        settings: () => (sheet = 'settings')
+    }));
 
     type MobileDrawerState = 'peek' | 'half' | 'full';
     let mobileDrawer = $state<MobileDrawerState>('peek');
@@ -638,16 +643,16 @@
                 return;
             }
         }
-        if (ctrl && key === 's') { editor.save(); event.preventDefault(); return; }
-        if (ctrl && key === 'p') { view = 'print'; event.preventDefault(); return; }
+        if (ctrl && key === 's') { editorCommands.save(); event.preventDefault(); return; }
+        if (ctrl && key === 'p') { editorCommands.print(); event.preventDefault(); return; }
         if (ctrl && (key === '=' || key === '+')) { zoomAction('in'); event.preventDefault(); return; }
         if (ctrl && key === '-') { zoomAction('out'); event.preventDefault(); return; }
         if (ctrl && key === '0') { zoomAction('fit'); event.preventDefault(); return; }
         if (ctrl && key === '1') { zoomAction('reset'); event.preventDefault(); return; }
         if (ctrl && event.key.toLowerCase() === 'z' && !event.shiftKey) {
-            editor.undo();
+            editorCommands.undo();
         } else if (ctrl && (event.key.toLowerCase() === 'y' || (event.key.toLowerCase() === 'z' && event.shiftKey))) {
-            editor.redo();
+            editorCommands.redo();
         } else if (event.key === 'Delete' || event.key === 'Backspace') {
             editor.deleteSelected();
         } else if (event.key.startsWith('Arrow') && editor.selected && !editor.selected.locked) {
@@ -762,7 +767,10 @@
     class:mode-detail={view === 'editor' && templateUse}
     class:mode-fullbleed={activeExtra?.fullBleed}
 >
-    <header class:hero={view === 'library'}>
+    <header
+        class:hero={view === 'library'}
+        class:editor-design-header={view === 'editor' && !templateUse && tplSheet === 'design'}
+    >
         {#if view === 'editor' && templateUse}
             <!-- Catalogue-detail chrome: navigation and device state, without
                  the editable filename, history controls or design ribbon. -->
@@ -794,11 +802,11 @@
                     {#if editor.saveStatus === 'saved'}<Icon name="check" size={14} /> Saved{:else}Saving…{/if}
                 </span>
             {/if}
-            <button class="icon-btn" onclick={() => editor.undo()} disabled={!editor.canUndo} title="Undo (Ctrl+Z)" aria-label="Undo"><Icon name="undo" /></button>
-            <button class="icon-btn" onclick={() => editor.redo()} disabled={!editor.canRedo} title="Redo (Ctrl+Y)" aria-label="Redo"><Icon name="redo" /></button>
-            <button class="chip paper-chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text desktop-label">{paperLabel}</span><span class="chip-text mobile-label">{mobilePaperLabel}</span></button>
-            <button class="chip printer-chip state-{snap.state}" title={battery ? `${chipLabel} · Battery ${battery}` : chipLabel} onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text desktop-label">{chipLabel}</span><span class="chip-text mobile-label">{mobilePrinterLabel}</span></button>
-            <button class="print-btn" onclick={() => (view = view === 'print' ? 'editor' : 'print')}>
+            <button class="icon-btn menu-owned-action" onclick={editorCommands.undo} disabled={!editor.canUndo} title="Undo (Ctrl+Z)" aria-label="Undo"><Icon name="undo" /></button>
+            <button class="icon-btn menu-owned-action" onclick={editorCommands.redo} disabled={!editor.canRedo} title="Redo (Ctrl+Y)" aria-label="Redo"><Icon name="redo" /></button>
+            <button class="chip paper-chip state-connected" title="Paper: {paperLabel}" aria-label="Paper: {paperLabel}. Open paper settings" onclick={() => (sheet = 'paper')}><Icon name="tag" size={16} /><span class="chip-text desktop-label">{paperLabel}</span><span class="chip-text mobile-label">{mobilePaperLabel}</span><span class="status-chevron"><Icon name="chevron-down" size={14} /></span></button>
+            <button class="chip printer-chip state-{snap.state}" title={battery ? `${chipLabel} · Battery ${battery}` : chipLabel} aria-label="{chipLabel}. Open printer settings" onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{:else}<Icon name="printer" size={16} />{/if}<span class="chip-text desktop-label">{chipLabel}</span><span class="chip-text mobile-label">{mobilePrinterLabel}</span><span class="status-chevron"><Icon name="chevron-down" size={14} /></span></button>
+            <button class="print-btn" onclick={() => (view === 'print' ? view = 'editor' : editorCommands.print())} title={view === 'print' ? 'Back to design' : 'Print (Ctrl+P)'}>
                 <Icon name={view === 'print' ? 'pencil' : 'printer'} />
                 {view === 'print' ? 'Design' : 'Print'}
             </button>
@@ -817,20 +825,19 @@
             <button class="chip paper-chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text desktop-label">{paperLabel}</span><span class="chip-text mobile-label">{mobilePaperLabel}</span></button>
             <button class="chip printer-chip state-{snap.state}" title={battery ? `${chipLabel} · Battery ${battery}` : chipLabel} onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text desktop-label">{chipLabel}</span><span class="chip-text mobile-label">{mobilePrinterLabel}</span></button>
         {/if}
-        <button class="icon-btn" onclick={() => (sheet = 'settings')} title="Settings" aria-label="Settings" style="margin-left: 4px;"><Icon name="settings" size={20} /></button>
+        <button class="icon-btn menu-owned-action" onclick={editorCommands.settings} title="Settings" aria-label="Settings" style="margin-left: 4px;"><Icon name="settings" size={20} /></button>
     </header>
 
-    <!-- Desktop: Photoshop-style menu bar and the active tool's options bar.
-         Hidden on mobile, which keeps its bottom drawer. -->
+    <!-- Desktop: a dedicated command row followed by the active tool's options
+         row. Mobile keeps its compact header and bottom drawer. -->
     {#if view === 'editor' && !templateUse && tplSheet === 'design'}
         <div class="ps-bars">
             <MenuBar
                 {editor}
+                commands={editorCommands}
                 onSaveTemplate={() => openTemplateSheet('adapt')}
-                onOpenSheet={s => (sheet = s)}
+                onDesignFields={() => (sheet = 'params')}
                 onSheetTab={t => { if (t === 'design') tplSheet = 'design'; else openTemplateSheet(t); }}
-                onBack={backToLibrary}
-                onPrint={() => (view = 'print')}
                 onZoom={zoomAction}
                 onInsert={insertFromMenu}
                 onImage={chooseImage}
@@ -1579,6 +1586,11 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    .status-chevron {
+        display: inline-flex;
+        align-items: center;
+        opacity: 0.6;
+    }
     .chip:hover:not(:disabled) {
         background: #f9fafb;
         color: var(--text);
@@ -1750,6 +1762,7 @@
     @media (max-width: 859px) {
         .desktop-label { display: none; }
         .mobile-label { display: inline; }
+        .status-chevron { display: none; }
         .app.mode-editor:not(.mode-detail) {
             height: 100dvh;
             min-height: 0;
@@ -2024,6 +2037,9 @@
             flex: 1;
             overflow: hidden;
             min-height: 0;
+        }
+        .editor-design-header .menu-owned-action {
+            display: none;
         }
         /* The editor view fills main; the workspace flexes and the sheet tabs
            pin to the bottom (Excel-style). */
