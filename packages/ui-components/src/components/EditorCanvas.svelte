@@ -21,8 +21,13 @@
         unprintableTopBottomPx?: number;
         /** View-only: elements can't be selected, moved, resized or rotated. */
         readonly?: boolean;
+        /**
+         * A click on the empty label (no pan), in label pixels. The designer
+         * uses it to place the active tool's element where the user pointed.
+         */
+        onstagetap?: (point: { x: number; y: number }) => void;
     }
-    let { editor, unprintableLeadingPx = 0, unprintableTopBottomPx = 0, readonly = false }: Props = $props();
+    let { editor, unprintableLeadingPx = 0, unprintableTopBottomPx = 0, readonly = false, onstagetap }: Props = $props();
 
     const design = $derived(editor.design);
 
@@ -356,6 +361,21 @@
                 gesture = null;
             }
         } else if (gesture.pointerId === event.pointerId) {
+            // A pan that never moved is a tap on the stage.
+            if (gesture.mode === 'pan' && onstagetap && !readonly) {
+                const dx = event.clientX - gesture.startClientX;
+                const dy = event.clientY - gesture.startClientY;
+                if (Math.hypot(dx, dy) < 4) {
+                    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+                    const x = (event.clientX - rect.left - panX) / editor.zoom;
+                    const y = (event.clientY - rect.top - panY) / editor.zoom;
+                    // The viewport also receives clicks on the grey workspace.
+                    // Only clicks inside the actual label should place content.
+                    if (x >= 0 && x <= design.widthPx && y >= 0 && y <= design.heightPx) {
+                        onstagetap({ x, y });
+                    }
+                }
+            }
             if (gesture.mode !== 'pan' && gesture.mode !== 'pinch') {
                 editor.endTransform();
                 snapLinesX = [];

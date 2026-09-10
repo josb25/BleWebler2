@@ -7,6 +7,10 @@
     import { DEFAULT_PAPER_PROFILES } from 'universal-label-core';
     import { globalSettings as settings, DEFAULT_PRINTER_CAPS } from '../stores/settings.svelte';
     import Icon from './Icon.svelte';
+    import {
+        addShape as addShapeAction, addImageFromFile as addImageAction,
+        exportLabel as exportAction, importLabel as importAction, saveAs as saveAsAction
+    } from '../lib/editor-actions';
 
     interface Props {
         editor: EditorStore;
@@ -29,75 +33,18 @@
     let fileInput = $state<HTMLInputElement | null>(null);
     let importInput = $state<HTMLInputElement | null>(null);
 
-    /** Insert a shape, sized so each kind reads correctly straight away. */
-    function addShape(kind: ShapeKind): void {
-        const el = editor.addNew('shape');
-        const H = editor.design.heightPx;
-        const W = editor.design.widthPx;
-        if (kind === 'line') {
-            editor.moveElement(el.id, { shape: kind, width: Math.round(W * 0.6), height: 2, stroke: 2, fill: false });
-        } else {
-            const h = Math.max(16, Math.round(H * 0.5));
-            editor.moveElement(el.id, { shape: kind, width: Math.round(W * 0.35), height: h, stroke: 2, fill: false });
-        }
-    }
+    function addShape(kind: ShapeKind): void { addShapeAction(editor, kind); }
 
     function addImageFromFile(files: FileList | null): void {
-        const file = files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-            const src = typeof reader.result === 'string' ? reader.result : '';
-            if (!src) return;
-            const probe = new Image();
-            probe.onload = () => {
-                const el = editor.addNew('image');
-                const maxH = Math.max(8, editor.design.heightPx - 8);
-                const h = Math.min(maxH, probe.naturalHeight);
-                const w = Math.max(4, Math.round(h * (probe.naturalWidth / probe.naturalHeight)));
-                editor.moveElement(el.id, { src, width: w, height: h, x: 4, y: 4 });
-            };
-            probe.src = src;
-        };
-        reader.readAsDataURL(file);
+        addImageAction(editor, files);
         if (fileInput) fileInput.value = '';
     }
 
-    function exportLabel() {
-        const data = JSON.stringify(editor.design, null, 2);
-        const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${editor.design.name || 'label'}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
+    function exportLabel(): void { exportAction(editor); }
+    function saveAs(): void { saveAsAction(editor); }
 
-    function saveAs() {
-        const suggestion = `${editor.design.name || 'Label'} copy`;
-        const name = typeof prompt === 'function' ? prompt('Save as — name for the copy:', suggestion) : suggestion;
-        if (name && name.trim()) editor.saveAs(name.trim());
-    }
-
-    function importLabel(files: FileList | null) {
-        const file = files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-            try {
-                const data: unknown = JSON.parse(reader.result as string);
-                if (!editor.openImported(data)) {
-                    alert('That file is not a valid BleWebler2 label.');
-                }
-            } catch (e) {
-                console.error('Failed to import label', e);
-                alert('Could not read that file as JSON.');
-            }
-        };
-        reader.readAsText(file);
+    function importLabel(files: FileList | null): void {
+        importAction(editor, files);
         if (importInput) importInput.value = '';
     }
 

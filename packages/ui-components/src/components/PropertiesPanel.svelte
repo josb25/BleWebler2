@@ -695,10 +695,10 @@
             <strong class="type">Selection</strong>
         </div>
         <div class="row">
-            <span class="note">Select an element on the canvas or in the chips row to edit its properties.</span>
+            <span class="note">Select an element on the canvas or in the Layers panel to edit its properties.</span>
         </div>
         <div class="row">
-            <span class="dim">Use the <strong>Layout</strong> tab to adjust label size and print threshold.</span>
+            <span class="dim">Label length, snapping and the print threshold are in the options bar above the canvas.</span>
         </div>
     </div>
 {/if}

@@ -19,8 +19,10 @@
 
     interface Props {
         editor: EditorStore;
+        /** Inside a dock panel that already carries the title. */
+        embedded?: boolean;
     }
-    let { editor }: Props = $props();
+    let { editor, embedded = false }: Props = $props();
 
     const ICONS: Record<AnyElement['type'], IconName> = {
         text: 'type',
@@ -97,7 +99,7 @@
 {#if layers.length > 0}
     <div class="layers" bind:this={listEl}>
         <div class="head">
-            <span class="title">Layers</span>
+            <span class="title">{embedded ? '' : 'Layers'}</span>
             <span class="hint">front</span>
         </div>
 
