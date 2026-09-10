@@ -230,7 +230,13 @@ export class EditorStore {
     // ---- derived render view ----
 
     get tapeWidthMm(): number { return this.paper?.tapeWidthMm ?? this.heightPx / this.authoringDpmm; }
-    get pxPerMm(): number { return this.tapeWidthMm > 0 ? this.heightPx / this.tapeWidthMm : PX_PER_MM; }
+    /**
+     * Pixels per millimetre of the canvas.
+     *
+     * The printhead can be narrower than the tape, so canvas height divided by
+     * tape width is not a reliable resolution. The authoring resolution is.
+     */
+    get pxPerMm(): number { return this.authoringDpmm; }
 
     /** Continuous/gapless media: the tape has no fixed label length. */
     get isContinuousMedia(): boolean {
@@ -251,6 +257,7 @@ export class EditorStore {
         const { design } = resolveTemplate(this.template, {
             widthPx, heightPx: this.heightPx,
             tapeWidthMm: this.tapeWidthMm,
+            dpmm: this.authoringDpmm,
             labelLengthMm: this.paper?.labelLengthMm ?? widthPx / this.authoringDpmm,
             params: this.params, measureText: measurer(),
             mediaInsets: this.mediaInsets,

@@ -230,3 +230,21 @@ describe('resolveTemplate', () => {
         if (el.type === 'text') expect(el.text).toBe('Hi');
     });
 });
+
+describe('resolveTemplate mm scale', () => {
+    it('uses an explicit dpmm instead of estimating it from the tape width', () => {
+        const tpl = createTemplate('t', 15, 30);
+        tpl.elements = [{
+            type: 'text', id: 't',
+            place: { anchor: 'tl', origin: 'tl', dx: { u: 'mm', v: 10 }, dy: { u: 'mm', v: 0 }, size: { u: 'px', v: 16 } },
+            text: compileText('x'),
+            font: 'bitmap', bitmapFont: 'fixed', fontFamily: 'sans-serif',
+            bold: false, italic: false, underline: false, align: 'left'
+        }];
+        // A 96-dot head on 15 mm labels: the canvas is 96 px but the tape is 15 mm.
+        const estimated = resolveTemplate(tpl, { widthPx: 240, heightPx: 96, tapeWidthMm: 15 }).design;
+        const explicit = resolveTemplate(tpl, { widthPx: 240, heightPx: 96, tapeWidthMm: 15, dpmm: 8 }).design;
+        expect(Math.round(estimated.elements[0].x)).toBe(64);
+        expect(Math.round(explicit.elements[0].x)).toBe(80);
+    });
+});

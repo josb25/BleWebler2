@@ -401,6 +401,12 @@ export interface ResolveOptions {
     heightPx: number;
     /** Physical tape width (canvas height) in mm — drives mm unit conversion. */
     tapeWidthMm?: number;
+    /**
+     * Pixels per millimetre of the target canvas. When given it wins over the
+     * `heightPx / tapeWidthMm` estimate, which is only right while the canvas
+     * spans the whole tape — not when a narrow printhead clamps it.
+     */
+    dpmm?: number;
     labelLengthMm?: number;
     /** Parameter values (name → value); missing params fall back to defaults. */
     params?: Record<string, unknown>;
@@ -457,7 +463,9 @@ const DEFAULT_MIN_TEXT_PX = 6;
  * which the lint pass aggregates across sizes.
  */
 export function resolveTemplate(tpl: LabelTemplate, opts: ResolveOptions): ResolveResult {
-    const pxPerMm = opts.tapeWidthMm && opts.tapeWidthMm > 0 ? opts.heightPx / opts.tapeWidthMm : PX_PER_MM;
+    const pxPerMm = opts.dpmm && opts.dpmm > 0
+        ? opts.dpmm
+        : opts.tapeWidthMm && opts.tapeWidthMm > 0 ? opts.heightPx / opts.tapeWidthMm : PX_PER_MM;
 
     // When the template positions against the whole physical label, lay it out in
     // the larger media box and shift the result back into printable-canvas
