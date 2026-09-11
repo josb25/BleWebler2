@@ -26,6 +26,21 @@ The TypeScript implementation in BleWebler2 was written for its existing
 derived from the public byte format and independently reproduced by the sources
 above.
 
+## Catprinter V5X / MXW01 `22 21`
+
+Implementation: `packages/core/src/drivers/catprinter/mxw01-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [jeremy46231/MXW01-catprinter protocol](https://github.com/jeremy46231/MXW01-catprinter/blob/0744587459fbe9644b4a2295c9a3ecb06b12d5cc/PROTOCOL.md) | `0744587`, MIT | AE30/AE01/AE02/AE03 GATT layout, `22 21` packet framing and CRC, A2/A9/AD flow, 384-dot LSB-first bulk raster, 90-row minimum and acknowledgement semantics. |
+| [clementvp/mxw01-thermal-printer](https://github.com/clementvp/mxw01-thermal-printer/tree/ead9a022f0de96b96844ea0e8737bbfdda0518ef) | `ead9a02`, MIT in package metadata | Independent TypeScript corroboration of framing, print flow, raster padding and characteristic separation. Protocol facts only; no source copied. |
+| [TiMini-Print](https://github.com/Dejniel/TiMini-Print/tree/a9a456c4243132bad52c500e39bdec221fe98db9) | `a9a456c`, Apache-2.0 | V5X family association and advertised clone-name catalogue. |
+
+V5X is deliberately a separate driver from Tiny: it sends control packets on
+AE01 but raw image rows on AE03, and its `22 21` framing is incompatible with
+both Tiny dialects. The implementation is newly written against BleWebler2's
+driver contracts; no third-party source or assets are redistributed.
+
 ## Phomemo D/Q rotated ESC/POS
 
 Implementation: `packages/core/src/drivers/phomemo`
@@ -110,6 +125,5 @@ source or assets are included.
 
 ## Researched but not yet implemented
 
-- [MXW01 protocol specification](https://github.com/jeremy46231/MXW01-catprinter/blob/main/PROTOCOL.md), which documents the related but distinct V5X/MXW01 bulk-raster flow.
 - Additional [Phomymo](https://github.com/transcriptionstream/phomymo) families: TSPL.
 - [phomemo-tools](https://github.com/vivier/phomemo-tools), GPL-3.0, for public Phomemo protocol documentation only. No source code from this project is copied.

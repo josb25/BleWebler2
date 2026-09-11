@@ -9,6 +9,7 @@ import { reduceToChannels } from "../types/ink";
 import { MarklifeDriver } from "../drivers/marklife/marklife-driver";
 import { NiimbotDriver } from "../drivers/niimbot/niimbot-driver";
 import { CatPrinterDriver } from "../drivers/catprinter/catprinter-driver";
+import { CatPrinterMxw01Driver } from "../drivers/catprinter/mxw01-driver";
 import { PhomemoDqDriver } from "../drivers/phomemo/phomemo-dq-driver";
 import { PhomemoM110Driver } from "../drivers/phomemo/phomemo-m110-driver";
 import { PhomemoM02Driver } from "../drivers/phomemo/phomemo-m02-driver";
@@ -49,6 +50,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
         this.registerDriver(new NiimbotDriver());
         this.registerDriver(new CatPrinterDriver('standard'));
         this.registerDriver(new CatPrinterDriver('prefixed'));
+        this.registerDriver(new CatPrinterMxw01Driver());
         this.registerDriver(new PhomemoDqDriver());
         this.registerDriver(new PhomemoM110Driver());
         this.registerDriver(new PhomemoM02Driver());
