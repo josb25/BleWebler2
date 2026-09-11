@@ -8,10 +8,15 @@ const SERVICE = '0000ff00-0000-1000-8000-00805f9b34fb';
 const WRITE = '0000ff02-0000-1000-8000-00805f9b34fb';
 const NOTIFY = '0000ff03-0000-1000-8000-00805f9b34fb';
 
-interface MSeriesModel { model: string; headDots: number; mediaWidthMm: number; }
+interface MSeriesModel {
+    model: string;
+    headDots: number;
+    mediaWidthMm: number;
+    bluetoothNames?: readonly string[];
+}
 const MODELS: readonly MSeriesModel[] = [
     { model: 'M03', headDots: 432, mediaWidthMm: 53 },
-    { model: 'T02', headDots: 384, mediaWidthMm: 48 },
+    { model: 'T02', headDots: 384, mediaWidthMm: 48, bluetoothNames: ['T02E', 'Q02E', 'C02E'] },
     { model: 'M200', headDots: 608, mediaWidthMm: 75 },
     { model: 'M221', headDots: 576, mediaWidthMm: 72 },
     { model: 'M250', headDots: 576, mediaWidthMm: 75 },
@@ -34,6 +39,7 @@ export const PHOMEMO_M_SERIES_MODELS: PrinterModelProfile[] = MODELS.map(model =
     id: `phomemo_${model.model.toLowerCase()}`,
     brand: 'Phomemo',
     model: model.model,
+    aliases: model.bluetoothNames ? [...model.bluetoothNames] : undefined,
     family: 'General M-series ESC/POS-derived',
     supportLevel: 'Untested',
     capabilities: capabilities(model),
@@ -43,7 +49,10 @@ export const PHOMEMO_M_SERIES_MODELS: PrinterModelProfile[] = MODELS.map(model =
 export class PhomemoMSeriesDriver implements IPrinterDriver {
     readonly name = 'Phomemo general M-series';
     readonly driverType = 'hardware' as const;
-    readonly connectionRequirements = { services: [SERVICE], namePrefixes: MODELS.map(model => model.model) };
+    readonly connectionRequirements = {
+        services: [SERVICE],
+        namePrefixes: MODELS.flatMap(model => [model.model, ...(model.bluetoothNames ?? [])])
+    };
     readonly supportedModels = PHOMEMO_M_SERIES_MODELS;
 
     private transport?: IDeviceTransport;
@@ -52,9 +61,7 @@ export class PhomemoMSeriesDriver implements IPrinterDriver {
 
     isCompatible(deviceName: string): boolean {
         const upper = deviceName.trim().toUpperCase();
-        return MODELS.some(({ model }) => upper === model
-            || upper.startsWith(`${model}-`)
-            || upper.startsWith(`${model}_`));
+        return MODELS.some(model => this.matchesModelName(upper, model));
     }
 
     async bindTransport(transport: IDeviceTransport): Promise<void> {
@@ -102,9 +109,15 @@ export class PhomemoMSeriesDriver implements IPrinterDriver {
     }
 
     private matchModel(): MSeriesModel {
-        return MODELS.find(({ model }) => this.deviceName === model
-            || this.deviceName.startsWith(`${model}-`)
-            || this.deviceName.startsWith(`${model}_`)) ?? MODELS[0];
+        return MODELS.find(model => this.matchesModelName(this.deviceName, model)) ?? MODELS[0];
+    }
+
+    private matchesModelName(deviceName: string, model: MSeriesModel): boolean {
+        if ((model.bluetoothNames ?? []).some(name => deviceName === name.toUpperCase())) return true;
+        const canonical = model.model.toUpperCase();
+        return deviceName === canonical
+            || deviceName.startsWith(`${canonical}-`)
+            || deviceName.startsWith(`${canonical}_`);
     }
 
     private requireTransport(): IDeviceTransport {
@@ -129,4 +142,3 @@ export class PhomemoMSeriesDriver implements IPrinterDriver {
         }
     }
 }
-

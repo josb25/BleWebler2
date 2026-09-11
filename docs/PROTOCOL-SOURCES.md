@@ -130,6 +130,7 @@ Implementation: `packages/core/src/drivers/phomemo/phomemo-m-series-driver.ts`
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
 | [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | FF00 GATT transport, M03/T02/M200/M221/M250/M260 model widths, initialise/heat/density/raster/feed order and 128-byte pacing. Protocol facts only; no source code copied. |
+| [Dejniel/TiMini-Print](https://github.com/Dejniel/TiMini-Print/tree/a9a456c4243132bad52c500e39bdec221fe98db9) | `a9a456c`, Apache-2.0 | Exact T02-family Bluetooth-name aliases T02E, Q02E and C02E, plus explicit exclusions for suffixed alias names and unrelated GT02/YT02 devices. Catalogue facts only; no source code copied. |
 
 M220 is intentionally excluded from this driver: captured protocol
 documentation groups it with M110/M120 and BleWebler2 follows that stronger
