@@ -79,6 +79,11 @@ export type PhomemoTsplDriver = _PhomemoTsplDriver;
 export const PhomemoTsplDriver = _PhomemoTsplDriver;
 export { PHOMEMO_TSPL_MODELS };
 
+import { OrgstaS001Driver as _OrgstaS001Driver, ORGSTA_S001_MODELS } from "./drivers/yk/orgsta-s001-driver";
+export type OrgstaS001Driver = _OrgstaS001Driver;
+export const OrgstaS001Driver = _OrgstaS001Driver;
+export { ORGSTA_S001_MODELS };
+
 import { NiimbotDriver as _NiimbotDriver } from "./drivers/niimbot/niimbot-driver";
 export type NiimbotDriver = _NiimbotDriver;
 export const NiimbotDriver = _NiimbotDriver;

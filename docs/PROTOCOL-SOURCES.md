@@ -180,6 +180,21 @@ The TSPL encoder is written from the vendor command specification. It uses the
 existing transport abstraction, so USB and native Bluetooth Classic can carry
 the same byte stream; Web Bluetooth cannot reach a Classic-only device.
 
+## Orgsta S001 / YK Astra P1
+
+Implementation: `packages/core/src/drivers/yk/orgsta-s001-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [Dejniel/TiMini-Print](https://github.com/Dejniel/TiMini-Print/tree/a9a456c4243132bad52c500e39bdec221fe98db9) | `a9a456c`, Apache-2.0 | S001 advertising name, SPP transport, 96-dot head with six-dot left padding, 203 dpi, density mapping, YK frame fields, four-row raster slices and plain/tag/black-tag feed recipes. Protocol facts only; no source code copied. |
+| [TP6-S hardware report](https://fr.linkedin.com/posts/james-lecocq-17927533b_github-thaoliatp6-thermalprinter-an-activity-7490849213455585281-jQio) | public hardware report | Independently corroborates the `64 command sequence length payload 00000000 9B` frame shape and demonstrates that GATT UUIDs vary among YK-framed hardware. No implementation code used. |
+
+The implementation is a fresh TypeScript expression of documented packet facts.
+It deliberately enables only raw serial transports, including Android Bluetooth
+Classic/SPP. No S001 GATT service and characteristic pair has been verified, so
+Web Bluetooth is rejected with an actionable error instead of guessing UUIDs
+from another YK-framed printer.
+
 ## Researched but not yet implemented
 
 - [phomemo-tools](https://github.com/vivier/phomemo-tools), GPL-3.0, for public Phomemo protocol documentation only. No source code from this project is copied.

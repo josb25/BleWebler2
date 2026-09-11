@@ -11,6 +11,7 @@ import { IDeviceTransport, BluetoothLEScanFilter, TransportEventMap } from "./tr
  */
 export class NodeBleTransport extends EventEmitter<TransportEventMap> implements IDeviceTransport {
     public readonly type = "NodeBle";
+    public readonly filterType = 'bluetooth-le' as const;
 
     private device?: Peripheral;
 

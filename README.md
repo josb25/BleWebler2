@@ -39,6 +39,7 @@ BleWebler2 includes drivers for:
 | Catprinter V5G | YT01/MX/BQ-family `51 78` dot-raster models and rebrands (experimental) |
 | Catprinter V5C | YTB01 `56 88` row-raster printer with notification flow control (experimental) |
 | Funny Print LX | LX-D01–LX-D09 / BH-01 authenticated raster printers (experimental) |
+| Orgsta S001 | S001 YK-framed 90-dot label printer over Bluetooth Classic/SPP or raw serial (experimental) |
 | Phomemo P12/A30 | P12/P12 Pro/A30 tape protocol with response-paced setup (experimental) |
 | Virtual printer | Complete print workflow without physical hardware |
 

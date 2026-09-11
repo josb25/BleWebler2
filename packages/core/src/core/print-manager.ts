@@ -20,6 +20,7 @@ import { PhomemoMSeriesDriver } from "../drivers/phomemo/phomemo-m-series-driver
 import { PhomemoP12Driver } from "../drivers/phomemo/phomemo-p12-driver";
 import { PhomemoM04Driver } from "../drivers/phomemo/phomemo-m04-driver";
 import { PhomemoTsplDriver } from "../drivers/phomemo/phomemo-tspl-driver";
+import { OrgstaS001Driver } from "../drivers/yk/orgsta-s001-driver";
 import { DummyDriver } from "../drivers/dummy/dummy-driver";
 
 export interface PrintManagerEvents {
@@ -65,6 +66,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
         this.registerDriver(new PhomemoP12Driver());
         this.registerDriver(new PhomemoM04Driver());
         this.registerDriver(new PhomemoTsplDriver());
+        this.registerDriver(new OrgstaS001Driver());
         // Dummy is intentionally last because it accepts any virtual device.
         this.registerDriver(new DummyDriver());
     }

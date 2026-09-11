@@ -8,6 +8,7 @@ import { BleClient, RequestBleDeviceOptions } from "@capacitor-community/bluetoo
  */
 export class CapacitorBleTransport extends EventEmitter<TransportEventMap> implements IDeviceTransport {
     public readonly type = "Bluetooth-Capacitor";
+    public readonly filterType = 'bluetooth-le' as const;
     private deviceId: string | null = null;
     private deviceName: string | undefined;
     private initialized = false;

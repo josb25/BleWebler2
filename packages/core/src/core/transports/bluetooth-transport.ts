@@ -6,6 +6,7 @@ import { IDeviceTransport, BluetoothLEScanFilter, TransportEventMap } from "./tr
  */
 export class UniversalBluetoothTransport extends EventEmitter<TransportEventMap> implements IDeviceTransport {
     public readonly type = "Bluetooth";
+    public readonly filterType = 'bluetooth-le' as const;
 
     private device?: BluetoothDevice;
     private server?: BluetoothRemoteGATTServer;
