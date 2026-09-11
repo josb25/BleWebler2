@@ -32,6 +32,7 @@ BleWebler2 includes drivers for:
 | Marklife | P11/P12/P15 family and compatible protocol variants |
 | Niimbot | Models supported by `@mmote/niimbluelib` 0.0.1-alpha.42 |
 | Catprinter / Tiny | GB/GT/YT/MX pocket printers using the `51 78` or `12 51 78` dialect (experimental) |
+| Phomemo D/Q | D30/D30S/D35/D50/D110 and Q30/Q30S/Q31/Q32 rotated-raster models (experimental) |
 | Virtual printer | Complete print workflow without physical hardware |
 
 Compatibility can vary by model and firmware. For useful hardware reports, include the exact model, firmware version, platform, and connection type.

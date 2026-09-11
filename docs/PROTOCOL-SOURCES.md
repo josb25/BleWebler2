@@ -26,9 +26,22 @@ The TypeScript implementation in BleWebler2 was written for its existing
 derived from the public byte format and independently reproduced by the sources
 above.
 
+## Phomemo D/Q rotated ESC/POS
+
+Implementation: `packages/core/src/drivers/phomemo`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | FF00/FF02/FF03 GATT layout, D/Q model grouping, 128-byte pacing, heat-time table, media selection, clockwise raster orientation, GS v 0 framing and end command. |
+| [Phomemo D35 product page](https://phomemo.com/ja-ca/products/only-canada-d35-portable-bluetooth-labels-maker) | vendor documentation | 6–15 mm stock range and 203 dpi specification. |
+| [Phomemo D50 media catalogue](https://phomemo.com/products/d50-labels-collection) | vendor documentation | 16–24 mm stock range. |
+
+The implementation is a fresh TypeScript expression of the documented wire
+facts. No third-party implementation files or assets are included. The driver
+is explicitly marked untested pending reports or captures from physical units.
+
 ## Researched but not yet implemented
 
 - [MXW01 protocol specification](https://github.com/jeremy46231/MXW01-catprinter/blob/main/PROTOCOL.md), which documents the related but distinct V5X/MXW01 bulk-raster flow.
-- [Phomymo](https://github.com/transcriptionstream/phomymo), MIT, for Phomemo model groupings and Web Bluetooth protocol research.
+- Additional [Phomymo](https://github.com/transcriptionstream/phomymo) families: M02, M04, M110, generic M-series, P12/A30 and TSPL.
 - [phomemo-tools](https://github.com/vivier/phomemo-tools), GPL-3.0, for public Phomemo protocol documentation only. No source code from this project is copied.
-

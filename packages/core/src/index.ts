@@ -24,6 +24,11 @@ export type CatPrinterDriver = _CatPrinterDriver;
 export const CatPrinterDriver = _CatPrinterDriver;
 export { CATPRINTER_MODELS };
 
+import { PhomemoDqDriver as _PhomemoDqDriver, PHOMEMO_DQ_MODELS } from "./drivers/phomemo/phomemo-dq-driver";
+export type PhomemoDqDriver = _PhomemoDqDriver;
+export const PhomemoDqDriver = _PhomemoDqDriver;
+export { PHOMEMO_DQ_MODELS };
+
 import { NiimbotDriver as _NiimbotDriver } from "./drivers/niimbot/niimbot-driver";
 export type NiimbotDriver = _NiimbotDriver;
 export const NiimbotDriver = _NiimbotDriver;
