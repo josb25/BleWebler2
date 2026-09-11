@@ -47,7 +47,7 @@ Implementation: `packages/core/src/drivers/phomemo`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
-| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | FF00/FF02/FF03 GATT layout, D/Q model grouping, 128-byte pacing, heat-time table, media selection, clockwise raster orientation, GS v 0 framing and end command. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | FF00/FF02/FF03 GATT layout, D/Q model grouping, 128-byte pacing, heat-time table, media selection, clockwise raster orientation, GS v 0 framing and end command. Protocol facts only; no source code copied. |
 | [Phomemo D35 product page](https://phomemo.com/ja-ca/products/only-canada-d35-portable-bluetooth-labels-maker) | vendor documentation | 6–15 mm stock range and 203 dpi specification. |
 | [Phomemo D50 media catalogue](https://phomemo.com/products/d50-labels-collection) | vendor documentation | 16–24 mm stock range. |
 
@@ -62,7 +62,7 @@ Implementation: `packages/core/src/drivers/phomemo/phomemo-m110-driver.ts`
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
 | [phomemo-tools protocol documentation](https://github.com/vivier/phomemo-tools/blob/master/README.md#5-protocol-for-m110m120m220) | public documentation, GPL-3.0 | Captured speed/density ranges, three media values, GS v 0 dimensions, 43-byte M110 sample width, footer, and the M110/M120/M220 family association. Protocol facts only; no GPL source code copied. |
-| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | FF00/FF02/FF03 GATT layout, BLE pacing, model metadata and an independent implementation of the job sequence. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | FF00/FF02/FF03 GATT layout, BLE pacing, model metadata and an independent implementation of the job sequence. Protocol facts only; no source code copied. |
 
 The 344-dot M110/M120 width follows the captured 43-byte row in the protocol
 documentation. Public implementations disagree and one uses 384 dots, so the
@@ -76,7 +76,7 @@ Implementation: `packages/core/src/drivers/phomemo/phomemo-m02-driver.ts`
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
 | [phomemo-tools M02 protocol documentation](https://github.com/vivier/phomemo-tools/blob/master/README.md#4-protocol-for-m02) | public documentation, GPL-3.0 | M02/M02S/M02 Pro support, GS v 0 framing, MSB-first 48-byte rows and captured status/footer facts. Protocol facts only; no GPL source code copied. |
-| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | M02 wake prefix, FF00 GATT transport, density setup, 128-byte pacing, minimal feed and M02X/Pro model metadata. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | M02 wake prefix, FF00 GATT transport, density setup, 128-byte pacing, minimal feed and M02X/Pro model metadata. Protocol facts only; no source code copied. |
 
 The Pro profile uses 78 whole bytes (624 dots) per row. A public README calls
 the geometry 626 dots, which cannot be represented by that row width; the
@@ -88,7 +88,7 @@ Implementation: `packages/core/src/drivers/phomemo/phomemo-m-series-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
-| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | FF00 GATT transport, M03/T02/M200/M221/M250/M260 model widths, initialise/heat/density/raster/feed order and 128-byte pacing. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | FF00 GATT transport, M03/T02/M200/M221/M250/M260 model widths, initialise/heat/density/raster/feed order and 128-byte pacing. Protocol facts only; no source code copied. |
 
 M220 is intentionally excluded from this driver: captured protocol
 documentation groups it with M110/M120 and BleWebler2 follows that stronger
@@ -101,7 +101,7 @@ Implementation: `packages/core/src/drivers/phomemo/phomemo-p12-driver.ts`
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
 | [soburi/phomemo_p12](https://github.com/soburi/phomemo_p12/tree/3c1bf0d4237c92321a51f600c66bdc0b5640e529) | `3c1bf0d`, MIT | P12 setup exchange and response pacing, raster flow and tape-feed behaviour. |
-| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | A30 association and 120-dot profile, FF00 GATT transport, setup packet grouping and BLE pacing. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | A30 association and 120-dot profile, FF00 GATT transport, setup packet grouping and BLE pacing. Protocol facts only; no source code copied. |
 
 The retail name `P12` is also used by incompatible Marklife hardware. Automatic
 detection therefore refuses to choose when both name and shared FF00 service
@@ -113,7 +113,7 @@ Implementation: `packages/core/src/drivers/phomemo/phomemo-m04-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
-| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | FF00 GATT transport, captured proprietary setup commands, raw compression mode, 53/80/110 mm raster widths, 256-byte pacing and feed sequence. Its M04 implementation records successful M04AS hardware testing in issue 23. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | FF00 GATT transport, captured proprietary setup commands, raw compression mode, 53/80/110 mm raster widths, 256-byte pacing and feed sequence. Its M04 implementation records successful M04AS hardware testing in issue 23. Protocol facts only; no source code copied. |
 | [Phomemo M04AS product documentation](https://phomemo.com/products/m04as) | vendor documentation | M04AS media sizes and 300/304 dpi product specification. |
 
 The driver advertises the widest mechanism to the editor and chooses one of the
