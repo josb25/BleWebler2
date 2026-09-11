@@ -17,10 +17,19 @@ class MockTransport extends EventEmitter<TransportEventMap> implements IDeviceTr
 }
 
 describe('PhomemoM02Driver', () => {
-    it('matches explicit models and the documented Mr.in advertising name', () => {
+    it('matches exact advertising names without claiming suffixed lookalikes', () => {
         const driver = new PhomemoM02Driver();
         expect(driver.isCompatible('M02X-1234')).toBe(true);
         expect(driver.isCompatible('Mr.in_M02')).toBe(true);
+        expect(driver.isCompatible('M02C')).toBe(true);
+        expect(driver.isCompatible('M02D')).toBe(true);
+        expect(driver.isCompatible('m02e')).toBe(true);
+        expect(driver.isCompatible('MR2')).toBe(true);
+        expect(driver.isCompatible('M02A')).toBe(true);
+        expect(driver.isCompatible('KP-Q1')).toBe(true);
+        expect(driver.isCompatible('sandymaro')).toBe(true);
+        expect(driver.isCompatible('KP-Q1-1234')).toBe(false);
+        expect(driver.isCompatible('sandymaro_1234')).toBe(false);
         expect(driver.isCompatible('M03')).toBe(false);
     });
 
@@ -29,6 +38,18 @@ describe('PhomemoM02Driver', () => {
         await driver.bindTransport(new MockTransport('M02PRO'));
         expect(driver.getCapabilities().canvasHeightPx).toBe(624);
         expect(driver.getCapabilities().dpmm).toBe(12);
+    });
+
+    it('maps retail aliases to the correct raster geometry', async () => {
+        const xDriver = new PhomemoM02Driver();
+        await xDriver.bindTransport(new MockTransport('KP-Q1'));
+        expect(xDriver.getCapabilities().canvasHeightPx).toBe(384);
+        expect(xDriver.getCapabilities().dpmm).toBe(8);
+
+        const proDriver = new PhomemoM02Driver();
+        await proDriver.bindTransport(new MockTransport('sandymaro'));
+        expect(proDriver.getCapabilities().canvasHeightPx).toBe(624);
+        expect(proDriver.getCapabilities().dpmm).toBe(12);
     });
 
     it('emits wake, setup, raster and minimal feed in order', async () => {
@@ -46,4 +67,3 @@ describe('PhomemoM02Driver', () => {
         expect([...transport.writes[5]]).toEqual([0x1b, 0x4a, 0x08]);
     });
 });
-

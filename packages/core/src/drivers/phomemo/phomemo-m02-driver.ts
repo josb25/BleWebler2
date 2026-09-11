@@ -8,13 +8,19 @@ const SERVICE = '0000ff00-0000-1000-8000-00805f9b34fb';
 const WRITE = '0000ff02-0000-1000-8000-00805f9b34fb';
 const NOTIFY = '0000ff03-0000-1000-8000-00805f9b34fb';
 
-interface M02Model { model: string; headDots: number; dpmm: number; mediaWidthMm: number; }
+interface M02Model {
+    model: string;
+    headDots: number;
+    dpmm: number;
+    mediaWidthMm: number;
+    bluetoothNames?: readonly string[];
+}
 
 const MODELS: readonly M02Model[] = [
-    { model: 'M02', headDots: 384, dpmm: 8, mediaWidthMm: 48 },
-    { model: 'M02S', headDots: 384, dpmm: 8, mediaWidthMm: 48 },
-    { model: 'M02X', headDots: 384, dpmm: 8, mediaWidthMm: 48 },
-    { model: 'M02 Pro', headDots: 624, dpmm: 12, mediaWidthMm: 53 }
+    { model: 'M02', headDots: 384, dpmm: 8, mediaWidthMm: 48, bluetoothNames: ['M02C', 'Mr.in', 'Mr.in_M02'] },
+    { model: 'M02S', headDots: 384, dpmm: 8, mediaWidthMm: 48, bluetoothNames: ['Mr.in_M02S'] },
+    { model: 'M02X', headDots: 384, dpmm: 8, mediaWidthMm: 48, bluetoothNames: ['M02D', 'M02E', 'MR2', 'M02A', 'KP-Q1'] },
+    { model: 'M02 Pro', headDots: 624, dpmm: 12, mediaWidthMm: 53, bluetoothNames: ['M02PRO', 'sandymaro'] }
 ];
 
 function capabilities(model: M02Model): PrinterCapabilities {
@@ -33,6 +39,7 @@ export const PHOMEMO_M02_MODELS: PrinterModelProfile[] = MODELS.map(model => ({
     id: `phomemo_${model.model.toLowerCase().replace(/\s+/g, '_')}`,
     brand: 'Phomemo',
     model: model.model,
+    aliases: model.bluetoothNames ? [...model.bluetoothNames] : undefined,
     family: 'M02 prefixed ESC/POS',
     supportLevel: 'Untested',
     capabilities: capabilities(model),
@@ -44,7 +51,7 @@ export class PhomemoM02Driver implements IPrinterDriver {
     readonly driverType = 'hardware' as const;
     readonly connectionRequirements = {
         services: [SERVICE],
-        namePrefixes: ['M02', 'M02S', 'M02X', 'M02 PRO', 'M02PRO', 'Mr.in_M02']
+        namePrefixes: MODELS.flatMap(model => [model.model, ...(model.bluetoothNames ?? [])])
     };
     readonly supportedModels = PHOMEMO_M02_MODELS;
 
@@ -53,9 +60,7 @@ export class PhomemoM02Driver implements IPrinterDriver {
 
     isCompatible(deviceName: string): boolean {
         const upper = deviceName.trim().toUpperCase();
-        if (upper.startsWith('MR.IN_M02')) return true;
-        return ['M02 PRO', 'M02PRO', 'M02S', 'M02X', 'M02'].some(name =>
-            upper === name || upper.startsWith(`${name}-`) || upper.startsWith(`${name}_`));
+        return MODELS.some(model => this.matchesModelName(upper, model));
     }
 
     async bindTransport(transport: IDeviceTransport): Promise<void> {
@@ -97,10 +102,15 @@ export class PhomemoM02Driver implements IPrinterDriver {
     }
 
     private matchModel(): M02Model {
-        if (this.deviceName.includes('PRO')) return MODELS[3];
-        if (this.deviceName.startsWith('M02S')) return MODELS[1];
-        if (this.deviceName.startsWith('M02X')) return MODELS[2];
-        return MODELS[0];
+        return MODELS.find(model => this.matchesModelName(this.deviceName, model)) ?? MODELS[0];
+    }
+
+    private matchesModelName(deviceName: string, model: M02Model): boolean {
+        if ((model.bluetoothNames ?? []).some(name => deviceName === name.toUpperCase())) return true;
+        const canonical = model.model.toUpperCase();
+        return deviceName === canonical
+            || deviceName.startsWith(`${canonical}-`)
+            || deviceName.startsWith(`${canonical}_`);
     }
 
     private requireTransport(): IDeviceTransport {

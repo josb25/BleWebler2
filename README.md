@@ -34,7 +34,7 @@ BleWebler2 includes drivers for:
 | Catprinter / Tiny | GB/GT/YT/MX pocket printers using the `51 78` or `12 51 78` dialect (experimental) |
 | Phomemo D/Q | D30/D30S/D35/D50/D110 and Q30/Q30S/Q31/Q32 rotated-raster models (experimental) |
 | Phomemo M110 | M110/M110S/M120/M220 ESC/POS-derived label printers (experimental) |
-| Phomemo M02 | M02/M02S/M02X/M02 Pro pocket printers using the `10 FF FE 01` wake prefix (experimental) |
+| Phomemo M02 | M02/M02S/M02X/M02 Pro pocket printers and known advertising aliases using the `10 FF FE 01` wake prefix (experimental) |
 | Phomemo M-series | M03/T02 (including T02E/Q02E/C02E)/M200/M221/M250/M260 raw ESC/POS-raster models (experimental) |
 | Catprinter V5G | YT01/MX/BQ-family `51 78` dot-raster models and rebrands (experimental) |
 | Catprinter V5C | YTB01 `56 88` row-raster printer with notification flow control (experimental) |

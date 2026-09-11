@@ -118,6 +118,7 @@ Implementation: `packages/core/src/drivers/phomemo/phomemo-m02-driver.ts`
 | --- | --- | --- |
 | [phomemo-tools M02 protocol documentation](https://github.com/vivier/phomemo-tools/blob/master/README.md#4-protocol-for-m02) | public documentation, GPL-3.0 | M02/M02S/M02 Pro support, GS v 0 framing, MSB-first 48-byte rows and captured status/footer facts. Protocol facts only; no GPL source code copied. |
 | [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | M02 wake prefix, FF00 GATT transport, density setup, 128-byte pacing, minimal feed and M02X/Pro model metadata. Protocol facts only; no source code copied. |
+| [Dejniel/TiMini-Print](https://github.com/Dejniel/TiMini-Print/tree/a9a456c4243132bad52c500e39bdec221fe98db9) | `a9a456c`, Apache-2.0 | Exact advertising-name mappings for the M02, M02S, M02X and M02 Pro profiles. Catalogue facts only; no source code copied. |
 
 The Pro profile uses 78 whole bytes (624 dots) per row. A public README calls
 the geometry 626 dots, which cannot be represented by that row width; the
