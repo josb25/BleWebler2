@@ -36,6 +36,7 @@ BleWebler2 includes drivers for:
 | Phomemo M110 | M110/M110S/M120/M220 ESC/POS-derived label printers (experimental) |
 | Phomemo M02 | M02/M02S/M02X/M02 Pro pocket printers using the `10 FF FE 01` wake prefix (experimental) |
 | Phomemo M-series | M03/T02/M200/M221/M250/M260 raw ESC/POS-raster models (experimental) |
+| Phomemo P12/A30 | P12/P12 Pro/A30 tape protocol with response-paced setup (experimental) |
 | Virtual printer | Complete print workflow without physical hardware |
 
 Compatibility can vary by model and firmware. For useful hardware reports, include the exact model, firmware version, platform, and connection type.

@@ -79,6 +79,19 @@ M220 is intentionally excluded from this driver: captured protocol
 documentation groups it with M110/M120 and BleWebler2 follows that stronger
 evidence rather than registering the same retail name under two wire protocols.
 
+## Phomemo P12/P12 Pro/A30
+
+Implementation: `packages/core/src/drivers/phomemo/phomemo-p12-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [soburi/phomemo_p12](https://github.com/soburi/phomemo_p12/tree/3c1bf0d4237c92321a51f600c66bdc0b5640e529) | `3c1bf0d`, MIT | P12 setup exchange and response pacing, raster flow and tape-feed behaviour. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | A30 association and 120-dot profile, FF00 GATT transport, setup packet grouping and BLE pacing. |
+
+The retail name `P12` is also used by incompatible Marklife hardware. Automatic
+detection therefore refuses to choose when both name and shared FF00 service
+remain ambiguous; the user must select the Phomemo P12/A30 family explicitly.
+
 ## Researched but not yet implemented
 
 - [MXW01 protocol specification](https://github.com/jeremy46231/MXW01-catprinter/blob/main/PROTOCOL.md), which documents the related but distinct V5X/MXW01 bulk-raster flow.
