@@ -123,7 +123,20 @@ ambiguous Bluetooth drivers for one physical printer. The local implementation
 is a fresh TypeScript expression of the documented wire facts; no third-party
 source or assets are included.
 
+## Phomemo PM-241 / TSPL
+
+Implementation: `packages/core/src/drivers/phomemo/phomemo-tspl-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [TSC TSPL/TSPL2 Programming Manual 3.0](https://fs.tscprinters.com/system/files/31-0000001-00_tspl_tspl2_programming_3_0.pdf) | vendor programming specification | SIZE, GAP, OFFSET, DENSITY, SPEED, DIRECTION, CLS, BITMAP and PRINT syntax; BITMAP dimensions and overwrite mode. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`; conflicting MIT/ISC metadata, no licence file | PM-241/PM-241-BT TSPL association, 102-byte/816-dot raster width, USB use, bitmap polarity and pacing. Protocol facts only; no source code copied. |
+| [Phomemo PM-241-BT support centre](https://phomemo.com/en-ca/pages/pm-241-bt-support-center-1) | vendor documentation | PM-241-BT USB connection and product support identity. |
+
+The TSPL encoder is written from the vendor command specification. It uses the
+existing transport abstraction, so USB and native Bluetooth Classic can carry
+the same byte stream; Web Bluetooth cannot reach a Classic-only device.
+
 ## Researched but not yet implemented
 
-- Additional [Phomymo](https://github.com/transcriptionstream/phomymo) families: TSPL.
 - [phomemo-tools](https://github.com/vivier/phomemo-tools), GPL-3.0, for public Phomemo protocol documentation only. No source code from this project is copied.
