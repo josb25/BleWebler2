@@ -69,6 +69,19 @@ transport contracts. It does not copy TiMini-Print source, LZO compression or
 status-controller code; only the documented packet facts and short conformance
 vectors are used.
 
+## Funny Print LX-D / BH-01
+
+Implementation: `packages/core/src/drivers/catprinter/funny-lx-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [TiMini-Print Funny LX family](https://github.com/Dejniel/TiMini-Print/tree/a9a456c4243132bad52c500e39bdec221fe98db9/timiniprint/protocol/families/funny_lx) | `a9a456c`, Apache-2.0 | FFE6/FFE1/FFE2 GATT layout, status/MAC exchange, CRC-16/XMODEM challenge flow and vectors, darkness command, 384-dot MSB-first raster, 100-byte indexed packets, retry/delay/ready notifications, footer acknowledgement and LX-D/BH-01 name association. |
+
+The TypeScript encoder, authentication state and notification queue are newly
+written against BleWebler2's transport contract. No TiMini-Print source code is
+copied. Support is limited to its hardware-observed direct LX-D variant; other
+Funny Print device types remain excluded.
+
 ## Phomemo D/Q rotated ESC/POS
 
 Implementation: `packages/core/src/drivers/phomemo`
