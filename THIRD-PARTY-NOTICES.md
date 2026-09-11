@@ -2,6 +2,10 @@
 
 BleWebler2's original code is licensed under the [MIT License](LICENSE). The following material is redistributed under separate terms.
 
+Protocol research projects that are referenced but not redistributed are listed
+separately in [docs/PROTOCOL-SOURCES.md](docs/PROTOCOL-SOURCES.md), including
+their licences, pinned revisions, and the protocol facts used.
+
 ## NiimBlueLib
 
 NiimBlueLib is installed from npm as @mmote/niimbluelib.

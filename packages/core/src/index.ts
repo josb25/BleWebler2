@@ -1,6 +1,7 @@
 import { PrintManager as _PrintManager } from "./core/print-manager";
 export type PrintManager = _PrintManager;
 export const PrintManager = _PrintManager;
+export type { PrinterDriverChoice } from "./core/print-manager";
 
 // Interfaces (transport + driver contracts — always safe to import)
 export * from "./core/transports/transport.interface";
@@ -17,6 +18,11 @@ import { MarklifeDriver as _MarklifeDriver, MARKLIFE_PROFILES } from "./drivers/
 export type MarklifeDriver = _MarklifeDriver;
 export const MarklifeDriver = _MarklifeDriver;
 export { MARKLIFE_PROFILES };
+
+import { CatPrinterDriver as _CatPrinterDriver, CATPRINTER_MODELS } from "./drivers/catprinter/catprinter-driver";
+export type CatPrinterDriver = _CatPrinterDriver;
+export const CatPrinterDriver = _CatPrinterDriver;
+export { CATPRINTER_MODELS };
 
 import { NiimbotDriver as _NiimbotDriver } from "./drivers/niimbot/niimbot-driver";
 export type NiimbotDriver = _NiimbotDriver;

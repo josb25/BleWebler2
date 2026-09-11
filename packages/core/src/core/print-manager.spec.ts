@@ -133,6 +133,21 @@ describe('PrintManager', () => {
         await expect(printManager.connect(transport)).rejects.toThrow(/multiple drivers.*First protocol.*Second protocol/i);
     });
 
+    it('allows a user-selected driver when automatic matching is inconclusive', async () => {
+        const first = new MockDriver('FirstName', 'shared-service', 'First protocol');
+        const second = new MockDriver('SecondName', 'shared-service', 'Second protocol');
+        printManager.registerDriver(first);
+        printManager.registerDriver(second);
+
+        const transport = new FastMockTransport('UnknownRebrand', ['shared-service']);
+        const connectedEvent = vi.fn();
+        printManager.on('connected', connectedEvent);
+        await printManager.connect(transport, 'Second protocol');
+
+        expect(connectedEvent).toHaveBeenCalledWith(second);
+        expect(connectedEvent).not.toHaveBeenCalledWith(first);
+    });
+
     it('does not route a generic printer name to an unrelated protocol', async () => {
         const transport = new FastMockTransport(
             'Printer01',
@@ -150,7 +165,7 @@ describe('PrintManager', () => {
         const services = new Set(filters.flatMap(filter => filter.services ?? []));
         expect(services).toContain('0000ff00-0000-1000-8000-00805f9b34fb');
         expect(services).toContain('0000fee0-0000-1000-8000-00805f9b34fb');
-        expect(services).not.toContain('0000ae30-0000-1000-8000-00805f9b34fb');
+        expect(services).toContain('0000ae30-0000-1000-8000-00805f9b34fb');
     });
 
     it('does not pass Bluetooth discovery filters to WebUSB transports', async () => {

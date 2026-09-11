@@ -17,6 +17,7 @@ import {
     type PrinterStatus,
     type LoadedMedia,
     type StatusField,
+    type PrinterDriverChoice,
     PrinterError,
     toPrinterError,
     printBlocker
@@ -106,14 +107,14 @@ export class PrinterSession {
      * platform). `dummyProfile` configures the virtual printer when the Dummy
      * driver ends up matching, so different printheads can be simulated.
      */
-    async connect(transport: IDeviceTransport, dummyProfile?: DummyProfile): Promise<void> {
+    async connect(transport: IDeviceTransport, dummyProfile?: DummyProfile, driverName?: string): Promise<void> {
         if (this.snapshot.state === 'connecting' || this.snapshot.state === 'printing') {
             throw new PrinterError('not-connected', `Cannot connect while ${this.snapshot.state}.`);
         }
         this.pendingDummyProfile = dummyProfile;
         this.update({ state: 'connecting', lastError: undefined });
         try {
-            await this.pm.connect(transport);
+            await this.pm.connect(transport, driverName);
         } catch (err) {
             const e = toPrinterError(err, 'transport');
             // A cancelled chooser is a decision, not a fault. Recording it as
@@ -123,6 +124,11 @@ export class PrinterSession {
             throw e;
         }
         void this.refreshStatus();
+    }
+
+    /** Hardware protocol families available for an explicit connection override. */
+    getDriverChoices(): PrinterDriverChoice[] {
+        return this.pm.getAvailableDriverChoices();
     }
 
     async disconnect(): Promise<void> {

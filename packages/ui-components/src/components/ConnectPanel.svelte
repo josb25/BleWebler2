@@ -23,6 +23,7 @@
     // svelte-ignore state_referenced_locally -- session identity is stable.
     const printer = fromStore(session);
     let dummyProfileIdx = $state(0);
+    let driverOverride = $state('');
     let connectError = $state('');
     let refreshing = $state(false);
     let busyId = $state<string | null>(null);
@@ -31,7 +32,11 @@
         connectError = '';
         busyId = option.id;
         try {
-            await session.connect(option.create(), option.isDummy ? DUMMY_PROFILES[dummyProfileIdx] : undefined);
+            await session.connect(
+                option.create(),
+                option.isDummy ? DUMMY_PROFILES[dummyProfileIdx] : undefined,
+                option.isDummy ? undefined : driverOverride || undefined
+            );
         } catch (err) {
             const e = toPrinterError(err);
             // Cancelling the device chooser is a choice, not a failure. Showing
@@ -62,6 +67,7 @@
     }
 
     const snap = $derived(printer.current);
+    const driverChoices = $derived(session.getDriverChoices());
 
     /**
      * The drawing for what actually answered, once something has. Deliberately
@@ -74,6 +80,18 @@
 
 <div class="panel">
     {#if snap.state === 'disconnected' || snap.state === 'connecting'}
+        <label class="driver-choice">
+            <span>
+                <strong>Printer protocol</strong>
+                <small>Use automatic detection unless your printer is an unknown rebrand.</small>
+            </span>
+            <select bind:value={driverOverride} disabled={snap.state === 'connecting'}>
+                <option value="">Automatic</option>
+                {#each driverChoices as driver (driver.name)}
+                    <option value={driver.name}>{driver.name}</option>
+                {/each}
+            </select>
+        </label>
         <div class="options">
             {#each transports as option (option.id)}
                 <div class="option" class:disabled={!option.available}>
@@ -170,6 +188,24 @@
         flex-direction: column;
         gap: 8px;
     }
+    .driver-choice {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px;
+        background: var(--panel);
+        border-radius: 8px;
+    }
+    .driver-choice span {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .driver-choice small {
+        color: var(--muted);
+        font-size: 12px;
+    }
     .option,
     .connected {
         display: flex;
@@ -235,7 +271,8 @@
     }
     @media (max-width: 520px) {
         .option,
-        .connected {
+        .connected,
+        .driver-choice {
             align-items: flex-start;
             flex-wrap: wrap;
         }
