@@ -21,8 +21,9 @@ export const connectInit = makePacket(0xaa, new Uint8Array([0]));
 export const queryStatus = makePacket(0xa1, new Uint8Array([0]));
 export const beginPrint = makePacket(0xa3, new Uint8Array([1]));
 export const endPrint = makePacket(0xa6, new Uint8Array([0x30, 0x00]));
-export const pauseNotification = makePacket(0xa7, new Uint8Array([1]));
-export const resumeNotification = makePacket(0xa7, new Uint8Array([0]));
+// Notifications set the flag byte to 01; outbound command packets use 00.
+export const pauseNotification = new Uint8Array([0x56, 0x88, 0xa7, 0x01, 0x01, 0x00, 0x01, 0x07, 0xff]);
+export const resumeNotification = new Uint8Array([0x56, 0x88, 0xa7, 0x01, 0x01, 0x00, 0x00, 0x00, 0xff]);
 
 export function settings(level: number, textMode = false): Uint8Array {
     const density = Math.max(1, Math.min(3, Math.round(level)));

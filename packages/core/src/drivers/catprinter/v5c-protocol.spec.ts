@@ -16,8 +16,8 @@ describe('Catprinter V5C protocol', () => {
         expect([...queryStatus]).toEqual([0x56, 0x88, 0xa1, 0, 1, 0, 0, 0, 0xff]);
         expect([...beginPrint]).toEqual([0x56, 0x88, 0xa3, 0, 1, 0, 1, 7, 0xff]);
         expect([...endPrint]).toEqual([0x56, 0x88, 0xa6, 0, 2, 0, 0x30, 0, 0xf9, 0xff]);
-        expect([...pauseNotification]).toEqual([0x56, 0x88, 0xa7, 0, 1, 0, 1, 7, 0xff]);
-        expect([...resumeNotification]).toEqual([0x56, 0x88, 0xa7, 0, 1, 0, 0, 0, 0xff]);
+        expect([...pauseNotification]).toEqual([0x56, 0x88, 0xa7, 1, 1, 0, 1, 7, 0xff]);
+        expect([...resumeNotification]).toEqual([0x56, 0x88, 0xa7, 1, 1, 0, 0, 0, 0xff]);
     });
 
     it('encodes three density states and image mode', () => {
