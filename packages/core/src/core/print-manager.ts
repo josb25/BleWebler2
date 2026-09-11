@@ -11,6 +11,7 @@ import { NiimbotDriver } from "../drivers/niimbot/niimbot-driver";
 import { CatPrinterDriver } from "../drivers/catprinter/catprinter-driver";
 import { CatPrinterMxw01Driver } from "../drivers/catprinter/mxw01-driver";
 import { CatPrinterV5gDriver } from "../drivers/catprinter/v5g-driver";
+import { CatPrinterV5cDriver } from "../drivers/catprinter/v5c-driver";
 import { PhomemoDqDriver } from "../drivers/phomemo/phomemo-dq-driver";
 import { PhomemoM110Driver } from "../drivers/phomemo/phomemo-m110-driver";
 import { PhomemoM02Driver } from "../drivers/phomemo/phomemo-m02-driver";
@@ -54,6 +55,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
         this.registerDriver(new CatPrinterDriver('prefixed'));
         this.registerDriver(new CatPrinterMxw01Driver());
         this.registerDriver(new CatPrinterV5gDriver());
+        this.registerDriver(new CatPrinterV5cDriver());
         this.registerDriver(new PhomemoDqDriver());
         this.registerDriver(new PhomemoM110Driver());
         this.registerDriver(new PhomemoM02Driver());

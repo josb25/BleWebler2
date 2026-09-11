@@ -56,6 +56,19 @@ ambiguous and the user-facing driver-family choice is the fallback. The basic
 monochrome implementation is newly written for BleWebler2; TiMini-Print source
 code, adaptive thermal-control logic and compression code are not copied.
 
+## Catprinter V5C / YTB01 `56 88`
+
+Implementation: `packages/core/src/drivers/catprinter/v5c-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [TiMini-Print](https://github.com/Dejniel/TiMini-Print/tree/a9a456c4243132bad52c500e39bdec221fe98db9) | `a9a456c`, Apache-2.0 | YTB01 family association, `56 88` framing, CRC, connection/status packets, three-state density and mode settings, A4 raw rows, A6 finish command, AE30 endpoints, pacing and pause/resume notifications. |
+
+The monochrome implementation was written against BleWebler2's driver and
+transport contracts. It does not copy TiMini-Print source, LZO compression or
+status-controller code; only the documented packet facts and short conformance
+vectors are used.
+
 ## Phomemo D/Q rotated ESC/POS
 
 Implementation: `packages/core/src/drivers/phomemo`
