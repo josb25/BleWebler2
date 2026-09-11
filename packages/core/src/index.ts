@@ -34,6 +34,11 @@ export type PhomemoM110Driver = _PhomemoM110Driver;
 export const PhomemoM110Driver = _PhomemoM110Driver;
 export { PHOMEMO_M110_MODELS };
 
+import { PhomemoM02Driver as _PhomemoM02Driver, PHOMEMO_M02_MODELS } from "./drivers/phomemo/phomemo-m02-driver";
+export type PhomemoM02Driver = _PhomemoM02Driver;
+export const PhomemoM02Driver = _PhomemoM02Driver;
+export { PHOMEMO_M02_MODELS };
+
 import { NiimbotDriver as _NiimbotDriver } from "./drivers/niimbot/niimbot-driver";
 export type NiimbotDriver = _NiimbotDriver;
 export const NiimbotDriver = _NiimbotDriver;

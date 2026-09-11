@@ -54,6 +54,19 @@ documentation. Public implementations disagree and one uses 384 dots, so the
 profiles remain explicitly untested. M220 uses its separately documented
 72 mm/576-dot model width with the same command family.
 
+## Phomemo M02
+
+Implementation: `packages/core/src/drivers/phomemo/phomemo-m02-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [phomemo-tools M02 protocol documentation](https://github.com/vivier/phomemo-tools/blob/master/README.md#4-protocol-for-m02) | public documentation, GPL-3.0 | M02/M02S/M02 Pro support, GS v 0 framing, MSB-first 48-byte rows and captured status/footer facts. Protocol facts only; no GPL source code copied. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | M02 wake prefix, FF00 GATT transport, density setup, 128-byte pacing, minimal feed and M02X/Pro model metadata. |
+
+The Pro profile uses 78 whole bytes (624 dots) per row. A public README calls
+the geometry 626 dots, which cannot be represented by that row width; the
+protocol-aligned value is used pending hardware validation.
+
 ## Researched but not yet implemented
 
 - [MXW01 protocol specification](https://github.com/jeremy46231/MXW01-catprinter/blob/main/PROTOCOL.md), which documents the related but distinct V5X/MXW01 bulk-raster flow.
