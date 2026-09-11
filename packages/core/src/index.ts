@@ -29,6 +29,11 @@ export type CatPrinterMxw01Driver = _CatPrinterMxw01Driver;
 export const CatPrinterMxw01Driver = _CatPrinterMxw01Driver;
 export { CATPRINTER_MXW01_MODELS };
 
+import { CatPrinterV5gDriver as _CatPrinterV5gDriver, CATPRINTER_V5G_MODELS } from "./drivers/catprinter/v5g-driver";
+export type CatPrinterV5gDriver = _CatPrinterV5gDriver;
+export const CatPrinterV5gDriver = _CatPrinterV5gDriver;
+export { CATPRINTER_V5G_MODELS };
+
 import { PhomemoDqDriver as _PhomemoDqDriver, PHOMEMO_DQ_MODELS } from "./drivers/phomemo/phomemo-dq-driver";
 export type PhomemoDqDriver = _PhomemoDqDriver;
 export const PhomemoDqDriver = _PhomemoDqDriver;

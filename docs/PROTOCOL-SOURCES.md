@@ -41,6 +41,21 @@ AE01 but raw image rows on AE03, and its `22 21` framing is incompatible with
 both Tiny dialects. The implementation is newly written against BleWebler2's
 driver contracts; no third-party source or assets are redistributed.
 
+## Catprinter V5G `51 78`
+
+Implementation: `packages/core/src/drivers/catprinter/v5g-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [TiMini-Print](https://github.com/Dejniel/TiMini-Print/tree/a9a456c4243132bad52c500e39bdec221fe98db9) | `a9a456c`, Apache-2.0 | V5G packet prefix, F2 density payload, job command order, A2 LSB-first 384-dot rows, AE30/AE01/AE02 transport, pacing and advertised-name family associations. |
+
+V5G shares the `51 78` envelope and many advertised names with hardware that
+uses the Tiny or V5X command flow. Those observations cannot identify one wire
+protocol by name and GATT service alone, so automatic selection remains
+ambiguous and the user-facing driver-family choice is the fallback. The basic
+monochrome implementation is newly written for BleWebler2; TiMini-Print source
+code, adaptive thermal-control logic and compression code are not copied.
+
 ## Phomemo D/Q rotated ESC/POS
 
 Implementation: `packages/core/src/drivers/phomemo`
