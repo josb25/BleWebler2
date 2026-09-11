@@ -67,6 +67,18 @@ The Pro profile uses 78 whole bytes (624 dots) per row. A public README calls
 the geometry 626 dots, which cannot be represented by that row width; the
 protocol-aligned value is used pending hardware validation.
 
+## Phomemo general M-series
+
+Implementation: `packages/core/src/drivers/phomemo/phomemo-m-series-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | FF00 GATT transport, M03/T02/M200/M221/M250/M260 model widths, initialise/heat/density/raster/feed order and 128-byte pacing. |
+
+M220 is intentionally excluded from this driver: captured protocol
+documentation groups it with M110/M120 and BleWebler2 follows that stronger
+evidence rather than registering the same retail name under two wire protocols.
+
 ## Researched but not yet implemented
 
 - [MXW01 protocol specification](https://github.com/jeremy46231/MXW01-catprinter/blob/main/PROTOCOL.md), which documents the related but distinct V5X/MXW01 bulk-raster flow.

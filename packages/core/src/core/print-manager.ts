@@ -12,6 +12,7 @@ import { CatPrinterDriver } from "../drivers/catprinter/catprinter-driver";
 import { PhomemoDqDriver } from "../drivers/phomemo/phomemo-dq-driver";
 import { PhomemoM110Driver } from "../drivers/phomemo/phomemo-m110-driver";
 import { PhomemoM02Driver } from "../drivers/phomemo/phomemo-m02-driver";
+import { PhomemoMSeriesDriver } from "../drivers/phomemo/phomemo-m-series-driver";
 import { DummyDriver } from "../drivers/dummy/dummy-driver";
 
 export interface PrintManagerEvents {
@@ -49,6 +50,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
         this.registerDriver(new PhomemoDqDriver());
         this.registerDriver(new PhomemoM110Driver());
         this.registerDriver(new PhomemoM02Driver());
+        this.registerDriver(new PhomemoMSeriesDriver());
         // Dummy is intentionally last because it accepts any virtual device.
         this.registerDriver(new DummyDriver());
     }
