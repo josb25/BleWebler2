@@ -92,8 +92,24 @@ The retail name `P12` is also used by incompatible Marklife hardware. Automatic
 detection therefore refuses to choose when both name and shared FF00 service
 remain ambiguous; the user must select the Phomemo P12/A30 family explicitly.
 
+## Phomemo M04S/M04AS
+
+Implementation: `packages/core/src/drivers/phomemo/phomemo-m04-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | FF00 GATT transport, captured proprietary setup commands, raw compression mode, 53/80/110 mm raster widths, 256-byte pacing and feed sequence. Its M04 implementation records successful M04AS hardware testing in issue 23. |
+| [Phomemo M04AS product documentation](https://phomemo.com/products/m04as) | vendor documentation | M04AS media sizes and 300/304 dpi product specification. |
+
+The driver advertises the widest mechanism to the editor and chooses one of the
+captured 600/896/1232-dot raster profiles from the paper selected for each job.
+This keeps the protocol decision inside the driver without creating three
+ambiguous Bluetooth drivers for one physical printer. The local implementation
+is a fresh TypeScript expression of the documented wire facts; no third-party
+source or assets are included.
+
 ## Researched but not yet implemented
 
 - [MXW01 protocol specification](https://github.com/jeremy46231/MXW01-catprinter/blob/main/PROTOCOL.md), which documents the related but distinct V5X/MXW01 bulk-raster flow.
-- Additional [Phomymo](https://github.com/transcriptionstream/phomymo) families: M02, M04, M110, generic M-series, P12/A30 and TSPL.
+- Additional [Phomymo](https://github.com/transcriptionstream/phomymo) families: TSPL.
 - [phomemo-tools](https://github.com/vivier/phomemo-tools), GPL-3.0, for public Phomemo protocol documentation only. No source code from this project is copied.
