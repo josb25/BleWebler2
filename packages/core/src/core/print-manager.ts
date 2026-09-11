@@ -10,6 +10,7 @@ import { MarklifeDriver } from "../drivers/marklife/marklife-driver";
 import { NiimbotDriver } from "../drivers/niimbot/niimbot-driver";
 import { CatPrinterDriver } from "../drivers/catprinter/catprinter-driver";
 import { PhomemoDqDriver } from "../drivers/phomemo/phomemo-dq-driver";
+import { PhomemoM110Driver } from "../drivers/phomemo/phomemo-m110-driver";
 import { DummyDriver } from "../drivers/dummy/dummy-driver";
 
 export interface PrintManagerEvents {
@@ -45,6 +46,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
         this.registerDriver(new CatPrinterDriver('standard'));
         this.registerDriver(new CatPrinterDriver('prefixed'));
         this.registerDriver(new PhomemoDqDriver());
+        this.registerDriver(new PhomemoM110Driver());
         // Dummy is intentionally last because it accepts any virtual device.
         this.registerDriver(new DummyDriver());
     }

@@ -40,6 +40,20 @@ The implementation is a fresh TypeScript expression of the documented wire
 facts. No third-party implementation files or assets are included. The driver
 is explicitly marked untested pending reports or captures from physical units.
 
+## Phomemo M110/M120/M220
+
+Implementation: `packages/core/src/drivers/phomemo/phomemo-m110-driver.ts`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [phomemo-tools protocol documentation](https://github.com/vivier/phomemo-tools/blob/master/README.md#5-protocol-for-m110m120m220) | public documentation, GPL-3.0 | Captured speed/density ranges, three media values, GS v 0 dimensions, 43-byte M110 sample width, footer, and the M110/M120/M220 family association. Protocol facts only; no GPL source code copied. |
+| [transcriptionstream/phomymo](https://github.com/transcriptionstream/phomymo/tree/1f58d3f0e7f941b9143277cda828380149e56855) | `1f58d3f`, MIT | FF00/FF02/FF03 GATT layout, BLE pacing, model metadata and an independent implementation of the job sequence. |
+
+The 344-dot M110/M120 width follows the captured 43-byte row in the protocol
+documentation. Public implementations disagree and one uses 384 dots, so the
+profiles remain explicitly untested. M220 uses its separately documented
+72 mm/576-dot model width with the same command family.
+
 ## Researched but not yet implemented
 
 - [MXW01 protocol specification](https://github.com/jeremy46231/MXW01-catprinter/blob/main/PROTOCOL.md), which documents the related but distinct V5X/MXW01 bulk-raster flow.
