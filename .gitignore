@@ -18,6 +18,7 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+AGENTS.md
 
 temp/
 *.db
