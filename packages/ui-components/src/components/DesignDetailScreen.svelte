@@ -5,6 +5,7 @@
         type LabelDesign, type SavedLabel, type TemplateImage
     } from 'universal-label-renderer';
     import type { EditorStore } from '../stores/editor.svelte';
+    import { applyDieMask } from '../lib/paper-thumb';
     import Icon from './Icon.svelte';
 
     interface Props {
@@ -45,6 +46,7 @@
             canvas.getContext('2d')?.putImageData(
                 new ImageData(new Uint8ClampedArray(image.data), image.width, image.height), 0, 0
             );
+            applyDieMask(canvas, design, paper);
             return canvas.toDataURL();
         } catch {
             return '';

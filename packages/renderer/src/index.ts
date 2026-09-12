@@ -110,7 +110,7 @@ export * from './raster/measure';
 export { rasterizeDesign, rasterizeElementPreview, browserRasterEnv, type RasterEnv, type RasterOptions } from './raster/rasterize';
 
 export {
-    diePath, dieWithHoles, dieSize, hasShapedDie,
+    diePath, dieWithHoles, dieSize, hasShapedDie, diePlacement,
     type DieSize
 } from './raster/die';
 // ---- ink: slots -> colorants, and planes -> pixels a human can see ----

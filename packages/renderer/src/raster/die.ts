@@ -116,3 +116,68 @@ export function hasShapedDie(paper: PaperProfile): boolean {
     if (paper.holesMm?.length) return true;
     return cornerRadii(paper, dieSize(paper)).some(r => r > 0);
 }
+
+/**
+ * A die line placed onto the printable canvas, as the six affine matrix
+ * components that map label-space millimetres to canvas pixels.
+ *
+ * The die is authored upright in label space (the sticker as you would hold
+ * it), but the canvas is the *roll's* orientation, and the sticker can sit
+ * narrower on its carrier than the tape is wide. Two facts the bare
+ * `design.size / dieSize` scaling used to miss:
+ *
+ *  - the die's across-tape extent is `labelWidthMm`, not `tapeWidthMm`, so
+ *    scaling it to the full canvas height stretches it; and
+ *  - a die-cut sticker narrower than its liner is centred on the web, so it
+ *    carries an inset of `(tapeWidthMm - labelWidthMm) / 2` across the tape.
+ *
+ * Both are applied here so a canvas mask, an SVG clip and a printed thumbnail
+ * can share one transform and never disagree about where the sticker ends.
+ *
+ * Returns `a b c d e f` such that `x' = a*x + c*y + e`, `y' = b*x + d*y + f`,
+ * with the input in label-space mm and the output in canvas pixels. `null`
+ * when the die has no defined size to place.
+ */
+export function diePlacement(
+    paper: PaperProfile,
+    canvasWidthPx: number,
+    canvasHeightPx: number
+): { a: number; b: number; c: number; d: number; e: number; f: number } | null {
+    const size = dieSize(paper);
+    if (size.widthMm <= 0 || size.heightMm <= 0) return null;
+    const rot = paper.mountRotationDeg ?? 0;
+    const tape = paper.tapeWidthMm;
+    const labelW = paper.labelWidthMm ?? tape;
+    // The sticker is centred on the carrier, so half the carrier-vs-sticker
+    // difference is blank margin on each side of the tape.
+    const insetMm = Math.max(0, (tape - labelW) / 2);
+
+    // Across the tape the die spans `labelW`; along the feed it spans the
+    // label length. Which canvas axis is which depends on the mount rotation.
+    // For an upright or inverted mount the feed runs along canvas-x; for a
+    // sideways mount it runs down canvas-y, and the across-tape inset swaps
+    // axes with it.
+    const sideways = rot === 90 || rot === 270;
+    const alongPx = sideways ? canvasHeightPx : canvasWidthPx;
+    const acrossPx = sideways ? canvasWidthPx : canvasHeightPx;
+    const alongScale = alongPx / size.widthMm;
+    // The die's across-tape extent is `labelW`, rendered into the `acrossPx`
+    // canvas axis that represents the full `tapeWidthMm`. Scale to the
+    // sticker, not the tape, then shift by the inset so it stays centred.
+    const acrossScale = (acrossPx * (labelW / tape)) / size.heightMm;
+    const insetPx = insetMm * (acrossPx / tape);
+
+    if (rot === 0) {
+        return { a: alongScale, b: 0, c: 0, d: acrossScale, e: 0, f: insetPx };
+    }
+    if (rot === 180) {
+        return { a: -alongScale, b: 0, c: 0, d: -acrossScale, e: canvasWidthPx, f: canvasHeightPx - insetPx };
+    }
+    if (rot === 90) {
+        // Sideways: label x (length) -> canvas +y, label y (width) -> canvas +x.
+        // x' = -acrossScale * y + e ; y' = alongScale * x + f
+        return { a: 0, b: alongScale, c: -acrossScale, d: 0, e: insetPx, f: 0 };
+    }
+    // rot === 270
+    return { a: 0, b: -alongScale, c: acrossScale, d: 0, e: canvasWidthPx - insetPx, f: canvasHeightPx };
+}

@@ -10,7 +10,7 @@
     import { anchorFx, anchorFy } from 'universal-label-renderer';
     import { measureElement, rotatedBounds } from 'universal-label-renderer';
     import { domMeasureText } from 'universal-label-renderer';
-    import { dieWithHoles, dieSize, hasShapedDie } from 'universal-label-renderer';
+    import { dieWithHoles, diePlacement, hasShapedDie } from 'universal-label-renderer';
     import ElementView from './ElementView.svelte';
     import Icon from './Icon.svelte';
     import { untrack } from 'svelte';
@@ -57,16 +57,16 @@
     const dieGeom = $derived(clipped ? dieWithHoles(paper!) : null);
     const dieTransform = $derived.by(() => {
         if (!paper || !clipped) return '';
-        const size = dieSize(paper);
-        const rot = paper.mountRotationDeg ?? 0;
-        const W = design.widthPx * editor.zoom;
-        const H = design.heightPx * editor.zoom;
-        // Scaling into the *displayed* box keeps the outline glued to the canvas
-        // at any zoom, without re-deriving pixels per millimetre here.
-        if (rot === 90) return `translate(${W} 0) rotate(90) scale(${H / size.widthMm} ${W / size.heightMm})`;
-        if (rot === 270) return `translate(0 ${H}) rotate(-90) scale(${H / size.widthMm} ${W / size.heightMm})`;
-        if (rot === 180) return `translate(${W} ${H}) rotate(180) scale(${W / size.widthMm} ${H / size.heightMm})`;
-        return `scale(${W / size.widthMm} ${H / size.heightMm})`;
+        // diePlacement maps label-space mm to *canvas* pixels; the clip path is
+        // declared in the same pixel space as the (zoomed) canvas element, so we
+        // scale the whole transform by the zoom factor to keep the outline glued
+        // to the canvas at any zoom. Sharing the placement with the thumbnail and
+        // print mask means a die-cut sticker narrower than its carrier is inset
+        // and to scale here too, not stretched to the full tape height.
+        const m = diePlacement(paper, design.widthPx, design.heightPx);
+        if (!m) return '';
+        const z = editor.zoom;
+        return `matrix(${m.a * z} ${m.b * z} ${m.c * z} ${m.d * z} ${m.e * z} ${m.f * z})`;
     });
     /** Substrate colour behind the design, so coloured stock reads as coloured. */
     const paperColor = $derived(

@@ -11,7 +11,7 @@
  * underneath, and the die outline cut out of the result.
  */
 import {
-    rasterizeDesign, compositePage, dieWithHoles, dieSize, hasShapedDie,
+    rasterizeDesign, compositePage, dieWithHoles, diePlacement, hasShapedDie,
     type LabelDesign
 } from 'universal-label-renderer';
 import type { PaperProfile } from 'universal-label-core';
@@ -38,29 +38,38 @@ export function substrateOf(paper: PaperProfile | undefined): string {
 function diePath2D(paper: PaperProfile, design: LabelDesign): { path: Path2D; fillRule: CanvasFillRule } | null {
     if (!hasShapedDie(paper)) return null;
     const { d, fillRule } = dieWithHoles(paper);
-    const size = dieSize(paper);
-    const rot = paper.mountRotationDeg ?? 0;
-
-    // The canvas is the *roll's* orientation; the die is drawn upright. For a
-    // sideways mount the label's width runs down the canvas, so the transform
-    // maps label space onto canvas space rather than the numbers being swapped.
-    const m = new DOMMatrix();
-    if (rot === 90) {
-        m.translateSelf(design.widthPx, 0);
-        m.rotateSelf(90);
-        m.scaleSelf(design.heightPx / size.widthMm, design.widthPx / size.heightMm);
-    } else if (rot === 270) {
-        m.translateSelf(0, design.heightPx);
-        m.rotateSelf(-90);
-        m.scaleSelf(design.heightPx / size.widthMm, design.widthPx / size.heightMm);
-    } else {
-        if (rot === 180) { m.translateSelf(design.widthPx, design.heightPx); m.rotateSelf(180); }
-        m.scaleSelf(design.widthPx / size.widthMm, design.heightPx / size.heightMm);
-    }
-
+    // The canvas is the *roll's* orientation; the die is drawn upright in
+    // label space. diePlacement maps label-space mm to canvas pixels, and
+    // accounts for a die-cut sticker narrower than its carrier being centred
+    // on the web — without it a 12.5 mm die on 15 mm tape stretches to fill the
+    // canvas and sits at the edge rather than inset and to scale.
+    const m = diePlacement(paper, design.widthPx, design.heightPx);
+    if (!m) return null;
+    const matrix = new DOMMatrix([m.a, m.b, m.c, m.d, m.e, m.f]);
     const path = new Path2D();
-    path.addPath(new Path2D(d), m);
+    path.addPath(new Path2D(d), matrix);
     return { path, fillRule };
+}
+
+/**
+ * Cut a composited canvas down to the paper's die, in place.
+ *
+ * Where {@link paintDesignOnPaper} also rasters and colours the substrate, this
+ * is just the mask step — for screens that already have a rasterized page (the
+ * design-detail preview, the size gallery) and only need the rectangle trimmed
+ * to the sticker's actual outline so a die-cut does not read as a bare block.
+ * Uses the same {@link diePlacement} as the editor and the print thumbnail, so
+ * the cut cannot disagree with either.
+ */
+export function applyDieMask(canvas: HTMLCanvasElement, design: LabelDesign, paper?: PaperProfile): void {
+    if (!paper) return;
+    const die = diePath2D(paper, design);
+    if (!die) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.fill(die.path, die.fillRule);
+    ctx.globalCompositeOperation = 'source-over';
 }
 
 /**
