@@ -293,7 +293,7 @@
             
             const zoomFactor = dist / initialPinchDistance;
             let newZoom = initialPinchZoom * zoomFactor;
-            newZoom = Math.max(0.25, Math.min(10, newZoom));
+            newZoom = Math.max(0.25, Math.min(16, newZoom));
 
             const cx = (pts[0].clientX + pts[1].clientX) / 2;
             const cy = (pts[0].clientY + pts[1].clientY) / 2;
@@ -392,7 +392,7 @@
         function handleWheel(event: WheelEvent) {
             event.preventDefault();
             const zoomDelta = event.deltaY > 0 ? -0.25 : 0.25;
-            const newZoom = Math.max(0.25, Math.min(10, editor.zoom + zoomDelta));
+            const newZoom = Math.max(0.25, Math.min(16, editor.zoom + zoomDelta));
             
             if (newZoom !== editor.zoom) {
                 const scale = newZoom / editor.zoom;

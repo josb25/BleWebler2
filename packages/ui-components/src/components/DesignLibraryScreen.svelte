@@ -27,7 +27,8 @@
     }
     let { session, media, onopen, onnew, onuse, onedit }: Props = $props();
 
-    let entries = $state<SavedLabel[]>([]);
+    // Reactive: reads session.list() which bumps version on every mutation.
+    let entries = $derived(session.list());
     let thumbs = $state<Record<string, string>>({});
     let importInput = $state<HTMLInputElement | null>(null);
     let search = $state('');
@@ -36,9 +37,15 @@
     let dropping = $state(false);
     let dragDepth = 0;
     let importReport = $state<{ ok: number; failed: Array<{ name: string; error: string }> } | null>(null);
+    let pendingDelete = $state<string | null>(null);
+
+    // Re-render thumbnails when entries change.
+    $effect(() => {
+        void entries;
+        void renderThumbs();
+    });
 
     function refresh(): void {
-        entries = session.list();
         void renderThumbs();
     }
 
@@ -78,7 +85,7 @@
         }
     }
 
-    onMount(refresh);
+    onMount(() => void renderThumbs());
 
     const query = $derived(search.trim().toLowerCase());
     const searching = $derived(query !== '');
@@ -108,7 +115,14 @@
     }
     function edit(entry: SavedLabel): void { onedit(copy(entry.template), entry.origin); }
     function toggleFavorite(id: string): void { session.toggleFavorite(id); refresh(); }
-    function remove(id: string): void { session.remove(id); refresh(); }
+    function confirmDelete(id: string): void { pendingDelete = id; }
+    function cancelDelete(): void { pendingDelete = null; }
+    function executeDelete(): void {
+        if (pendingDelete === null) return;
+        session.remove(pendingDelete);
+        pendingDelete = null;
+        refresh();
+    }
 
     function sizeLabel(tpl: LabelTemplate): string {
         const df = tpl.adaptivity.designedFor;
@@ -242,7 +256,7 @@
                         <div class="card-actions">
                             <button class="open-action" onclick={() => open(entry)}>{entry.template.params.length > 0 ? 'Fill in' : 'Open'}</button><span class="spacer"></span>
                             <button class="icon" title="Edit design" aria-label="Edit design" onclick={() => edit(entry)}><Icon name="pencil" size={15} /></button>
-                            <button class="icon" title="Delete design" aria-label="Delete design" onclick={() => remove(entry.template.id)}><Icon name="trash" size={15} /></button>
+                            <button class="icon" title="Delete design" aria-label="Delete design" onclick={() => confirmDelete(entry.template.id)}><Icon name="trash" size={15} /></button>
                         </div>
                     </div>
                 </article>
@@ -250,6 +264,19 @@
         </div>
     {/if}
 </div>
+
+{#if pendingDelete}
+    <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+    <div class="confirm-overlay" onclick={e => { if (e.target === e.currentTarget) cancelDelete(); }}>
+        <div class="confirm-dialog" role="alertdialog" aria-label="Delete design">
+            <p>Delete this design? This cannot be undone.</p>
+            <div class="confirm-actions">
+                <button onclick={cancelDelete}>Cancel</button>
+                <button class="danger" onclick={executeDelete}>Delete</button>
+            </div>
+        </div>
+    </div>
+{/if}
 
 <style>
     .library { display: flex; flex-direction: column; gap: 18px; padding: 4px 0 28px; }
@@ -333,4 +360,26 @@
         .gallery { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
     }
     @media (max-width: 480px) { .readout span { padding: 0 7px; } .gallery { grid-template-columns: 1fr; } .thumb-button { min-height: 108px; } }
+    .confirm-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgb(0 0 0 / 55%);
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .confirm-dialog {
+        background: var(--bg);
+        border-radius: 12px;
+        padding: 20px;
+        max-width: 340px;
+        width: calc(100% - 32px);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .confirm-dialog p { margin: 0; font-size: 14px; }
+    .confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .confirm-actions .danger { color: #fff; background: var(--danger); }
 </style>

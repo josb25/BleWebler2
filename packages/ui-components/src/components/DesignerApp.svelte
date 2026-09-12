@@ -47,11 +47,13 @@
     import SettingsPanel from './SettingsPanel.svelte';
     import PaperPanel from './PaperPanel.svelte';
     import { globalSettings as settings, DEFAULT_PRINTER_CAPS, SIDEBAR } from '../stores/settings.svelte';
+    import { toast } from '../stores/toasts.svelte';
     import Sheet from './Sheet.svelte';
     import Icon from './Icon.svelte';
     import { scrollToTop } from '../lib/scroll';
     import PrinterMark from './PrinterMark.svelte';
     import Onboarding from './Onboarding.svelte';
+    import ToastStack from './ToastStack.svelte';
     import { artworkForDevice } from '../data/artwork';
     import PaperPreview from './PaperPreview.svelte';
     import { loadedMediaIdentityKey, resolveLoadedPaper } from '../printer/media-paper';
@@ -654,6 +656,11 @@
         } else if (ctrl && (event.key.toLowerCase() === 'y' || (event.key.toLowerCase() === 'z' && event.shiftKey))) {
             editorCommands.redo();
         } else if (event.key === 'Delete' || event.key === 'Backspace') {
+            if (editor.selectedId === null) return;
+            if (editor.selected?.locked) {
+                toast('Element is locked — unlock it first to delete', 'info');
+                return;
+            }
             editor.deleteSelected();
         } else if (event.key.startsWith('Arrow') && editor.selected && !editor.selected.locked) {
             const step = event.shiftKey ? 8 : 1;
@@ -745,18 +752,6 @@
         return diff > 0 ? diff / 2 : 0;
     });
 
-    $effect(() => {
-        document.body.classList.remove('theme-system', 'theme-light', 'theme-dark', 'anim-normal', 'anim-fast', 'anim-none', 'skin-tech', 'skin-craft');
-        document.body.classList.add(`theme-${settings.theme}`, `anim-${settings.animations}`, `skin-${settings.skin}`);
-    });
-
-    // Reset scroll position when switching between library/editor/print views.
-    $effect(() => {
-        const currentView = view;
-        if (typeof window !== 'undefined') {
-            window.scrollTo(0, 0);
-        }
-    });
 </script>
 
 <svelte:window onkeydown={onKeydown} />
@@ -779,7 +774,7 @@
             <span class="spacer"></span>
             <button class="chip paper-chip state-connected" title="Paper: {paperLabel}" onclick={() => (sheet = 'paper')}><span class="chip-text desktop-label">{paperLabel}</span><span class="chip-text mobile-label">{mobilePaperLabel}</span></button>
             <button class="chip printer-chip state-{snap.state}" title={battery ? `${chipLabel} · Battery ${battery}` : chipLabel} onclick={() => (sheet = 'printer')}>{#if chipArtwork}<PrinterMark artwork={chipArtwork} size={24} led={chipLed} />{/if}<span class="chip-text desktop-label">{chipLabel}</span><span class="chip-text mobile-label">{mobilePrinterLabel}</span></button>
-            <button class="print-btn" onclick={printTemplateDesign}>
+            <button class="print-btn" onclick={printTemplateDesign} title={snap.state === 'disconnected' ? 'Connect a printer first' : 'Print'}>
                 <Icon name="printer" /> Print
             </button>
         {:else if view === 'editor' || view === 'print'}
@@ -1112,6 +1107,8 @@
         </div>
     </Sheet>
 {/if}
+
+<ToastStack />
 
 <style>
     /* Base (Light) Theme Variables */
@@ -2211,16 +2208,10 @@
        return unchanged once the window reaches a conventional desktop size. */
     @media (min-width: 860px) and (max-width: 1199px) {
         .editor-layout {
-            grid-template-columns: min(var(--left-w), 190px) 5px minmax(300px, 1fr) 5px min(var(--right-w), 260px);
-        }
-        .editor-layout.left-shut {
-            grid-template-columns: 34px 5px minmax(300px, 1fr) 5px min(var(--right-w), 260px);
+            grid-template-columns: 48px 1fr 5px var(--right-w);
         }
         .editor-layout.right-shut {
-            grid-template-columns: min(var(--left-w), 190px) 5px minmax(300px, 1fr) 5px 34px;
-        }
-        .editor-layout.left-shut.right-shut {
-            grid-template-columns: 34px 5px minmax(300px, 1fr) 5px 34px;
+            grid-template-columns: 48px 1fr 5px 34px;
         }
     }
 

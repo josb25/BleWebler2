@@ -33,6 +33,7 @@
     let frameDiv = $state<HTMLDivElement | null>(null);
 
     let img = $state<HTMLCanvasElement | null>(null);
+    let bitmapDiv = $state<HTMLDivElement | null>(null);
     let renderToken = 0;
 
     const bounds = $derived(rotatedBounds(element, domMeasureText));
@@ -47,9 +48,14 @@
         const token = ++renderToken;
         rasterizeElementPreview(element, design)
             .then(canvas => {
-                if (token === renderToken) img = canvas as HTMLCanvasElement;
+                if (token !== renderToken) return;
+                img = canvas as HTMLCanvasElement;
+                // Replace the canvas child directly — no toDataURL round-trip.
+                if (bitmapDiv) {
+                    bitmapDiv.replaceChildren(img);
+                }
             })
-            .catch(err => console.warn('[ElementView] preview failed:', err));
+            .catch(() => {});
     });
 
     /** The already-rotated bitmap sits on the bounding box. */
@@ -76,12 +82,7 @@
 
 <!-- Bitmap layer: never receives pointers, so hit-testing follows the rotated
      frame below rather than this element's larger bounding box. -->
-<div class="bitmap" style={bitmapStyle}>
-    {#if img}
-        <!-- svelte-ignore a11y_missing_attribute -->
-        <img src={img.toDataURL()} draggable="false" />
-    {/if}
-</div>
+<div class="bitmap" style={bitmapStyle} bind:this={bitmapDiv}></div>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -- canvas objects are
      pointer-driven; selection/nudge/delete have app-level keyboard bindings -->
@@ -117,7 +118,7 @@
         position: absolute;
         pointer-events: none;
     }
-    .bitmap img {
+    .bitmap :global(canvas) {
         width: 100%;
         height: 100%;
         image-rendering: pixelated;

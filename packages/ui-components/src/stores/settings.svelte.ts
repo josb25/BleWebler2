@@ -29,6 +29,8 @@ export interface AppSettings {
      * open the app would be the worst version of this feature.
      */
     onboarded?: boolean;
+    /** Schema version for migration. Missing = pre-versioning. */
+    v?: number;
     /**
      * Listing ids bookmarked in Discover.
      *
@@ -74,6 +76,8 @@ export class SettingsStore {
     paper = $state<PaperProfile | undefined>(undefined);
     /** See {@link AppSettings.onboarded}. */
     onboarded = $state<boolean>(false);
+    /** See {@link AppSettings.v}. */
+    v = $state<number | undefined>(undefined);
     /** See {@link AppSettings.bookmarks}. */
     bookmarks = $state<string[]>([]);
 
@@ -111,12 +115,18 @@ export class SettingsStore {
                 if (parsed.paper && typeof parsed.paper.tapeWidthMm === 'number') {
                     this.paper = parsed.paper;
                 }
-                // Settings that exist but predate this flag belong to someone
-                // already using the app. Walking them through the basics
-                // because a key is missing would be the update introducing
-                // itself, which is not what a first-run tour is for. Only an
-                // explicit `false` (Settings -> replay) reopens it.
-                this.onboarded = parsed.onboarded !== false;
+                // Settings that predate the onboarding feature belong to someone
+                // already using the app. But if the settings schema version is
+                // older than the current one, show onboarding once so new features
+                // (skin, theme presets) are surfaced. An explicit `false` (Settings
+                // -> replay) always reopens it.
+                if (parsed.v === undefined) {
+                    this.onboarded = false;
+                    this.v = 1;
+                } else {
+                    this.v = parsed.v;
+                    this.onboarded = parsed.onboarded !== false;
+                }
                 if (Array.isArray(parsed.bookmarks)) {
                     this.bookmarks = parsed.bookmarks.filter((b): b is string => typeof b === 'string');
                 }
@@ -147,6 +157,7 @@ export class SettingsStore {
             customPapers: this.customPapers,
             paper: this.paper,
             onboarded: this.onboarded,
+            v: this.v,
             bookmarks: this.bookmarks,
             sidebars: {
                 leftW: this.leftW, rightW: this.rightW,
