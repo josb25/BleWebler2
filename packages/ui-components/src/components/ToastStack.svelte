@@ -32,7 +32,7 @@
     .toast {
         pointer-events: auto;
         padding: 10px 18px;
-        border-radius: 999px;
+        border-radius: 2px;
         font-size: 13px;
         font-weight: 600;
         box-shadow: 0 4px 12px rgb(0 0 0 / 25%);

@@ -204,8 +204,8 @@
         background: var(--panel);
         color: var(--text);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+        border-radius: 4px;
+        box-shadow: 7px 7px 0 rgb(0 0 0 / 22%), 0 24px 60px rgba(0, 0, 0, 0.35);
         overflow: hidden;
     }
     .wiz-head {
@@ -268,7 +268,7 @@
         padding: 10px 12px;
         background: var(--panel-2);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 3px;
         cursor: pointer;
         text-align: left;
         color: inherit;
@@ -277,13 +277,13 @@
     .choice-text { display: flex; flex-direction: column; }
     .choice-text small { color: var(--muted); font-size: 12px; }
     .swatch {
-        width: 30px; height: 30px; border-radius: 8px; flex: none;
+        width: 30px; height: 30px; border-radius: 2px; flex: none;
         border: 1px solid var(--border);
     }
     .skin-tech { background: linear-gradient(135deg, #4f46e5, #1e293b); }
     .skin-craft { background: linear-gradient(135deg, #e8b98a, #8d5a3b); }
 
-    .seg { display: inline-flex; margin-top: 14px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .seg { display: inline-flex; margin-top: 14px; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
     .seg-btn {
         padding: 7px 14px;
         background: var(--panel-2);
@@ -321,7 +321,7 @@
     .summary li {
         display: flex; justify-content: space-between; gap: 12px;
         padding: 10px 12px; background: var(--panel-2);
-        border: 1px solid var(--border); border-radius: 10px;
+        border: 1px solid var(--border); border-radius: 2px;
     }
     .summary span { color: var(--muted); font-size: 13px; }
 
@@ -335,7 +335,7 @@
     .spacer { flex: 1; }
     .btn {
         display: inline-flex; align-items: center; gap: 7px;
-        padding: 9px 16px; border-radius: 10px;
+        padding: 9px 16px; border-radius: 2px;
         border: 1px solid var(--border); background: var(--panel-2);
         color: var(--text); font-size: 14px; cursor: pointer;
     }

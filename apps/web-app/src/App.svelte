@@ -141,7 +141,7 @@
     .hardware-link .btn {
         display: inline-block;
         padding: 0.6rem 1.1rem;
-        border-radius: 8px;
+        border-radius: 2px;
         background: var(--accent, #0f5c9c);
         color: #fff;
         text-decoration: none;

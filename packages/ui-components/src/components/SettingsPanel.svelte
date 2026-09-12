@@ -154,7 +154,8 @@
         display: flex;
         flex-direction: row;
         gap: 20px;
-        min-height: 340px;
+        height: 100%;
+        min-height: 0;
     }
     .category-nav {
         display: flex;
@@ -172,7 +173,7 @@
         width: 100%;
         padding: 9px 12px;
         border: 1px solid transparent;
-        border-radius: 10px;
+        border-radius: 2px;
         background: transparent;
         color: var(--muted);
         cursor: pointer;
@@ -191,7 +192,8 @@
     .cat-btn.active {
         background: color-mix(in srgb, var(--accent) 10%, var(--panel-2));
         color: var(--text);
-        border-color: var(--accent);
+        border-color: var(--border);
+        border-left: 3px solid var(--accent);
         font-weight: 600;
         transform: none;
         box-shadow: none;
@@ -199,9 +201,12 @@
     .content-pane {
         flex: 1;
         min-width: 0;
+        min-height: 0;
         display: flex;
         flex-direction: column;
         gap: 20px;
+        overflow-y: auto;
+        padding-right: 4px;
     }
     section {
         display: flex;
@@ -239,7 +244,7 @@
         cursor: pointer;
         padding: 8px 12px;
         border: 1px solid var(--border);
-        border-radius: 10px;
+        border-radius: 2px;
         background: var(--panel);
         transition: border-color 0.15s ease, background 0.15s ease;
     }
@@ -270,7 +275,7 @@
         text-align: left;
         background: var(--panel-2);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 3px;
         box-shadow: none;
         cursor: pointer;
         color: inherit;
@@ -287,7 +292,7 @@
         flex: 0 0 auto;
         width: 34px;
         height: 34px;
-        border-radius: 8px;
+        border-radius: 2px;
         border: 1px solid var(--border);
     }
     .swatch.tech {
@@ -295,7 +300,7 @@
     }
     .swatch.craft {
         background: linear-gradient(135deg, #c85a30 0 50%, #faf6f1 50% 100%);
-        border-radius: 12px;
+        border-radius: 3px;
     }
     .skin-text {
         display: flex;
@@ -314,7 +319,7 @@
         padding: 9px 14px;
         background: var(--panel-2);
         border: 1px solid var(--border);
-        border-radius: 10px;
+        border-radius: 2px;
         color: var(--text);
         font-size: 14px;
         cursor: pointer;
@@ -349,6 +354,10 @@
             padding: 8px 10px;
             font-size: 13px;
             white-space: nowrap;
+        }
+        .cat-btn.active {
+            border-left: 1px solid var(--border);
+            border-bottom: 3px solid var(--accent);
         }
     }
     @media (max-width: 420px) {

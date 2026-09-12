@@ -715,7 +715,7 @@
         gap: 8px;
         padding: 10px;
         background: var(--panel);
-        border-radius: 8px;
+        border-radius: 2px;
     }
     .advanced,
     .advanced-body {
@@ -803,7 +803,7 @@
         width: max-content;
         max-width: 220px;
         padding: 8px 10px;
-        border-radius: 8px;
+        border-radius: 2px;
         background: var(--panel-2);
         border: 1px solid var(--border);
         color: var(--text);
@@ -870,7 +870,7 @@
     .editable-row {
         padding: 8px;
         border: 1px dashed var(--accent);
-        border-radius: 8px;
+        border-radius: 2px;
         background: color-mix(in srgb, var(--accent) 5%, transparent);
     }
 

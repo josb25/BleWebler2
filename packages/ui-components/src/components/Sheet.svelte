@@ -10,8 +10,10 @@
         /** Place a time-sensitive prompt above onboarding and ordinary sheets. */
         priority?: boolean;
         wide?: boolean;
+        /** Keep category-based sheets from resizing as their content changes. */
+        stable?: boolean;
     }
-    let { title, onclose, children, priority = false, wide = false }: Props = $props();
+    let { title, onclose, children, priority = false, wide = false, stable = false }: Props = $props();
 
     let backdropEl = $state<HTMLDivElement | null>(null);
     let sheetEl = $state<HTMLDivElement | null>(null);
@@ -64,7 +66,7 @@
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions
      -- backdrop dismiss duplicates the explicit close button below; Escape is handled above -->
 <div class="backdrop" class:priority data-sheet-overlay bind:this={backdropEl} onclick={e => { if (e.target === e.currentTarget) onclose(); }}>
-    <div class="sheet" class:wide role="dialog" aria-modal="true" aria-label={title} bind:this={sheetEl}>
+    <div class="sheet" class:wide class:stable role="dialog" aria-modal="true" aria-label={title} bind:this={sheetEl}>
         <div class="head">
             <h3>{title}</h3>
             <button class="close" onclick={onclose} aria-label="Close"><Icon name="x" /></button>
@@ -88,7 +90,9 @@
     .backdrop.priority { z-index: 110; }
     .sheet {
         background: var(--bg);
-        border-radius: 16px 16px 0 0;
+        border: 1px solid var(--border);
+        border-bottom: 0;
+        border-radius: 18px 18px 0 0;
         width: 100%;
         max-width: 640px;
         max-height: 85dvh;
@@ -100,10 +104,15 @@
             align-items: center;
         }
         .sheet {
-            border-radius: 16px;
+            border-bottom: 1px solid var(--border);
+            border-radius: var(--radius-panel, 16px);
+            box-shadow: 8px 8px 0 rgb(0 0 0 / 20%);
         }
         .sheet.wide {
             max-width: 800px;
+        }
+        .sheet.stable {
+            height: min(680px, 85dvh);
         }
     }
     .head {
@@ -125,6 +134,8 @@
         padding: 4px 8px;
     }
     .body {
+        flex: 1;
+        min-height: 0;
         overflow-y: auto;
         padding: 6px 16px calc(16px + env(safe-area-inset-bottom));
         display: flex;
@@ -133,6 +144,7 @@
     }
     @media (max-width: 420px) {
         .sheet { max-height: 90dvh; }
+        .sheet.stable { height: 90dvh; }
         .head { padding: 12px 12px 4px; }
         .close {
             min-width: 40px;

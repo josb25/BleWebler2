@@ -184,7 +184,7 @@
         gap: 5px;
         padding: 7px 8px;
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 2px;
         background: var(--panel-2);
     }
     .axis-head { display: flex; align-items: center; gap: 4px; }

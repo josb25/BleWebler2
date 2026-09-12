@@ -496,7 +496,7 @@
         padding: 12px;
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 3px;
         cursor: pointer;
         transition: all 0.2s ease;
     }
@@ -592,7 +592,7 @@
         justify-content: center;
         gap: 8px;
         padding: 12px;
-        border-radius: 10px;
+        border-radius: 2px;
         font-weight: 500;
         cursor: pointer;
         font-size: 14px;
@@ -689,7 +689,7 @@
         padding: 8px 10px;
         background: var(--panel-2);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 2px;
         margin-bottom: 10px;
     }
     .btn-secondary + .btn-secondary { margin-top: 8px; }
@@ -699,7 +699,7 @@
         padding: 12px 8px;
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 2px;
         overflow-x: auto;
     }
     .input-field {
@@ -707,7 +707,7 @@
         border: 1px solid var(--border);
         color: var(--text);
         padding: 10px 12px;
-        border-radius: 8px;
+        border-radius: 2px;
         font-size: 14px;
         width: 100%;
         box-sizing: border-box;

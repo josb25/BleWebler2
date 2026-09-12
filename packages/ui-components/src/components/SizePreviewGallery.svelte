@@ -94,7 +94,7 @@
     }
     .cell {
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 3px;
         padding: 8px;
         background: var(--panel);
         display: flex;
@@ -107,7 +107,7 @@
         position: relative;
         background:
             repeating-conic-gradient(var(--checker) 0% 25%, transparent 0% 50%) 50% / 12px 12px, #fff;
-        border-radius: 8px;
+        border-radius: 2px;
         min-height: 60px;
         display: flex;
         align-items: center;

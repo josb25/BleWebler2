@@ -82,7 +82,7 @@
     .add { min-height: 32px; }
     .empty { color: var(--muted); font-size: 13px; margin: 0; }
     .list { display: flex; flex-direction: column; gap: 10px; }
-    .param { border: 1px solid var(--border); border-radius: 10px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .param { border: 1px solid var(--border); border-radius: 2px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
     .prow { display: flex; gap: 6px; align-items: center; }
     .pname { width: 96px; font-family: ui-monospace, monospace; font-size: 12px; }
     .plabel { flex: 1; min-width: 90px; }

@@ -227,7 +227,7 @@
     .crumbs strong { min-width: 0; overflow: hidden; color: var(--text); text-overflow: ellipsis; white-space: nowrap; }
     .product-layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(330px, .8fr); gap: clamp(22px, 4vw, 52px); align-items: start; }
     .media-column { min-width: 0; }
-    .preview-card { overflow: hidden; border: 1px solid var(--border); border-radius: calc(var(--card-radius, 7px) + 6px); background: var(--panel); box-shadow: var(--shadow); }
+    .preview-card { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-panel, 4px); background: var(--panel); box-shadow: var(--shadow); }
     .preview-topline { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 15px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
     .live { display: inline-flex; align-items: center; gap: 7px; color: var(--ok); }
     .live > span { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 15%, transparent); }
@@ -239,7 +239,7 @@
     .placeholder { width: 68%; height: 90px; border-radius: 5px; background: var(--panel-2); }
     .caption { margin: 0; padding: 9px 14px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px; }
     .media-strip { display: flex; gap: 9px; margin-top: 11px; overflow-x: auto; padding: 2px 2px 6px; }
-    .media-strip button { position: relative; flex: 0 0 88px; height: 64px; min-height: 0; overflow: hidden; padding: 5px; border-radius: 8px; background: var(--panel); }
+    .media-strip button { position: relative; flex: 0 0 88px; height: 64px; min-height: 0; overflow: hidden; padding: 5px; border-radius: 2px; background: var(--panel); }
     .media-strip button.active { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent); }
     .media-strip img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
     .media-strip span { position: absolute; right: 4px; bottom: 3px; padding: 1px 4px; border-radius: 3px; background: rgb(0 0 0 / 60%); color: #fff; font-size: 9px; }
@@ -254,8 +254,8 @@
     .byline span + span::before { content: '·'; margin-right: 13px; }
     .summary { margin: 14px 0 0; color: var(--muted); line-height: 1.55; }
     .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 13px; }
-    .tags span { padding: 3px 7px; border: 1px solid var(--border); border-radius: 999px; background: var(--panel); color: var(--muted); font-size: 10px; }
-    .compat { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; margin-bottom: 12px; padding: 11px; border: 1px solid color-mix(in srgb, var(--ok) 45%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--ok) 7%, var(--panel)); }
+    .tags span { padding: 3px 7px; border: 1px solid var(--border); border-radius: 2px; background: var(--panel); color: var(--muted); font-size: 10px; }
+    .compat { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; margin-bottom: 12px; padding: 11px; border: 1px solid color-mix(in srgb, var(--ok) 45%, var(--border)); border-left: 3px solid var(--ok); border-radius: 2px; background: color-mix(in srgb, var(--ok) 7%, var(--panel)); }
     .compat.bad { border-color: color-mix(in srgb, var(--warn) 55%, var(--border)); background: color-mix(in srgb, var(--warn) 8%, var(--panel)); }
     .compat-icon { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
     .compat.bad .compat-icon { color: var(--warn); background: color-mix(in srgb, var(--warn) 15%, transparent); }
@@ -264,8 +264,8 @@
     .compat div span { overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
     .compat button { min-height: 29px; padding: 4px 8px; background: transparent; font-size: 11px; box-shadow: none; }
     .personalize, .print-box { padding: 16px; border: 1px solid var(--border); background: var(--panel); }
-    .personalize { border-radius: calc(var(--card-radius, 7px) + 4px) calc(var(--card-radius, 7px) + 4px) 0 0; }
-    .print-box { border-top: 0; border-radius: 0 0 calc(var(--card-radius, 7px) + 4px) calc(var(--card-radius, 7px) + 4px); box-shadow: var(--shadow); }
+    .personalize { border-radius: 3px 3px 0 0; }
+    .print-box { border-top: 0; border-radius: 0 0 3px 3px; box-shadow: var(--shadow); }
     .section-title { display: flex; align-items: flex-start; gap: 10px; }
     .section-title > span { display: grid; place-items: center; flex: 0 0 25px; height: 25px; border-radius: 50%; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 11px; font-weight: 700; }
     .section-title h2 { margin: 1px 0 0; color: var(--text); font-size: 13px; letter-spacing: 0; text-transform: none; }
@@ -278,7 +278,7 @@
     .field input:not([type='checkbox']):not([type='color']), .field select, .field textarea { width: 100%; background: var(--bg); }
     .field input[type='color'] { width: 100%; height: 42px; padding: 4px; }
     .toggle-row { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; }
-    .no-fields { margin: 14px 0 0; padding: 11px; border-radius: 8px; background: var(--panel-2); color: var(--muted); font-size: 12px; }
+    .no-fields { margin: 14px 0 0; padding: 11px; border-radius: 2px; background: var(--panel-2); color: var(--muted); font-size: 12px; }
     .print-cta { width: 100%; min-height: 46px; margin-top: 15px; font-size: 14px; }
     .secondary-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 8px; }
     .secondary-actions button { min-width: 0; font-size: 11px; }
@@ -297,7 +297,7 @@
         .product-layout { grid-template-columns: 1fr; }
         .buy-column { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .identity, .compat { grid-column: 1 / -1; }
-        .personalize, .print-box { border: 1px solid var(--border); border-radius: calc(var(--card-radius, 7px) + 4px); }
+        .personalize, .print-box { border: 1px solid var(--border); border-radius: 3px; }
         .print-box { align-self: start; }
     }
     @media (max-width: 620px) {

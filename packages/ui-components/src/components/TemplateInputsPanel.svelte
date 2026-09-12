@@ -79,11 +79,11 @@
     .inputs { max-width: 560px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
     .preview-frame {
         background: repeating-conic-gradient(var(--checker) 0% 25%, transparent 0% 50%) 50% / 14px 14px, #fff;
-        border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+        border: 1px solid var(--border); border-radius: 3px; padding: 20px;
         display: flex; align-items: center; justify-content: center; min-height: 150px; box-shadow: var(--shadow);
     }
     .preview { max-width: 100%; image-rendering: pixelated; filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%)); }
-    .ph { width: 60%; height: 60px; background: var(--panel-2); border-radius: 6px; }
+    .ph { width: 60%; height: 60px; background: var(--panel-2); border-radius: 2px; }
     .params { display: flex; flex-direction: column; gap: 12px; }
     .field { display: flex; flex-direction: column; gap: 4px; }
     .fld-label { font-size: 13px; font-weight: 600; color: var(--muted); }

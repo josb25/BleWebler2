@@ -1048,7 +1048,7 @@
         <Toolbar {editor} activeTab="File" onSaveTemplate={() => openTemplateSheet('adapt')} />
     </Sheet>
 {:else if sheet === 'settings'}
-    <Sheet title="Settings" wide onclose={() => (sheet = null)}>
+    <Sheet title="Settings" wide stable onclose={() => (sheet = null)}>
         <SettingsPanel />
     </Sheet>
 {:else if sheet === 'paper'}
@@ -1114,16 +1114,16 @@
     /* Base (Light) Theme Variables */
     :global(:root), :global(body.theme-light), :global(body.theme-system) {
         --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', Menlo, Consolas, monospace;
-        --bg: #f3f4f6;
-        --panel: #ffffff;
-        --panel-2: #f3f4f6;
-        --border: #d5d8de;
-        --text: #1a212e;
-        --muted: #4b5563;
-        --accent: #1d3557; /* Deep Navy Blue */
-        --accent-hover: #142845;
-        --header-bg: var(--accent);
-        --header-text: #ffffff;
+        --bg: #e9edf1;
+        --panel: #f9fafb;
+        --panel-2: #eef1f4;
+        --border: #aeb7c2;
+        --text: #18212b;
+        --muted: #52606d;
+        --accent: #2457d6;
+        --accent-hover: #163f9f;
+        --header-bg: #171d26;
+        --header-text: #f7f8fa;
         --danger: #dc2626;
         --warn: #b45309;
         --ok: #047857;
@@ -1131,23 +1131,25 @@
         --dot: rgb(31 41 55 / 12%);
         --tile: #fcfcfd;
         --ink: rgb(31 41 55 / 85%);
-        --card-radius: 6px;
-        --shadow: 0 10px 30px rgba(0,0,0,0.06);
-        --shadow-hover: 0 14px 40px rgba(0,0,0,0.08);
+        --radius-control: 4px;
+        --radius-panel: 16px;
+        --card-radius: 12px;
+        --shadow: 3px 3px 0 rgba(24, 33, 43, 0.10);
+        --shadow-hover: 5px 5px 0 rgba(24, 33, 43, 0.14);
         --scrollbar: rgb(0 0 0 / 15%);
     }
 
     /* Dark Theme Variables */
     :global(body.theme-dark) {
-        --bg: #111827;
-        --panel: #1f2937;
-        --panel-2: #374151;
-        --border: #374151;
-        --text: #f9fafb;
-        --muted: #9ca3af;
-            --accent: #60a5fa; /* Luminous Blue */
-            --accent-hover: #3b82f6;
-        --header-bg: #1f2937;
+        --bg: #0f1318;
+        --panel: #181e26;
+        --panel-2: #222a34;
+        --border: #3b4653;
+        --text: #f2f5f7;
+        --muted: #a4aeba;
+        --accent: #69c8ff;
+        --accent-hover: #91d8ff;
+        --header-bg: #0b0e12;
         --header-text: #f9fafb;
         --danger: #f87171;
         --warn: #fbbf24;
@@ -1156,24 +1158,26 @@
         --dot: rgb(249 250 251 / 14%);
         --tile: #182233;
         --ink: rgb(0 0 0 / 70%);
-        --card-radius: 6px;
-        --shadow: 0 10px 30px rgba(0,0,0,0.4);
-        --shadow-hover: 0 14px 40px rgba(0,0,0,0.6);
+        --radius-control: 4px;
+        --radius-panel: 16px;
+        --card-radius: 12px;
+        --shadow: 3px 3px 0 rgba(0,0,0,0.45);
+        --shadow-hover: 5px 5px 0 rgba(0,0,0,0.62);
         --scrollbar: rgb(255 255 255 / 20%);
     }
 
     /* System Theme Override (when Dark OS preference) */
     @media (prefers-color-scheme: dark) {
         :global(body.theme-system) {
-            --bg: #111827;
-            --panel: #1f2937;
-            --panel-2: #374151;
-            --border: #374151;
-            --text: #f9fafb;
-            --muted: #9ca3af;
-            --accent: #60a5fa; /* Luminous Blue */
-            --accent-hover: #3b82f6;
-            --header-bg: #1f2937;
+            --bg: #0f1318;
+            --panel: #181e26;
+            --panel-2: #222a34;
+            --border: #3b4653;
+            --text: #f2f5f7;
+            --muted: #a4aeba;
+            --accent: #69c8ff;
+            --accent-hover: #91d8ff;
+            --header-bg: #0b0e12;
             --header-text: #f9fafb;
             --danger: #f87171;
             --warn: #fbbf24;
@@ -1182,9 +1186,11 @@
             --dot: rgb(249 250 251 / 14%);
             --tile: #182233;
             --ink: rgb(0 0 0 / 70%);
-            --card-radius: 6px;
-            --shadow: 0 10px 30px rgba(0,0,0,0.4);
-            --shadow-hover: 0 14px 40px rgba(0,0,0,0.6);
+            --radius-control: 4px;
+            --radius-panel: 16px;
+            --card-radius: 12px;
+            --shadow: 3px 3px 0 rgba(0,0,0,0.45);
+            --shadow-hover: 5px 5px 0 rgba(0,0,0,0.62);
             --scrollbar: rgb(255 255 255 / 20%);
         }
     }
@@ -1216,9 +1222,11 @@
         --dot: rgb(93 64 45 / 15%);
         --tile: #fdf8f1;
         --ink: rgb(93 64 45 / 55%);
-        --card-radius: 14px;
-        --shadow: 0 8px 24px rgba(93, 64, 45, 0.10);
-        --shadow-hover: 0 12px 32px rgba(93, 64, 45, 0.16);
+        --radius-control: 4px;
+        --radius-panel: 16px;
+        --card-radius: 12px;
+        --shadow: 3px 3px 0 rgba(93, 64, 45, 0.14);
+        --shadow-hover: 5px 5px 0 rgba(93, 64, 45, 0.20);
         --scrollbar: rgb(93 64 45 / 20%);
         /* Softer geometry and a display face for headings. */
         --display-font: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
@@ -1242,9 +1250,11 @@
         --dot: rgb(255 250 245 / 16%);
         --tile: #362b25;
         --ink: rgb(0 0 0 / 55%);
-        --card-radius: 14px;
-        --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-        --shadow-hover: 0 14px 40px rgba(0, 0, 0, 0.6);
+        --radius-control: 4px;
+        --radius-panel: 16px;
+        --card-radius: 12px;
+        --shadow: 3px 3px 0 rgba(0, 0, 0, 0.48);
+        --shadow-hover: 5px 5px 0 rgba(0, 0, 0, 0.64);
         --scrollbar: rgb(255 250 245 / 20%);
     }
     @media (prefers-color-scheme: dark) {
@@ -1266,9 +1276,11 @@
             --dot: rgb(255 250 245 / 16%);
             --tile: #362b25;
             --ink: rgb(0 0 0 / 55%);
-            --card-radius: 14px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-            --shadow-hover: 0 14px 40px rgba(0, 0, 0, 0.6);
+            --radius-control: 4px;
+            --radius-panel: 16px;
+            --card-radius: 12px;
+            --shadow: 3px 3px 0 rgba(0, 0, 0, 0.48);
+            --shadow-hover: 5px 5px 0 rgba(0, 0, 0, 0.64);
             --scrollbar: rgb(255 250 245 / 20%);
         }
     }
@@ -1283,11 +1295,11 @@
     :global(body.skin-craft) :global(input),
     :global(body.skin-craft) :global(select),
     :global(body.skin-craft) :global(textarea) {
-        border-radius: 10px;
+        border-radius: var(--radius-control);
     }
     :global(body.skin-craft) :global(.card),
     :global(body.skin-craft) :global(.panel) {
-        border-radius: 16px;
+        border-radius: var(--radius-panel);
     }
 
     /* Animation Duration Variables */
@@ -1313,11 +1325,11 @@
         color: var(--text);
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: var(--radius-control);
         padding: 6px 14px;
         min-height: 36px;
         cursor: pointer;
-        transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s ease;
+        transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, color 0.12s ease;
         font-weight: 500;
         display: inline-flex;
         align-items: center;
@@ -1326,11 +1338,11 @@
     }
     :global(button:hover:not(:disabled)) {
         background: var(--panel-2);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-color: var(--accent);
+        box-shadow: 2px 2px 0 color-mix(in srgb, var(--accent) 28%, transparent);
     }
     :global(button:active:not(:disabled)) {
-        transform: scale(0.95);
+        transform: translate(1px, 1px);
         box-shadow: none;
     }
     :global(button:disabled) {
@@ -1341,11 +1353,11 @@
         background: var(--accent);
         color: #fff;
         border-color: transparent;
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 25%, transparent);
+        box-shadow: 2px 2px 0 color-mix(in srgb, var(--accent) 32%, transparent);
     }
     :global(button.primary:hover:not(:disabled)) {
         background: var(--accent-hover);
-        box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent);
+        box-shadow: 3px 3px 0 color-mix(in srgb, var(--accent) 38%, transparent);
     }
     :global(button.danger) {
         color: #fff;
@@ -1359,7 +1371,7 @@
         gap: 14px;
         padding: 12px;
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: var(--radius-panel);
         background: var(--panel);
     }
     .media-offer.loading { align-items: flex-start; }
@@ -1373,7 +1385,7 @@
     .media-offer-error {
         padding: 12px;
         border: 1px solid color-mix(in srgb, var(--warn) 40%, var(--border));
-        border-radius: 12px;
+        border-radius: var(--radius-panel);
         background: color-mix(in srgb, var(--warn) 8%, var(--panel));
     }
     .media-offer-actions { display: flex; justify-content: flex-end; gap: 8px; }
@@ -1394,7 +1406,7 @@
         color: var(--text);
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 10px;
+        border-radius: var(--radius-control);
         padding: 8px 12px;
         box-sizing: border-box;
         max-width: 100%;
@@ -1436,18 +1448,17 @@
         background: var(--header-bg);
         color: var(--header-text);
         border-bottom: 1px solid rgba(0,0,0,0.1);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        box-shadow: none;
         z-index: 10;
         position: relative;
     }
-    /* Home screen: a light, page-integrated hero rather than a colored app-bar,
-       so it flows into the rounded search + cards below instead of clashing. */
+    /* Home screen: page-integrated but still reads as deliberate app chrome. */
     header.hero {
         background: transparent;
         color: var(--text);
-        border-bottom: none;
+        border-bottom: 1px solid var(--border);
         box-shadow: none;
-        padding: 18px 4px 6px;
+        padding: 14px 4px 10px;
         gap: 8px;
     }
     header.hero .brand {
@@ -1460,12 +1471,14 @@
     }
     header.hero .brand-mark {
         font-size: 22px;
+        color: var(--accent);
+        transform: rotate(-8deg);
     }
     header.hero .ghost {
         background: var(--panel);
         border: 1px solid var(--border);
         color: var(--text);
-        box-shadow: var(--shadow);
+        box-shadow: none;
     }
     header.hero .ghost:hover:not(:disabled) {
         background: var(--panel-2);
@@ -1473,7 +1486,7 @@
     header.hero .chip {
         background: var(--panel);
         border: 1px solid var(--border);
-        box-shadow: var(--shadow);
+        box-shadow: none;
     }
     /* --header-text is white in every skin, because the app-bar is normally a
        colored slab. The hero drops that background, so its icon buttons have to
@@ -1502,13 +1515,13 @@
         font-size: 18px;
         padding: 8px;
         color: var(--header-text);
-        border-radius: 12px;
+        border-radius: var(--radius-control);
         box-shadow: none;
     }
     .icon-btn:hover {
         background: rgba(255, 255, 255, 0.15);
         color: #fff;
-        transform: translateY(-2px);
+        transform: none;
     }
     .name {
         flex: 1;
@@ -1563,7 +1576,7 @@
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        border-radius: 12px;
+        border-radius: var(--radius-control);
         font-size: 14px;
         font-weight: 700;
         padding: 6px 14px;
@@ -1573,7 +1586,7 @@
         overflow: hidden;
         background: #fff;
         border-color: transparent;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 2px 2px 0 rgba(0,0,0,0.18);
     }
     /* The ellipsis has to live on the text itself now that the chip is a flex
        row — `text-overflow` on a flex container truncates nothing. */
@@ -1719,7 +1732,7 @@
         padding: 5px 14px;
         border: 1px solid var(--border);
         border-bottom: none;
-        border-radius: 8px 8px 0 0;
+        border-radius: 3px 3px 0 0;
         background: var(--panel-2);
         color: var(--muted);
         box-shadow: none;
@@ -1882,7 +1895,7 @@
         min-width: 0;
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 16px;
+        border-radius: var(--radius-panel);
         box-shadow: var(--shadow);
     }
     .area-mobile {
@@ -1896,7 +1909,7 @@
         height: 156px;
         padding: 0 12px calc(10px + env(safe-area-inset-bottom));
         box-sizing: border-box;
-        border-radius: 18px 18px 0 0;
+        border-radius: 7px 7px 0 0;
         box-shadow: 0 -8px 28px rgb(0 0 0 / 18%);
         transition: height 180ms ease;
         overflow: hidden;
@@ -1990,7 +2003,7 @@
     .print-frame {
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 16px;
+        border-radius: var(--radius-panel);
         padding: 14px;
         box-shadow: var(--shadow);
     }
@@ -2121,7 +2134,7 @@
             border-bottom: 1px solid var(--border);
             background: var(--panel-2);
         }
-        .sheet-tabs .sheet { border-radius: 6px 6px 0 0; }
+        .sheet-tabs .sheet { border-radius: 3px 3px 0 0; }
         /* The drag edge. Wider hit area than it looks, so it is grabbable
            without being a visual divider in its own right. */
         .splitter {

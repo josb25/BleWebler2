@@ -201,7 +201,7 @@
         min-height: 26px;
         padding: 2px 10px;
         border: none;
-        border-radius: 5px;
+        border-radius: 2px;
         background: transparent;
         color: var(--text);
         box-shadow: none;
@@ -222,7 +222,7 @@
         padding: 4px;
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 2px;
         box-shadow: var(--shadow-hover, 0 10px 30px rgb(0 0 0 / 22%));
         display: flex;
         flex-direction: column;
@@ -236,7 +236,7 @@
         min-height: 28px;
         padding: 3px 10px 3px 6px;
         border: none;
-        border-radius: 5px;
+        border-radius: 2px;
         background: transparent;
         color: var(--text);
         box-shadow: none;

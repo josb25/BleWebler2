@@ -170,12 +170,13 @@
         padding: 6px 10px;
         background: var(--panel-2);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 2px;
         color: var(--text);
         transition: border-color 0.15s ease;
     }
     .search-wrap:focus-within {
         border-color: var(--accent);
+        box-shadow: inset 3px 0 0 var(--accent);
     }
     .search-icon {
         display: inline-flex;
@@ -184,15 +185,24 @@
         flex-shrink: 0;
     }
     .search-input {
+        appearance: none;
+        -webkit-appearance: none;
         flex: 1;
         min-width: 0;
-        border: none;
-        background: transparent;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
         color: inherit;
         font: inherit;
         font-size: 13px;
-        outline: none;
-        padding: 0;
+        outline: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+    .search-input:focus {
+        border: 0 !important;
+        outline: 0 !important;
+        box-shadow: none !important;
     }
     .search-input::placeholder {
         color: var(--muted);
@@ -206,7 +216,7 @@
         border: none;
         background: var(--border);
         color: var(--muted);
-        border-radius: 50%;
+        border-radius: 2px;
         cursor: pointer;
         font-size: 13px;
         line-height: 1;
@@ -255,7 +265,7 @@
         padding: 12px 8px;
         background: var(--panel-2);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 2px;
         cursor: pointer;
         color: inherit;
         font: inherit;
@@ -269,6 +279,7 @@
     .printer-card.on {
         border-color: var(--accent);
         background: color-mix(in srgb, var(--accent) 8%, var(--panel-2));
+        box-shadow: inset 0 3px 0 var(--accent);
     }
     .card-icon {
         display: inline-flex;
@@ -300,7 +311,7 @@
         font-weight: 500;
         line-height: 1.2;
         padding: 1px 4px;
-        border-radius: 4px;
+        border-radius: 2px;
         background: var(--panel);
         color: var(--muted);
         border: 1px solid var(--border);
@@ -326,7 +337,7 @@
         text-align: center;
         background: var(--panel-2);
         border: 1px dashed var(--border);
-        border-radius: 12px;
+        border-radius: 3px;
         color: var(--muted);
     }
     .empty-icon {
@@ -353,7 +364,7 @@
         padding: 6px 12px;
         font-size: 12px;
         font-weight: 500;
-        border-radius: 6px;
+        border-radius: 2px;
         background: var(--panel);
         border: 1px solid var(--border);
         color: var(--text);

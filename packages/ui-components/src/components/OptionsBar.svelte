@@ -143,7 +143,7 @@
     .mini {
         min-height: 26px;
         padding: 2px 8px;
-        border-radius: 5px;
+        border-radius: 2px;
         font-size: 12px;
         box-shadow: none;
         gap: 4px;

@@ -107,7 +107,7 @@
     .review { display: flex; flex-direction: column; gap: 10px; }
     .save-actions { display: flex; align-items: center; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
     .saved-tag { display: inline-flex; align-items: center; gap: 4px; color: var(--ok); font-size: 13px; font-weight: 600; }
-    .status { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); }
+    .status { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 8px 12px; border-left: 3px solid currentColor; border-radius: 2px; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .status.ok { color: var(--ok); border-color: var(--ok); }
     .status.bad { color: var(--danger); border-color: var(--danger); }
 </style>

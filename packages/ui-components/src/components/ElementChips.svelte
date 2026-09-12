@@ -183,7 +183,7 @@
         align-items: center;
         gap: 2px;
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 2px;
         background: var(--panel-2);
         overflow: hidden;
     }

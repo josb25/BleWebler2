@@ -206,7 +206,7 @@
         gap: 12px;
         padding: 10px;
         background: var(--panel);
-        border-radius: 8px;
+        border-radius: 2px;
     }
     .driver-choice span {
         display: flex;
@@ -225,7 +225,7 @@
         gap: 12px;
         padding: 10px;
         background: var(--panel);
-        border-radius: 8px;
+        border-radius: 2px;
     }
     .option.disabled {
         opacity: 0.6;
@@ -272,7 +272,7 @@
         font-size: 13px;
         padding: 6px 10px;
         background: var(--panel);
-        border-radius: 6px;
+        border-radius: 2px;
     }
     .actions {
         display: flex;

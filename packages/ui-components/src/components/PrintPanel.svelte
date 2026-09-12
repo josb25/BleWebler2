@@ -259,7 +259,7 @@
         gap: 10px;
         padding: 10px;
         background: var(--panel);
-        border-radius: 8px;
+        border-radius: 2px;
     }
     .row {
         display: flex;

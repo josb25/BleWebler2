@@ -235,7 +235,7 @@
         padding: 18px;
         background: var(--panel-2);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 3px;
         min-height: 190px;
     }
     .stage :global(svg) { width: 130px; height: auto; }

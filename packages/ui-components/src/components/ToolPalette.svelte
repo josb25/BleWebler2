@@ -113,7 +113,7 @@
         min-height: 0;
         padding: 0;
         border: 1px solid transparent;
-        border-radius: 6px;
+        border-radius: 2px;
         background: transparent;
         color: var(--text);
         box-shadow: none;
@@ -154,7 +154,7 @@
         padding: 4px;
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 2px;
         box-shadow: var(--shadow-hover, 0 8px 24px rgb(0 0 0 / 20%));
     }
     .flyout button {
@@ -163,7 +163,7 @@
         min-height: 30px;
         padding: 4px 10px;
         border: none;
-        border-radius: 6px;
+        border-radius: 2px;
         background: transparent;
         box-shadow: none;
         font-size: 13px;

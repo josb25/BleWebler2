@@ -705,7 +705,7 @@
         background: radial-gradient(var(--border) 1px, transparent 1px);
         background-size: 16px 16px;
         background-color: var(--bg);
-        border-radius: 16px;
+        border-radius: 3px;
         touch-action: none;
         user-select: none;
     }
@@ -791,7 +791,7 @@
         align-items: center;
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 2px;
         padding: 4px;
         box-shadow: var(--shadow);
         z-index: 100;
@@ -809,7 +809,7 @@
         padding: 4px 8px;
         font-size: 14px;
         cursor: pointer;
-        border-radius: 8px;
+        border-radius: 2px;
         transition: background 0.2s ease;
     }
     .zoom-btn:hover {
@@ -824,7 +824,7 @@
         font-size: 13px;
         border-left: 1px solid var(--border);
         margin-left: 4px;
-        border-radius: 0 8px 8px 0;
+        border-radius: 0 2px 2px 0;
     }
     .zoom-val {
         min-width: 40px;
@@ -902,7 +902,7 @@
         height: 36px;
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 6px;
+        border-radius: 2px;
         box-shadow: var(--shadow);
         cursor: ew-resize;
         display: flex;
