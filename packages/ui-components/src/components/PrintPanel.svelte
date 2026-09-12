@@ -110,18 +110,22 @@
         printedOk = false;
         printing = true;
         try {
+            const requestedCopies = Number.isFinite(copies)
+                ? Math.min(99, Math.max(1, Math.trunc(copies)))
+                : 1;
+            copies = requestedCopies;
             const page = await rasterizeDesign(editor.design, undefined, { inkChannels });
             const options: UniversalPrintOptions = {
                 paper: activePaper,
                 density,
-                copies,
+                copies: requestedCopies,
                 ...(caps?.supportsSpeedMode ? { speed } : {}),
                 ...(activePaper.type === 'continuous' ? { feedOverrides: { 
                     feedBeforeMm: typeof editor.printFeedBeforeMm === 'number' ? editor.printFeedBeforeMm : undefined, 
                     feedAfterMm: typeof editor.printFeedAfterMm === 'number' ? editor.printFeedAfterMm : undefined 
                 } } : {})
             };
-            for (let i = 0; i < copies; i++) {
+            for (let i = 0; i < requestedCopies; i++) {
                 // Drivers treat options.copies as metadata; the spooler prints
                 // one page per print() call, so we loop explicitly.
                 await session.print(page, options);

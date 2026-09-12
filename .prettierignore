@@ -4,8 +4,8 @@ lib/
 build/
 coverage/
 .svelte-kit/
-capacitor/android/
-capacitor/ios/
+apps/web-app/android/
+apps/web-app/ios/
 *.tsbuildinfo
 package-lock.json
 temp/

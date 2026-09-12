@@ -8,9 +8,9 @@
 {#if items.length > 0}
     <div class="toast-stack">
         {#each items as t (t.id)}
-            <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
-            <div class="toast {t.kind}" onclick={() => dismiss(t.id)} role="status">
-                {t.message}
+            <div class="toast {t.kind}" role="status">
+                <span>{t.message}</span>
+                <button type="button" class="dismiss" aria-label="Dismiss notification" onclick={() => dismiss(t.id)}>×</button>
             </div>
         {/each}
     </div>
@@ -36,10 +36,12 @@
         font-size: 13px;
         font-weight: 600;
         box-shadow: 0 4px 12px rgb(0 0 0 / 25%);
-        cursor: pointer;
         max-width: 90vw;
         text-align: center;
         animation: toast-in 0.15s ease-out;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
     .toast.info {
         background: var(--panel);
@@ -53,6 +55,17 @@
     .toast.error {
         background: var(--danger);
         color: #fff;
+    }
+    .dismiss {
+        min-width: 24px;
+        min-height: 24px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        line-height: 1;
+        cursor: pointer;
     }
     @keyframes toast-in {
         from { opacity: 0; transform: translateY(8px); }

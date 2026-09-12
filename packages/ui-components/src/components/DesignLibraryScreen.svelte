@@ -1,7 +1,8 @@
 <script lang="ts">
     /** One catalogue for all ULT designs; fields and adaptivity are capabilities. */
-    import { onMount } from 'svelte';
+    import { untrack } from 'svelte';
     import Icon from './Icon.svelte';
+    import Sheet from './Sheet.svelte';
     import type { InkBinding, PaperProfile } from 'universal-label-core';
     import {
         compositePage, mediaFit, rasterizeDesign, resolveTemplate,
@@ -38,16 +39,23 @@
     let dragDepth = 0;
     let importReport = $state<{ ok: number; failed: Array<{ name: string; error: string }> } | null>(null);
     let pendingDelete = $state<string | null>(null);
+    const renderingThumbs = new Set<string>();
+    let activeThumbKeys = new Set<string>();
 
-    // Re-render thumbnails when entries change.
+    // Re-render thumbnails when entries change. Cache reads and writes stay
+    // untracked so each completed thumbnail does not restart this effect.
     $effect(() => {
-        void entries;
-        void renderThumbs();
+        const snapshot = entries;
+        untrack(() => {
+            const activeKeys = new Set(snapshot.map(entry => `${entry.template.id}#${entry.savedAt}`));
+            activeThumbKeys = activeKeys;
+            const retained = Object.fromEntries(
+                Object.entries(thumbs).filter(([key]) => activeKeys.has(key))
+            ) as Record<string, string>;
+            if (Object.keys(retained).length !== Object.keys(thumbs).length) thumbs = retained;
+            void renderThumbs(snapshot);
+        });
     });
-
-    function refresh(): void {
-        void renderThumbs();
-    }
 
     /** Render the recognizable authored design; media compatibility is separate. */
     function resolveAtDesigned(tpl: LabelTemplate): LabelDesign {
@@ -73,19 +81,21 @@
         return canvas.toDataURL();
     }
 
-    async function renderThumbs(): Promise<void> {
-        for (const entry of entries) {
+    async function renderThumbs(snapshot: SavedLabel[]): Promise<void> {
+        for (const entry of snapshot) {
             const key = `${entry.template.id}#${entry.savedAt}`;
-            if (thumbs[key]) continue;
+            if (thumbs[key] || renderingThumbs.has(key)) continue;
+            renderingThumbs.add(key);
             try {
-                thumbs = { ...thumbs, [key]: await toThumb(resolveAtDesigned(entry.template)) };
+                const thumbnail = await toThumb(resolveAtDesigned(entry.template));
+                if (activeThumbKeys.has(key)) thumbs = { ...thumbs, [key]: thumbnail };
             } catch (error) {
                 if (import.meta.env.DEV) console.warn('[DesignLibrary] thumbnail failed:', error);
+            } finally {
+                renderingThumbs.delete(key);
             }
         }
     }
-
-    onMount(() => void renderThumbs());
 
     const query = $derived(search.trim().toLowerCase());
     const searching = $derived(query !== '');
@@ -114,14 +124,13 @@
         else onopen(copy(entry.template), entry.paper, entry.inkBindings, entry.origin);
     }
     function edit(entry: SavedLabel): void { onedit(copy(entry.template), entry.origin); }
-    function toggleFavorite(id: string): void { session.toggleFavorite(id); refresh(); }
+    function toggleFavorite(id: string): void { session.toggleFavorite(id); }
     function confirmDelete(id: string): void { pendingDelete = id; }
     function cancelDelete(): void { pendingDelete = null; }
     function executeDelete(): void {
         if (pendingDelete === null) return;
         session.remove(pendingDelete);
         pendingDelete = null;
-        refresh();
     }
 
     function sizeLabel(tpl: LabelTemplate): string {
@@ -153,7 +162,6 @@
                 failed.push({ name: file.name, error: error instanceof Error ? error.message : String(error) });
             }
         }
-        refresh();
         importReport = { ok, failed };
     }
     function onDragEnter(event: DragEvent): void {
@@ -266,16 +274,13 @@
 </div>
 
 {#if pendingDelete}
-    <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-    <div class="confirm-overlay" onclick={e => { if (e.target === e.currentTarget) cancelDelete(); }}>
-        <div class="confirm-dialog" role="alertdialog" aria-label="Delete design">
-            <p>Delete this design? This cannot be undone.</p>
-            <div class="confirm-actions">
-                <button onclick={cancelDelete}>Cancel</button>
-                <button class="danger" onclick={executeDelete}>Delete</button>
-            </div>
+    <Sheet title="Delete design" onclose={cancelDelete} priority>
+        <p>Delete this design? This cannot be undone.</p>
+        <div class="confirm-actions">
+            <button onclick={cancelDelete}>Cancel</button>
+            <button class="danger" onclick={executeDelete}>Delete</button>
         </div>
-    </div>
+    </Sheet>
 {/if}
 
 <style>
@@ -360,26 +365,6 @@
         .gallery { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
     }
     @media (max-width: 480px) { .readout span { padding: 0 7px; } .gallery { grid-template-columns: 1fr; } .thumb-button { min-height: 108px; } }
-    .confirm-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgb(0 0 0 / 55%);
-        z-index: 60;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .confirm-dialog {
-        background: var(--bg);
-        border-radius: 12px;
-        padding: 20px;
-        max-width: 340px;
-        width: calc(100% - 32px);
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-    .confirm-dialog p { margin: 0; font-size: 14px; }
     .confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
     .confirm-actions .danger { color: #fff; background: var(--danger); }
 </style>

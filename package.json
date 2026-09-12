@@ -34,8 +34,7 @@
         "fonts": "npm run fonts --workspace packages/renderer",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
-        "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "format": "prettier --write ."
     },
     "devDependencies": {
         "@capacitor/cli": "^8.4.0",

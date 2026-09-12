@@ -12,12 +12,20 @@
     }
     let { title, onclose, children, priority = false }: Props = $props();
 
+    let backdropEl = $state<HTMLDivElement | null>(null);
     let sheetEl = $state<HTMLDivElement | null>(null);
     let previouslyFocused: HTMLElement | null = null;
 
+    function isTopmost(): boolean {
+        const overlays = document.querySelectorAll<HTMLElement>('[data-sheet-overlay]');
+        return overlays.length > 0 && overlays[overlays.length - 1] === backdropEl;
+    }
+
     function onKeydown(e: KeyboardEvent): void {
+        if (!isTopmost()) return;
         if (e.key === 'Escape') {
-            e.stopPropagation();
+            e.preventDefault();
+            e.stopImmediatePropagation();
             onclose();
             return;
         }
@@ -54,7 +62,7 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions
      -- backdrop dismiss duplicates the explicit close button below; Escape is handled above -->
-<div class="backdrop" class:priority onclick={e => { if (e.target === e.currentTarget) onclose(); }}>
+<div class="backdrop" class:priority data-sheet-overlay bind:this={backdropEl} onclick={e => { if (e.target === e.currentTarget) onclose(); }}>
     <div class="sheet" role="dialog" aria-modal="true" aria-label={title} bind:this={sheetEl}>
         <div class="head">
             <h3>{title}</h3>

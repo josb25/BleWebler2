@@ -32,7 +32,6 @@
 
     let frameDiv = $state<HTMLDivElement | null>(null);
 
-    let img = $state<HTMLCanvasElement | null>(null);
     let bitmapDiv = $state<HTMLDivElement | null>(null);
     let renderToken = 0;
 
@@ -49,13 +48,14 @@
         rasterizeElementPreview(element, design)
             .then(canvas => {
                 if (token !== renderToken) return;
-                img = canvas as HTMLCanvasElement;
                 // Replace the canvas child directly — no toDataURL round-trip.
                 if (bitmapDiv) {
-                    bitmapDiv.replaceChildren(img);
+                    bitmapDiv.replaceChildren(canvas as HTMLCanvasElement);
                 }
             })
-            .catch(() => {});
+            .catch(err => {
+                if (import.meta.env.DEV) console.warn('[ElementView] preview failed:', err);
+            });
     });
 
     /** The already-rotated bitmap sits on the bounding box. */

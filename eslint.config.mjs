@@ -76,4 +76,3 @@ export default tseslint.config(
     // Disable style rules that conflict with Prettier (must be last).
     prettier,
 );
-
