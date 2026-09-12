@@ -31,10 +31,19 @@
         "mqtt": "npm start --workspace apps/mqtt-client --",
         "sync:android": "npm run sync:android --workspace apps/web-app",
         "open:android": "npm run open:android --workspace apps/web-app",
-        "fonts": "npm run fonts --workspace packages/renderer"
+        "fonts": "npm run fonts --workspace packages/renderer",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
     },
     "devDependencies": {
         "@capacitor/cli": "^8.4.0",
+        "@eslint/js": "^9.18.0",
+        "eslint": "^9.18.0",
+        "eslint-config-prettier": "^10.0.1",
+        "prettier": "^3.4.2",
+        "typescript-eslint": "^8.20.0",
         "uuid": "11.1.1"
     },
     "overrides": {

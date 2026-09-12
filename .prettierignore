@@ -1,0 +1,12 @@
+node_modules/
+dist/
+lib/
+build/
+coverage/
+.svelte-kit/
+capacitor/android/
+capacitor/ios/
+*.tsbuildinfo
+package-lock.json
+temp/
+**/dummy-print-output.*
