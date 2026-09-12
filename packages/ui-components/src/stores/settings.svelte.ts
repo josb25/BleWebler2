@@ -142,7 +142,7 @@ export class SettingsStore {
                     this.rightOpen = sb.rightOpen !== false;
                 }
             } catch (err) {
-                console.warn('Failed to parse settings:', err);
+                if (import.meta.env.DEV) console.warn('Failed to parse settings:', err);
             }
         }
     }

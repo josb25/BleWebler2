@@ -57,7 +57,7 @@
             await paintDesignOnPaper(target, editor.design, editor.paper);
             if (token !== renderToken || canvas !== target) return;
         } catch (err) {
-            console.warn('[PreviewBar] render failed:', err);
+            if (import.meta.env.DEV) console.warn('[PreviewBar] render failed:', err);
         }
     }
 
@@ -165,7 +165,7 @@
     }
     function onPointerUp(e: PointerEvent) {
         if (gesture && gesture.pointerId === e.pointerId) {
-            try { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); } catch(e) {}
+            try { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); } catch { /* already released */ }
             gesture = null;
         }
     }

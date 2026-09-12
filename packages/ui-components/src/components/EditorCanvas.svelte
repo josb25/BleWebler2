@@ -556,7 +556,7 @@
     }
 
     function assertHandled(x: never): void {
-        console.warn('applyResize: unhandled element', x);
+        if (import.meta.env.DEV) console.warn('applyResize: unhandled element', x);
     }
 </script>
 

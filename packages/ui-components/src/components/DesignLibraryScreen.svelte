@@ -80,7 +80,7 @@
             try {
                 thumbs = { ...thumbs, [key]: await toThumb(resolveAtDesigned(entry.template)) };
             } catch (error) {
-                console.warn('[DesignLibrary] thumbnail failed:', error);
+                if (import.meta.env.DEV) console.warn('[DesignLibrary] thumbnail failed:', error);
             }
         }
     }
@@ -247,7 +247,7 @@
                     <div class="meta">
                         <div class="title-line"><button class="name" onclick={() => open(entry)}>{entry.template.name || 'Untitled design'}</button>{#if sourceLabel(entry)}<span class="source">{sourceLabel(entry)}</span>{/if}</div>
                         {#if entry.template.description}<p class="description">{entry.template.description}</p>{/if}
-                        {#if entry.template.tags?.length}<div class="tags">{#each entry.template.tags.slice(0, 3) as tag (tag)}<button onclick={() => (search = tag)}>{tag}</button>{/each}</div>{/if}
+                        {#if entry.template.tags?.length}<div class="tags">{#each entry.template.tags.slice(0, 3) as tag (tag)}<button onclick={() => { search = tag; scope = 'all'; fitsOnly = false; }}>{tag}</button>{/each}</div>{/if}
                         <div class="details">
                             {#if fitOf(entry.template) === 'outside'}<span class="fit off" title={`Does not fit ${mediaLabel}`}>Doesn’t fit</span>{:else if fitOf(entry.template) === 'designed'}<span class="fit exact" title={`Designed for ${mediaLabel}`}>Exact fit</span>{/if}
                             <span>{sizeLabel(entry.template)}</span><span>·</span>

@@ -36,6 +36,13 @@
     let printedOk = $state(false);
     let printing = $state(false);
 
+    // Reset stale print status when the design changes.
+    $effect(() => {
+        void editor.design;
+        printedOk = false;
+        printError = '';
+    });
+
     $effect(() => {
         if (caps) density = Math.min(Math.max(1, userDensity), caps.maxDensity);
         

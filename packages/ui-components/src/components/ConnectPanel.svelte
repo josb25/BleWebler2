@@ -69,6 +69,12 @@
     }
 
     const snap = $derived(printer.current);
+
+    // Clear stale errors when the connection state transitions.
+    $effect(() => {
+        if (snap.state === 'connected') connectError = '';
+    });
+
     const driverChoices = $derived(session.getDriverChoices());
 
     /**

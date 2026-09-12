@@ -130,7 +130,7 @@ export function importLabel(editor: EditorStore, files: FileList | null): void {
                 alert('That file is not a valid BleWebler2 label.');
             }
         } catch (e) {
-            console.error('Failed to import label', e);
+            if (import.meta.env.DEV) console.error('Failed to import label', e);
             alert('Could not read that file as JSON.');
         }
     };

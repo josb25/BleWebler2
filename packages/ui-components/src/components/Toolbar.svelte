@@ -9,7 +9,8 @@
     import Icon from './Icon.svelte';
     import {
         addShape as addShapeAction, addImageFromFile as addImageAction,
-        exportLabel as exportAction, importLabel as importAction, saveAs as saveAsAction
+        exportLabel as exportAction, importLabel as importAction, saveAs as saveAsAction,
+        clearCanvas as clearCanvasAction
     } from '../lib/editor-actions';
 
     interface Props {
@@ -44,8 +45,11 @@
     function saveAs(): void { saveAsAction(editor); }
 
     function importLabel(files: FileList | null): void {
-        importAction(editor, files);
-        if (importInput) importInput.value = '';
+        try {
+            importAction(editor, files);
+        } finally {
+            if (importInput) importInput.value = '';
+        }
     }
 
     const widthMm = $derived(editor.design ? Math.round((editor.design.widthPx / editor.authoringDpmm) * 10) / 10 : 0);
@@ -85,11 +89,7 @@
         {/if}
         <div class="divider"></div>
         <div class="group">
-            <button class="danger" onclick={() => {
-                if (confirm('Are you sure you want to clear the canvas? This cannot be undone.')) {
-                    editor.newDesign(editor.design.heightPx);
-                }
-            }}><Icon name="trash" /> Clear Canvas</button>
+            <button class="danger" onclick={() => clearCanvasAction(editor)}><Icon name="trash" /> Clear Canvas</button>
         </div>
     {:else if activeTab === 'Insert'}
         <div class="group">
