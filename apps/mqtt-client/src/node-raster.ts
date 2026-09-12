@@ -1,5 +1,5 @@
 import { createCanvas, loadImage } from '@napi-rs/canvas';
-import type { RasterEnv } from '../../../packages/renderer/src/raster/rasterize.js';
+import type { RasterEnv } from 'universal-label-renderer';
 
 export const nodeRasterEnv: RasterEnv = {
   createCanvas(width, height) {

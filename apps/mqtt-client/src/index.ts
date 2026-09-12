@@ -6,8 +6,7 @@ import { DummyTransport } from 'universal-label-core/transport/dummy';
 import { NodeBleTransport } from 'universal-label-core/transport/node';
 import { NodeSerialTransport } from 'universal-label-core/transport/node-serial';
 import { NodeUsbTransport } from 'universal-label-core/transport/node-usb';
-import { rasterizeDesign } from '../../../packages/renderer/src/raster/rasterize.js';
-import { resolveTemplate, type LabelTemplate, type TemplateParam } from '../../../packages/renderer/src/template/template.js';
+import { rasterizeDesign, resolveTemplate, type TemplateParam } from 'universal-label-renderer';
 import { measureTextNode, nodeRasterEnv } from './node-raster.js';
 import { loadTemplateById } from './template-loader.js';
 

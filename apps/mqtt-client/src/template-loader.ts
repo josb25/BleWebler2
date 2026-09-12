@@ -1,7 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { isAbsolute, relative, resolve } from 'node:path';
-import { parseTemplate } from '../../../packages/renderer/src/template/validate.js';
-import type { LabelTemplate } from '../../../packages/renderer/src/template/template.js';
+import { parseTemplate, type LabelTemplate } from 'universal-label-renderer';
 
 const MAX_TEMPLATE_BYTES = 2 * 1024 * 1024;
 const TEMPLATE_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/;
