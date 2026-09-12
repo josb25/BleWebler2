@@ -177,5 +177,23 @@ export const DEFAULT_PAPER_PROFILES: PaperProfile[] = [
         name: '15mm Transparent',
         type: 'transparent',
         tapeWidthMm: 15
+    },
+    {
+        // A cable-flag roll: a single die-cut sticker that wraps a cable. It is
+        // two 12.5x37mm writeable panels end-to-end (the fold between them is
+        // where it doubles over), followed by a 7x35mm wrap tail that curls
+        // around the cable to hold it - thick, thick, then thin - for a 109mm
+        // pitch on a 15mm carrier. The wrap tail is part of the sticker but not
+        // a place to write, so it is a keep-clear area rather than a hole, and
+        // the two panels are where content belongs.
+        id: 'cable-flag-15x109',
+        name: '15mm Cable Flag (12.5x109)',
+        type: 'gap',
+        tapeWidthMm: 15,
+        labelWidthMm: 12.5,
+        labelLengthMm: 109,
+        gapMm: 3,
+        die: { kind: 'path', dMm: 'M0 0 H74 V2.75 H109 V9.75 H74 V12.5 H0 Z' },
+        keepClearMm: ['M74 2.75 H109 V9.75 H74 Z']
     }
 ];
