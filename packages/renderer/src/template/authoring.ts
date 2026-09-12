@@ -16,7 +16,7 @@
  */
 
 import {
-    pxToMm, PX_PER_MM,
+    PX_PER_MM,
     type LabelDesign, type AnyElement
 } from '../model/design';
 import { measureElement, type MeasureTextFn } from '../raster/measure';

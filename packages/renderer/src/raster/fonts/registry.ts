@@ -195,9 +195,8 @@ export async function loadFont(id: string | undefined): Promise<BitmapFont> {
                 pending.delete(id);
                 return font;
             })
-            .catch(err => {
+            .catch(() => {
                 pending.delete(id);
-                console.warn(`[fonts] failed to load "${id}", using default:`, err);
                 return defaultFont();
             });
         pending.set(id, inflight);

@@ -117,14 +117,13 @@ export class PhomemoP12Driver implements IPrinterDriver {
         }
         const transport = this.requireTransport();
         await new Promise<void>((resolve, reject) => {
-            let timer: ReturnType<typeof setTimeout>;
             const finish = () => {
                 clearTimeout(timer);
                 transport.off('data', onData);
                 resolve();
             };
             const onData = () => finish();
-            timer = setTimeout(finish, 500);
+            const timer = setTimeout(finish, 500);
             transport.on('data', onData);
             this.write(data).catch(error => {
                 clearTimeout(timer);

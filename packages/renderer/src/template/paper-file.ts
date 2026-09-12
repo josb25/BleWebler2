@@ -15,7 +15,6 @@
 
 import type { Ink, MediaDie, PaperAppearance, PaperProfile } from 'universal-label-core';
 import { isValidPath, PATH_LIMITS } from '../raster/svgpath';
-import { IMAGE_LIMITS } from './template';
 
 export const PAPER_FILE_LIMITS = {
     maxHoles: 12,

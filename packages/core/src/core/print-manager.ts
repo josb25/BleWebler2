@@ -31,6 +31,9 @@ export interface PrintManagerEvents {
     error: (error: Error) => void;
 }
 
+/** Diagnostic sink for the PrintManager. Defaults to silent; inject one to observe. */
+export type DiagnosticLogger = (level: 'info' | 'warn', message: string) => void;
+
 export interface PrinterDriverChoice {
     /** Stable selection key accepted by connect/connectWithTransport. */
     name: string;
@@ -48,9 +51,11 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
     private registeredDrivers: IPrinterDriver[] = [];
 
     private isPrinting: boolean = false;
+    private readonly logger: DiagnosticLogger;
 
-    constructor() {
+    constructor(logger?: DiagnosticLogger) {
         super();
+        this.logger = logger ?? (() => {});
         this.registerDriver(new MarklifeDriver());
         this.registerDriver(new NiimbotDriver());
         this.registerDriver(new CatPrinterDriver('standard'));
@@ -195,7 +200,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
         this.activeTransport.on("error", this.handleError);
 
         const deviceName = this.activeTransport.getDeviceName();
-        console.log(`[PrintManager] Device connected. Name: ${deviceName || 'Unknown'}`);
+        this.logger('info', `[PrintManager] Device connected. Name: ${deviceName || 'Unknown'}`);
 
         if (preferredDriverName) {
             const preferred = this.registeredDrivers.find(driver => driver.name === preferredDriverName);
@@ -217,7 +222,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
                     driver.connectionRequirements.services.some(service =>
                         discovered.has(normalizeUuid(service))));
             } catch (e) {
-                console.warn("[PrintManager] Failed to discover services for matching:", e);
+                this.logger('warn', `[PrintManager] Failed to discover services for matching: ${e}`);
             }
         }
 
@@ -228,7 +233,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
             const hardwareDrivers = this.registeredDrivers.filter(d => d.driverType === 'hardware');
             if (hardwareDrivers.length === 1) {
                 const onlyDriver = hardwareDrivers[0];
-                console.log(`[PrintManager] Still no match, but only one hardware driver registered (${onlyDriver.name}). Using fallback.`);
+                this.logger('info', `[PrintManager] Still no match, but only one hardware driver registered (${onlyDriver.name}). Using fallback.`);
                 await this.bindMatchedDriver(onlyDriver);
                 return;
             }
@@ -357,7 +362,7 @@ export class PrintManager extends EventEmitter<PrintManagerEvents> {
             try {
                 await this.activeDriver.unbindTransport();
             } catch (e) {
-                console.warn("[PrintManager] Error during driver unbindTransport:", e);
+                this.logger('warn', `[PrintManager] Error during driver unbindTransport: ${e}`);
             }
             this.activeDriver = undefined;
         }

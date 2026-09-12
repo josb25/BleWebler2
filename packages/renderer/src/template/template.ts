@@ -568,7 +568,8 @@ export function contentExtentPx(design: LabelDesign, measureText?: MeasureTextFn
     let right = 0;
     for (const el of design.elements) {
         const b = measureElement(el, measureText);
-        let x = el.x, w = b.width, h = b.height;
+        let x = el.x, w = b.width;
+        const h = b.height;
         if (el.rotation) {
             const rad = (el.rotation * Math.PI) / 180;
             const c = Math.abs(Math.cos(rad)), s = Math.abs(Math.sin(rad));

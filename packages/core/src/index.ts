@@ -1,7 +1,7 @@
 import { PrintManager as _PrintManager } from "./core/print-manager";
 export type PrintManager = _PrintManager;
 export const PrintManager = _PrintManager;
-export type { PrinterDriverChoice } from "./core/print-manager";
+export type { PrinterDriverChoice, DiagnosticLogger } from "./core/print-manager";
 
 // Interfaces (transport + driver contracts — always safe to import)
 export * from "./core/transports/transport.interface";

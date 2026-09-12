@@ -72,7 +72,7 @@ describe('unified model: dragging writes back to the placement', () => {
 
     it('an mm element keeps mm units and lands where it was dropped', () => {
         const el = textEl('a', { anchor: 'tl', origin: 'tl', dx: { u: 'mm', v: 1 }, dy: { u: 'mm', v: 1 }, size: { u: 'px', v: 24 } });
-        let tpl = tplWith(el);
+        const tpl = tplWith(el);
         const moved = { ...el, place: placeAtPx(el.place, { x: 80, y: 16 }, ctxFor(tpl, 'a')) };
         expect(moved.place.dx).toEqual({ u: 'mm', v: 10 }); // 80px / 8 px-per-mm
         expect(moved.place.dy).toEqual({ u: 'mm', v: 2 });

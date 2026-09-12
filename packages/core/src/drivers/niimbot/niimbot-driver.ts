@@ -1,4 +1,4 @@
-import { IPrinterDriver, PrinterCapabilities, UniversalPrintOptions, UniversalImageData } from "../driver.interface";
+import { IPrinterDriver, PrinterCapabilities, UniversalPrintOptions } from "../driver.interface";
 import type { LoadedMedia, MediaKind, PrinterStatus, PrinterStatusDetail, StatusField } from "../printer-status";
 import {
     singlePlane,
@@ -91,8 +91,9 @@ class UniversalTransportClient extends NiimbotAbstractClient {
         try {
             await this.initialNegotiate();
             await this.fetchPrinterInfo();
-        } catch (e) {
-            console.error("Niimbot TransportClient negotiation failed:", e);
+        } catch {
+            // Negotiation is lenient — the driver still proceeds even if the
+            // initial handshake fails (a later status read will surface the real error).
         }
 
         const result: ConnectionInfo = {
@@ -247,8 +248,9 @@ export class NiimbotDriver implements IPrinterDriver {
 
                     if (writeChar) foundWrite = writeChar.uuid;
                     if (notifyChar) foundNotify = notifyChar.uuid;
-                } catch (e) {
-                    console.error("Error inspecting Niimbot characteristics:", e);
+                } catch {
+                    // Characteristic inspection is best-effort; the transport
+                    // will surface a GATT error if a required characteristic is missing.
                 }
             }
         }
@@ -393,8 +395,8 @@ export class NiimbotDriver implements IPrinterDriver {
         this.printTask = undefined;
     }
 
-    async setSpeed(speed: number): Promise<void> { }
-    async setDensity(density: number): Promise<void> { }
+    async setSpeed(_speed: number): Promise<void> { }
+    async setDensity(_density: number): Promise<void> { }
 }
 
 /** Fit to the physical head, then byte-pad only the encoder's backing buffer. */

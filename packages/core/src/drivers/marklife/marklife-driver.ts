@@ -1,4 +1,4 @@
-import { IPrinterDriver, PrinterCapabilities, UniversalPrintOptions, UniversalImageData } from '../driver.interface';
+import { IPrinterDriver, PrinterCapabilities, UniversalPrintOptions } from '../driver.interface';
 import { singlePlane, type UniversalPage } from '../../types/ink';
 import { IDeviceTransport } from '../../core/transports/transport.interface';
 import * as Protocol from './protocol';
@@ -395,7 +395,6 @@ export class MarklifeDriver implements IPrinterDriver {
         if (!transport) throw new PrinterError('not-connected', 'Printer not connected.');
 
         return new Promise<Uint8Array | undefined>((resolve, reject) => {
-            let timer: ReturnType<typeof setTimeout>;
             const onData = (data: Uint8Array, charId?: string) => {
                 const id = charId?.toLowerCase();
                 const mine = !id
@@ -406,7 +405,7 @@ export class MarklifeDriver implements IPrinterDriver {
                 transport.off('data', onData);
                 resolve(new Uint8Array(data));
             };
-            timer = setTimeout(() => {
+            const timer = setTimeout(() => {
                 transport.off('data', onData);
                 // Undefined, not a rejection: a printer that does not implement
                 // a query is normal, and one unanswered question must not throw

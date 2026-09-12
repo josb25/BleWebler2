@@ -41,7 +41,6 @@ function fakeCtx() {
     };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const rotate = (ctx: ReturnType<typeof fakeCtx>, deg: number, cx: number, cy: number) =>
     applyRotation(ctx as any, deg, cx, cy);
 
