@@ -1,0 +1,1409 @@
+{
+  "source": "https://josb25.github.io/opentlp/devices.json",
+  "schemaVersion": 1,
+  "generated": "2026-09-12",
+  "licence": "CC0-1.0",
+  "count": 153,
+  "devices": [
+    {
+      "id": "generic_bh01",
+      "brand": "Generic",
+      "model": "BH-01",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "funny-lx",
+      "status": "reported"
+    },
+    {
+      "id": "generic_gb01",
+      "brand": "Generic Cat Printer",
+      "model": "GB01",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "reported"
+    },
+    {
+      "id": "generic_gb02",
+      "brand": "Generic Cat Printer",
+      "model": "GB02",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_gb03",
+      "brand": "Generic Cat Printer",
+      "model": "GB03",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_gb04",
+      "brand": "Generic Cat Printer",
+      "model": "GB04",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_gb05",
+      "brand": "Generic Cat Printer",
+      "model": "GB05",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_gt01",
+      "brand": "Generic Cat Printer",
+      "model": "GT01",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_gt02",
+      "brand": "Generic Cat Printer",
+      "model": "GT02",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_gt04",
+      "brand": "Generic Cat Printer",
+      "model": "GT04",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_gt08",
+      "brand": "Generic Cat Printer",
+      "model": "GT08",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_gt09",
+      "brand": "Generic Cat Printer",
+      "model": "GT09",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_jxm800",
+      "brand": "Generic Cat Printer",
+      "model": "JXM800",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_lp100",
+      "brand": "Generic Cat Printer",
+      "model": "LP100",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_ly01",
+      "brand": "Generic Cat Printer",
+      "model": "LY01",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_ly02",
+      "brand": "Generic Cat Printer",
+      "model": "LY02",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_ly03",
+      "brand": "Generic Cat Printer",
+      "model": "LY03",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_ly05",
+      "brand": "Generic Cat Printer",
+      "model": "LY05",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_ly10",
+      "brand": "Generic Cat Printer",
+      "model": "LY10",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "reported"
+    },
+    {
+      "id": "generic_ly11",
+      "brand": "Generic Cat Printer",
+      "model": "LY11",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mx05",
+      "brand": "Generic Cat Printer",
+      "model": "MX05",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mx06",
+      "brand": "Generic Cat Printer",
+      "model": "MX06",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mx08",
+      "brand": "Generic Cat Printer",
+      "model": "MX08",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mx09",
+      "brand": "Generic Cat Printer",
+      "model": "MX09",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mx10",
+      "brand": "Generic Cat Printer",
+      "model": "MX10",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mx11",
+      "brand": "Generic Cat Printer",
+      "model": "MX11",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mx12",
+      "brand": "Generic Cat Printer",
+      "model": "MX12",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mx13",
+      "brand": "Generic Cat Printer",
+      "model": "MX13",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mxtp",
+      "brand": "Generic Cat Printer",
+      "model": "MXTP",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_mxw01",
+      "brand": "Generic",
+      "model": "MXW01",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "catprinter-v5x",
+      "status": "reported"
+    },
+    {
+      "id": "generic_yt01",
+      "brand": "Generic Cat Printer",
+      "model": "YT01",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_yt02",
+      "brand": "Generic Cat Printer",
+      "model": "YT02",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tiny",
+      "status": "unverified"
+    },
+    {
+      "id": "generic_ytb01",
+      "brand": "Generic",
+      "model": "YTB01",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "catprinter-v5c",
+      "status": "reported"
+    },
+    {
+      "id": "marklife_a50",
+      "brand": "Marklife",
+      "model": "A50",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_d1",
+      "brand": "Marklife",
+      "model": "D1",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_d100",
+      "brand": "Marklife",
+      "model": "D100",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_d200",
+      "brand": "Marklife",
+      "model": "D200",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_d210",
+      "brand": "Marklife",
+      "model": "D210",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_etz0535",
+      "brand": "Marklife",
+      "model": "ET-Z0535",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_etz0537",
+      "brand": "Marklife",
+      "model": "ET-Z0537",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_l13",
+      "brand": "Marklife",
+      "model": "L13",
+      "aliases": [
+        "luckjingle",
+        "MUNBYN",
+        "SilverCrest"
+      ],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "verified"
+    },
+    {
+      "id": "marklife_l50",
+      "brand": "Marklife",
+      "model": "L50",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_l80",
+      "brand": "Marklife",
+      "model": "L80",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_lp15",
+      "brand": "Marklife",
+      "model": "LP15",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_lp90",
+      "brand": "Marklife",
+      "model": "LP90",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_lpc74",
+      "brand": "Marklife",
+      "model": "LPC74",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_m1",
+      "brand": "Marklife",
+      "model": "M1",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_p11",
+      "brand": "Marklife",
+      "model": "P11",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_p12",
+      "brand": "Marklife",
+      "model": "P12",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "verified"
+    },
+    {
+      "id": "marklife_p15",
+      "brand": "Marklife",
+      "model": "P15",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_p1s",
+      "brand": "Marklife",
+      "model": "P1S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_p50",
+      "brand": "Marklife",
+      "model": "P50",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_p50s",
+      "brand": "Marklife",
+      "model": "P50S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_p7",
+      "brand": "Marklife",
+      "model": "P7",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_p80",
+      "brand": "Marklife",
+      "model": "P80",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_p80s",
+      "brand": "Marklife",
+      "model": "P80S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "marklife_t3",
+      "brand": "Marklife",
+      "model": "T3",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "marklife-1f",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_a20",
+      "brand": "NIIMBOT",
+      "model": "A20",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_a203",
+      "brand": "NIIMBOT",
+      "model": "A203",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_a63",
+      "brand": "NIIMBOT",
+      "model": "A63",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_a8",
+      "brand": "NIIMBOT",
+      "model": "A8",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_a8p",
+      "brand": "NIIMBOT",
+      "model": "A8 P",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b1",
+      "brand": "NIIMBOT",
+      "model": "B1",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b11",
+      "brand": "NIIMBOT",
+      "model": "B11",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b16",
+      "brand": "NIIMBOT",
+      "model": "B16",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b18",
+      "brand": "NIIMBOT",
+      "model": "B18",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b18s",
+      "brand": "NIIMBOT",
+      "model": "B18S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b1pro",
+      "brand": "NIIMBOT",
+      "model": "B1 PRO",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b2",
+      "brand": "NIIMBOT",
+      "model": "B2",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b203",
+      "brand": "NIIMBOT",
+      "model": "B203",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b21",
+      "brand": "NIIMBOT",
+      "model": "B21",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b21c2b",
+      "brand": "NIIMBOT",
+      "model": "B21 C2B",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b21l2b",
+      "brand": "NIIMBOT",
+      "model": "B21 L2B",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b21pro",
+      "brand": "NIIMBOT",
+      "model": "B21 PRO",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b21s",
+      "brand": "NIIMBOT",
+      "model": "B21S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b21sc2b",
+      "brand": "NIIMBOT",
+      "model": "B21S C2B",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b2pro",
+      "brand": "NIIMBOT",
+      "model": "B2 PRO",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b3",
+      "brand": "NIIMBOT",
+      "model": "B3",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b31",
+      "brand": "NIIMBOT",
+      "model": "B31",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b32",
+      "brand": "NIIMBOT",
+      "model": "B32",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b32r",
+      "brand": "NIIMBOT",
+      "model": "B32R",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b3s",
+      "brand": "NIIMBOT",
+      "model": "B3S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b3sp",
+      "brand": "NIIMBOT",
+      "model": "B3S P",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b4",
+      "brand": "NIIMBOT",
+      "model": "B4",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b50",
+      "brand": "NIIMBOT",
+      "model": "B50",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_b50w",
+      "brand": "NIIMBOT",
+      "model": "B50W",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_c1",
+      "brand": "NIIMBOT",
+      "model": "C1",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_d101",
+      "brand": "NIIMBOT",
+      "model": "D101",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_d11",
+      "brand": "NIIMBOT",
+      "model": "D11",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_d110",
+      "brand": "NIIMBOT",
+      "model": "D110",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_d110m",
+      "brand": "NIIMBOT",
+      "model": "D110 M",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_d11h",
+      "brand": "NIIMBOT",
+      "model": "D11 H",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_d11pro",
+      "brand": "NIIMBOT",
+      "model": "D11 PRO",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_d11s",
+      "brand": "NIIMBOT",
+      "model": "D11S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_ep2mh",
+      "brand": "NIIMBOT",
+      "model": "EP2M H",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_ep3m",
+      "brand": "NIIMBOT",
+      "model": "EP3M",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_et10",
+      "brand": "NIIMBOT",
+      "model": "ET10",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_h1",
+      "brand": "NIIMBOT",
+      "model": "H1",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_h1s",
+      "brand": "NIIMBOT",
+      "model": "H1S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_k2",
+      "brand": "NIIMBOT",
+      "model": "K2",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_k3",
+      "brand": "NIIMBOT",
+      "model": "K3",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_k3w",
+      "brand": "NIIMBOT",
+      "model": "K3 W",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_m2",
+      "brand": "NIIMBOT",
+      "model": "M2",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_m2h",
+      "brand": "NIIMBOT",
+      "model": "M2 H",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_m3",
+      "brand": "NIIMBOT",
+      "model": "M3",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_mp3k",
+      "brand": "NIIMBOT",
+      "model": "MP3K",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_mp3kw",
+      "brand": "NIIMBOT",
+      "model": "MP3K W",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_n1",
+      "brand": "NIIMBOT",
+      "model": "N1",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_p1",
+      "brand": "NIIMBOT",
+      "model": "P1",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_p18",
+      "brand": "NIIMBOT",
+      "model": "P18",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_p1s",
+      "brand": "NIIMBOT",
+      "model": "P1S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_s1",
+      "brand": "NIIMBOT",
+      "model": "S1",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_s3",
+      "brand": "NIIMBOT",
+      "model": "S3",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_s6",
+      "brand": "NIIMBOT",
+      "model": "S6",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_s6p",
+      "brand": "NIIMBOT",
+      "model": "S6 P",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_t2s",
+      "brand": "NIIMBOT",
+      "model": "T2S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_t6",
+      "brand": "NIIMBOT",
+      "model": "T6",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_t7",
+      "brand": "NIIMBOT",
+      "model": "T7",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_t8",
+      "brand": "NIIMBOT",
+      "model": "T8",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_t8s",
+      "brand": "NIIMBOT",
+      "model": "T8S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_tp2mh",
+      "brand": "NIIMBOT",
+      "model": "TP2M H",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "niimbot_z401",
+      "brand": "NIIMBOT",
+      "model": "Z401",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "niimbot",
+      "status": "unverified"
+    },
+    {
+      "id": "orgsta_s001",
+      "brand": "Orgsta",
+      "model": "S001",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "yk-astra-p1",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_a30",
+      "brand": "Phomemo",
+      "model": "A30",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-p12",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_d110",
+      "brand": "Phomemo",
+      "model": "D110",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_d30",
+      "brand": "Phomemo",
+      "model": "D30",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_d30s",
+      "brand": "Phomemo",
+      "model": "D30S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_d35",
+      "brand": "Phomemo",
+      "model": "D35",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_d50",
+      "brand": "Phomemo",
+      "model": "D50",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m02",
+      "brand": "Phomemo",
+      "model": "M02",
+      "aliases": [
+        "M02C",
+        "Mr.in",
+        "Mr.in_M02"
+      ],
+      "rebadgeOf": null,
+      "family": "phomemo-m02",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m02pro",
+      "brand": "Phomemo",
+      "model": "M02 Pro",
+      "aliases": [
+        "M02PRO",
+        "sandymaro"
+      ],
+      "rebadgeOf": null,
+      "family": "phomemo-m02",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m02s",
+      "brand": "Phomemo",
+      "model": "M02S",
+      "aliases": [
+        "Mr.in_M02S"
+      ],
+      "rebadgeOf": null,
+      "family": "phomemo-m02",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m02x",
+      "brand": "Phomemo",
+      "model": "M02X",
+      "aliases": [
+        "KP-Q1",
+        "M02A",
+        "M02D",
+        "M02E",
+        "MR2"
+      ],
+      "rebadgeOf": null,
+      "family": "phomemo-m02",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m03",
+      "brand": "Phomemo",
+      "model": "M03",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m-series",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m04",
+      "brand": "Phomemo",
+      "model": "M04",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m04as",
+      "brand": "Phomemo",
+      "model": "M04AS",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m04",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m04s",
+      "brand": "Phomemo",
+      "model": "M04S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m04",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m110",
+      "brand": "Phomemo",
+      "model": "M110",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m110",
+      "status": "reported"
+    },
+    {
+      "id": "phomemo_m110s",
+      "brand": "Phomemo",
+      "model": "M110S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m110",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m120",
+      "brand": "Phomemo",
+      "model": "M120",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m110",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m200",
+      "brand": "Phomemo",
+      "model": "M200",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m-series",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m220",
+      "brand": "Phomemo",
+      "model": "M220",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m110",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m221",
+      "brand": "Phomemo",
+      "model": "M221",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m-series",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m250",
+      "brand": "Phomemo",
+      "model": "M250",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m-series",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_m260",
+      "brand": "Phomemo",
+      "model": "M260",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-m-series",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_p12",
+      "brand": "Phomemo",
+      "model": "P12",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-p12",
+      "status": "reported"
+    },
+    {
+      "id": "phomemo_p12pro",
+      "brand": "Phomemo",
+      "model": "P12 Pro",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-p12",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_pm241",
+      "brand": "Phomemo",
+      "model": "PM-241",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tspl",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_pm241bt",
+      "brand": "Phomemo",
+      "model": "PM-241-BT",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "tspl",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_q30",
+      "brand": "Phomemo",
+      "model": "Q30",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_q30s",
+      "brand": "Phomemo",
+      "model": "Q30S",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_q31",
+      "brand": "Phomemo",
+      "model": "Q31",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_q32",
+      "brand": "Phomemo",
+      "model": "Q32",
+      "aliases": [],
+      "rebadgeOf": null,
+      "family": "phomemo-dq",
+      "status": "unverified"
+    },
+    {
+      "id": "phomemo_t02",
+      "brand": "Phomemo",
+      "model": "T02",
+      "aliases": [
+        "C02E",
+        "Q02E",
+        "T02E"
+      ],
+      "rebadgeOf": null,
+      "family": "phomemo-m-series",
+      "status": "unverified"
+    }
+  ]
+}

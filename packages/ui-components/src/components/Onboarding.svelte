@@ -26,11 +26,9 @@
     import type { PrinterSession } from '../printer/session';
     import type { TransportOption } from '../printer/transports';
     import type { EditorStore } from '../stores/editor.svelte';
-    import { artworkFor } from '../data/artwork';
-    import PrinterMark from './PrinterMark.svelte';
+    import PrinterModelPicker from './PrinterModelPicker.svelte';
     import ConnectPanel from './ConnectPanel.svelte';
     import PaperPanel from './PaperPanel.svelte';
-    import Icon from './Icon.svelte';
 
     interface Props {
         session: PrinterSession;
@@ -143,20 +141,7 @@
                         <strong>Pick the model</strong>
                         <small>Used whenever no printer is connected, so you can design without hardware.</small>
                     </div>
-                    <div class="printer-grid">
-                        {#each PRINTER_PROFILES as p (p.id)}
-                            {@const art = artworkFor(p)}
-                            <button class="printer-card" class:on={settings.defaultPrinter === p.id} onclick={() => choosePrinter(p.id)}>
-                                {#if art}
-                                    <PrinterMark artwork={art} size={72} strokePx={0.8} title={p.model} />
-                                {:else}
-                                    <span class="card-icon"><Icon name="printer" size={36} /></span>
-                                {/if}
-                                <span class="card-name">{p.rebadgeOnly ? `${p.brand}-compatible` : p.brand}</span>
-                                <strong class="card-model">{p.model}</strong>
-                            </button>
-                        {/each}
-                    </div>
+                    <PrinterModelPicker selectedId={settings.defaultPrinter} onselect={choosePrinter} />
                 </section>
 
             {:else if step === 'paper'}
@@ -332,31 +317,6 @@
         background: var(--border);
     }
 
-    .printer-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 10px;
-    }
-    .printer-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-        padding: 12px 8px;
-        background: var(--panel-2);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        cursor: pointer;
-        color: inherit;
-    }
-    .printer-card.on {
-        border-color: var(--accent);
-        background: color-mix(in srgb, var(--accent) 8%, var(--panel-2));
-    }
-    .card-icon { color: var(--muted); }
-    .card-name { font-size: 11px; color: var(--muted); }
-    .card-model { font-size: 13px; }
-
     .summary { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
     .summary li {
         display: flex; justify-content: space-between; gap: 12px;
@@ -399,7 +359,6 @@
         }
         .skip,
         .btn { min-height: 40px; }
-        .printer-grid { grid-template-columns: 1fr 1fr; }
         .summary li { flex-wrap: wrap; }
     }
 </style>

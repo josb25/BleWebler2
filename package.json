@@ -26,6 +26,7 @@
         "check": "npm run check --workspaces --if-present",
         "build": "npm run build --workspaces --if-present",
         "packages:check": "npm run build --workspace packages/core --workspace packages/renderer && node scripts/verify-publishable-packages.mjs",
+        "catalogue:opentlp": "node scripts/update-opentlp-snapshot.mjs",
         "dev": "npm run dev --workspace apps/web-app",
         "desktop": "npm start --workspace apps/desktop",
         "cli": "npm start --workspace apps/cli --",

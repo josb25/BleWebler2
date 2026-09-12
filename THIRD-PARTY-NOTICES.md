@@ -86,6 +86,14 @@ The font source and regeneration notes are in [packages/renderer/fonts/README.md
 
 The bundled Universal Label Template examples under packages/ult/examples are released under CC0 1.0 by the ULT contributors. See the [CC0 1.0 legal code](https://creativecommons.org/publicdomain/zero/1.0/legalcode.en).
 
+## OpenTLP catalogue snapshot
+
+`packages/ui-components/src/data/opentlp-snapshot.json` contains a reduced snapshot of the Open Thermal Label Printer catalogue. It includes only device identity, aliases, protocol-family labels, and verification status; it contains no artwork or third-party implementation code.
+
+Licence: CC0 1.0. Source: https://josb25.github.io/opentlp/devices.json
+
+The snapshot records its source schema version and generation date. Regenerate it from a validated OpenTLP export with `npm run catalogue:opentlp -- --from <path-to-devices.json>`.
+
 ## Application runtimes
 
 The optional desktop and headless applications use Electron, MQTT.js, esbuild, and

@@ -1048,7 +1048,7 @@
         <Toolbar {editor} activeTab="File" onSaveTemplate={() => openTemplateSheet('adapt')} />
     </Sheet>
 {:else if sheet === 'settings'}
-    <Sheet title="Settings" onclose={() => (sheet = null)}>
+    <Sheet title="Settings" wide onclose={() => (sheet = null)}>
         <SettingsPanel />
     </Sheet>
 {:else if sheet === 'paper'}
