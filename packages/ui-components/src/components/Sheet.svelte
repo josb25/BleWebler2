@@ -11,12 +11,51 @@
         priority?: boolean;
     }
     let { title, onclose, children, priority = false }: Props = $props();
+
+    let sheetEl = $state<HTMLDivElement | null>(null);
+    let previouslyFocused: HTMLElement | null = null;
+
+    function onKeydown(e: KeyboardEvent): void {
+        if (e.key === 'Escape') {
+            e.stopPropagation();
+            onclose();
+            return;
+        }
+        if (e.key === 'Tab' && sheetEl) {
+            const focusable = sheetEl.querySelectorAll<HTMLElement>(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusable.length === 0) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        }
+    }
+
+    $effect(() => {
+        if (sheetEl) {
+            previouslyFocused = document.activeElement as HTMLElement | null;
+            const focusable = sheetEl.querySelector<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            focusable?.focus();
+        }
+        return () => {
+            previouslyFocused?.focus?.();
+        };
+    });
 </script>
 
+<svelte:window onkeydown={onKeydown} />
+
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions
-     -- backdrop dismiss duplicates the explicit close button below -->
+     -- backdrop dismiss duplicates the explicit close button below; Escape is handled above -->
 <div class="backdrop" class:priority onclick={e => { if (e.target === e.currentTarget) onclose(); }}>
-    <div class="sheet" role="dialog" aria-label={title}>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label={title} bind:this={sheetEl}>
         <div class="head">
             <h3>{title}</h3>
             <button class="close" onclick={onclose} aria-label="Close"><Icon name="x" /></button>

@@ -33,7 +33,7 @@ import {
     scaleTemplatePixelGeometry,
     type LabelTemplate, type TemplateElement, type TemplateParam, type TemplateAdaptivity
 } from 'universal-label-renderer';
-import { placeAtPx, authoringViewOf, type ElementAuthoring, type DimUnit, type PctBase } from 'universal-label-renderer';
+import { placeAtPx, authoringViewOf, type DimUnit, type PctBase } from 'universal-label-renderer';
 import { parseTemplate, contentLiteral, normalizeTag, TAG_LIMITS } from 'universal-label-renderer';
 import type { TemplateGallery, TemplateImage } from 'universal-label-renderer';
 import { constraintsFor, type Constraint, type ConstraintAxis } from 'universal-label-renderer';
@@ -612,7 +612,7 @@ export class EditorStore {
     }
 
     setThreshold(threshold: number): void {
-        this.template = { ...this.template, threshold };
+        this.commit({ ...this.template, threshold });
     }
 
     /**

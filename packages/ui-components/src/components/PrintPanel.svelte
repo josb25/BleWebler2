@@ -8,6 +8,7 @@
     import { DEFAULT_PAPER_PROFILES, type UniversalPrintOptions, type PaperProfile } from 'universal-label-core';
     import type { PrinterSession } from '../printer/session';
     import type { EditorStore } from '../stores/editor.svelte';
+    import { globalSettings as settings } from '../stores/settings.svelte';
     import { rasterizeDesign, planInks, previewBinding } from 'universal-label-renderer';
 
     interface Props {
@@ -22,18 +23,21 @@
     const caps = $derived(snap.capabilities);
 
     let density = $state(8);
+    let userDensity = $state(8);  // The user's choice, unclamped — restored on reconnect.
     let copies = $state(1);
     
     // Fallback to the first paper profile if the design has none
     let activePaperId = $state<string>('');
-    let activePaper = $derived(DEFAULT_PAPER_PROFILES.find(p => p.id === activePaperId) || editor.design.paper || DEFAULT_PAPER_PROFILES[0]);
+    const allPapers = $derived([...DEFAULT_PAPER_PROFILES, ...settings.customPapers]);
+    let activePaper = $derived(allPapers.find(p => p.id === activePaperId) || editor.design.paper || DEFAULT_PAPER_PROFILES[0]);
     
     let speed = $state(1);
     let printError = $state('');
     let printedOk = $state(false);
+    let printing = $state(false);
 
     $effect(() => {
-        if (caps) density = Math.min(density, caps.maxDensity);
+        if (caps) density = Math.min(Math.max(1, userDensity), caps.maxDensity);
         
         // Ensure activePaperId is synced (though UI select moved to Toolbar)
         if (editor.design.paper) {
@@ -97,6 +101,7 @@
     async function print(): Promise<void> {
         printError = '';
         printedOk = false;
+        printing = true;
         try {
             const page = await rasterizeDesign(editor.design, undefined, { inkChannels });
             const options: UniversalPrintOptions = {
@@ -117,6 +122,8 @@
             printedOk = true;
         } catch (err) {
             printError = err instanceof Error ? err.message : String(err);
+        } finally {
+            printing = false;
         }
     }
 </script>
@@ -174,7 +181,7 @@
         <div class="row">
             <label class="opt">
                 Density
-                <input type="range" min="1" max={caps.maxDensity} bind:value={density} />
+                <input type="range" min="1" max={caps.maxDensity} bind:value={userDensity} />
                 <span class="val">{density}/{caps.maxDensity}</span>
             </label>
         </div>
@@ -221,10 +228,10 @@
         {/if}
         <button
             class="primary print"
-            disabled={snap.state !== 'connected'}
+            disabled={snap.state !== 'connected' || printing}
             onclick={print}
         >
-            {snap.state === 'printing' ? 'Printing…' : `Print ${copies > 1 ? copies + ' copies' : 'label'}`}
+            {printing ? 'Printing…' : `Print ${copies > 1 ? copies + ' copies' : 'label'}`}
         </button>
         {#if printError}
             <div class="error">{printError}</div>

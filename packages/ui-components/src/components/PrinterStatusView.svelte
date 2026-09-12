@@ -12,8 +12,9 @@
      * Formatting lives here rather than in the driver, because `0.15` is the
      * fact and `"15%"` is a presentation of it.
      */
-    import type { PrinterStatus, StatusField, PrinterFault, FaultCode } from 'universal-label-core';
+    import type { PrinterStatus, StatusField } from 'universal-label-core';
     import Icon from './Icon.svelte';
+    import { faultText } from '../printer/messages';
 
     interface Props {
         status: PrinterStatus | null;
@@ -38,27 +39,6 @@
         const l = status?.battery?.level;
         return l === undefined ? null : Math.round(l * 100);
     });
-
-    /**
-     * English fallbacks, kept in one place so the day this app speaks a second
-     * language there is exactly one list to translate. A driver's own
-     * `fault.message` is only used for `'unknown'`, where by definition no
-     * translated string can exist.
-     */
-    const FAULT_TEXT: Record<FaultCode, string> = {
-        'paper-out': 'Out of paper',
-        'paper-jam': 'Paper jam',
-        'cover-open': 'Cover open',
-        'overheated': 'Printhead too hot',
-        'battery-critical': 'Battery critically low',
-        'printhead': 'Printhead fault',
-        'power': 'Power fault',
-        'unknown': 'Reported a fault'
-    };
-
-    function faultText(f: PrinterFault): string {
-        return f.code === 'unknown' ? (f.message ?? FAULT_TEXT.unknown) : FAULT_TEXT[f.code];
-    }
 
     const media = $derived(status?.media);
 </script>

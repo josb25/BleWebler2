@@ -27,10 +27,12 @@
     let connectError = $state('');
     let refreshing = $state(false);
     let busyId = $state<string | null>(null);
+    let lastTransportId = $state<string | null>(null);
 
     async function connect(option: TransportOption): Promise<void> {
         connectError = '';
         busyId = option.id;
+        lastTransportId = option.id;
         try {
             await session.connect(
                 option.create(),
@@ -171,7 +173,10 @@
             {#if snap.lastError && canRetry(snap.lastError) && snap.state === 'disconnected'}
                 <!-- Offered from the error's own `retryable`, so a retry never
                      appears on something retrying cannot fix. -->
-                <button class="ghost" onclick={() => connect(transports[0])}>Try again</button>
+                <button class="ghost" onclick={() => {
+                    const last = transports.find(t => t.id === lastTransportId);
+                    connect(last ?? transports[0]);
+                }}>Try again</button>
             {/if}
         </div>
     {/if}
