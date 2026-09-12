@@ -69,8 +69,6 @@ export function encodeRaster(image: UniversalImageData): Uint8Array {
         throw new RangeError(`S001 raster height ${image.height} exceeds ${PRINTABLE_DOTS} printable dots.`);
     }
     const output = new Uint8Array(image.width * ROW_BYTES);
-    const centeredOffset = Math.floor((PRINTABLE_DOTS - image.height) / 2);
-
     for (let x = 0; x < image.width; x += 1) {
         for (let y = 0; y < image.height; y += 1) {
             const source = ((y * image.width) + x) * 4;
@@ -80,7 +78,7 @@ export function encodeRaster(image: UniversalImageData): Uint8Array {
                 + (image.data[source + 1] ?? 255)
                 + (image.data[source + 2] ?? 255)) / 3;
             if (luminance > 200) continue;
-            const headDot = LEFT_PADDING_DOTS + centeredOffset + y;
+            const headDot = LEFT_PADDING_DOTS + y;
             output[(x * ROW_BYTES) + (headDot >>> 3)] |= 0x80 >>> (headDot & 7);
         }
     }

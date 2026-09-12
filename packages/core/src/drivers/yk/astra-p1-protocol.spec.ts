@@ -19,4 +19,14 @@ describe('YK Astra P1 protocol', () => {
         expect(slices[0][0]).toBe(0x02);
         expect(slices[0].slice(1)).toEqual(new Uint8Array(47));
     });
+
+    it('places a one-dot-high image at bit 6 of the first byte (0x02), never centering', () => {
+        const rgba = new Uint8Array(1 * 1 * 4).fill(255);
+        rgba[3] = 255;
+        rgba[0] = rgba[1] = rgba[2] = 0;
+        const raster = encodeRaster({ width: 1, height: 1, data: rgba });
+        expect(raster).toHaveLength(12);
+        expect(raster[0]).toBe(0x02);
+        expect(raster.slice(1)).toEqual(new Uint8Array(11));
+    });
 });
