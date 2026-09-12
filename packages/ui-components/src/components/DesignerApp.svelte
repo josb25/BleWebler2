@@ -853,6 +853,7 @@
             <DesignLibraryScreen
                 session={templates}
                 media={previewMedia}
+                paper={editor.paper}
                 onopen={openDesign}
                 onnew={newLabel}
                 onuse={useTemplate}

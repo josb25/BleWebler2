@@ -9,6 +9,7 @@
     import { TemplateSession } from '../stores/templates.svelte';
     import { rasterizeDesign, compositePage } from 'universal-label-renderer';
     import type { LabelDesign } from 'universal-label-renderer';
+    import { applyDieMask } from '../lib/paper-thumb';
 
     interface Props { editor: EditorStore; }
     let { editor }: Props = $props();
@@ -20,9 +21,13 @@
 
     const tpl = $derived(preview.active);
     const resolved = $derived(preview.resolved);
+    /** The paper the user actually has loaded: stamped onto the resolved
+     * preview so the template's fill-in preview reads on the real die, the
+     * same way the editor and print preview do. */
+    const paper = $derived(editor.paper);
 
     let img = $state('');
-    const key = $derived(resolved ? JSON.stringify({ p: preview.params, w: preview.targetWidthPx, h: preview.targetHeightPx }) : '');
+    const key = $derived(resolved ? JSON.stringify({ p: preview.params, w: preview.targetWidthPx, h: preview.targetHeightPx, pp: paper?.id }) : '');
     $effect(() => {
         void key;
         const design = resolved?.design;
@@ -33,10 +38,12 @@
     });
     async function render(design: LabelDesign): Promise<string> {
         try {
-            const image = compositePage(await rasterizeDesign(design), { inks: design.paper?.inks });
+            const onPaper = paper ? { ...design, paper } : design;
+            const image = compositePage(await rasterizeDesign(onPaper), { inks: onPaper.paper?.inks });
             const c = document.createElement('canvas');
             c.width = image.width; c.height = image.height;
             c.getContext('2d')?.putImageData(new ImageData(new Uint8ClampedArray(image.data), image.width, image.height), 0, 0);
+            applyDieMask(c, onPaper, paper);
             return c.toDataURL();
         } catch { return ''; }
     }

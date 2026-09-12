@@ -9,6 +9,7 @@
         type DesignOrigin, type LabelDesign, type LabelTemplate, type MediaFit, type SavedLabel
     } from 'universal-label-renderer';
     import type { TemplateSession } from '../stores/templates.svelte';
+    import { applyDieMask } from '../lib/paper-thumb';
 
     export interface PreviewMedia {
         pxPerMm: number;
@@ -21,12 +22,16 @@
     interface Props {
         session: TemplateSession;
         media: PreviewMedia;
+        /** The media currently loaded: when set, thumbnails render on it and are
+         * masked to its die, so the catalogue shows the sticker you'd actually
+         * hold rather than a bare rectangle for a die-cut roll. */
+        paper?: PaperProfile;
         onopen: (tpl: LabelTemplate, paper?: PaperProfile, inkBindings?: InkBinding[], origin?: DesignOrigin) => void;
         onnew: () => void;
         onuse: (tpl: LabelTemplate, origin?: DesignOrigin) => void;
         onedit: (tpl: LabelTemplate, origin?: DesignOrigin) => void;
     }
-    let { session, media, onopen, onnew, onuse, onedit }: Props = $props();
+    let { session, media, paper, onopen, onnew, onuse, onedit }: Props = $props();
 
     // Reactive: reads session.list() which bumps version on every mutation.
     let entries = $derived(session.list());
@@ -42,25 +47,45 @@
     const renderingThumbs = new Set<string>();
     let activeThumbKeys = new Set<string>();
 
-    // Re-render thumbnails when entries change. Cache reads and writes stay
-    // untracked so each completed thumbnail does not restart this effect.
+    // Re-render thumbnails when entries or the loaded paper change. The paper
+    // is read tracked so swapping the roll re-masks every thumbnail; cache
+    // reads and writes stay untracked so each completed thumbnail does not
+    // restart this effect.
     $effect(() => {
         const snapshot = entries;
+        void paper;
         untrack(() => {
             const activeKeys = new Set(snapshot.map(entry => `${entry.template.id}#${entry.savedAt}`));
             activeThumbKeys = activeKeys;
-            const retained = Object.fromEntries(
-                Object.entries(thumbs).filter(([key]) => activeKeys.has(key))
-            ) as Record<string, string>;
-            if (Object.keys(retained).length !== Object.keys(thumbs).length) thumbs = retained;
+            // The die depends on the paper, so a paper change invalidates every
+            // cached thumbnail rather than only the ones whose entry changed.
+            thumbs = {};
             void renderThumbs(snapshot);
         });
     });
 
-    /** Render the recognizable authored design; media compatibility is separate. */
+    /** Render the recognizable authored design; media compatibility is separate.
+     *
+     * When a paper is loaded the thumbnail is resolved on it - same size and
+     * die as what would print - so a die-cut roll reads as its sticker, not as a
+     * bare block. A die narrower than the carrier (`labelWidthMm < tapeWidthMm`)
+     * is resolved at the sticker's own height; `applyDieMask` then centres the
+     * die on the web the same way the editor and print preview do. */
     function resolveAtDesigned(tpl: LabelTemplate): LabelDesign {
         const df = tpl.adaptivity.designedFor;
         const dpmm = df.dpmm ?? 8;
+        if (paper) {
+            const lengthMm = paper.labelLengthMm ?? df.labelLengthMm ?? 40;
+            const acrossMm = paper.labelWidthMm ?? paper.tapeWidthMm;
+            const design = resolveTemplate(tpl, {
+                widthPx: Math.max(8, Math.round(lengthMm * dpmm)),
+                heightPx: Math.max(8, Math.round(acrossMm * dpmm)),
+                tapeWidthMm: paper.tapeWidthMm,
+                labelLengthMm: lengthMm,
+                cornerRadiusMm: paper.borderRadiusMm
+            }).design;
+            return { ...design, paper };
+        }
         const lengthMm = df.labelLengthMm ?? 40;
         return resolveTemplate(tpl, {
             widthPx: Math.max(8, Math.round(lengthMm * dpmm)),
@@ -78,6 +103,7 @@
         canvas.getContext('2d')?.putImageData(
             new ImageData(new Uint8ClampedArray(image.data), image.width, image.height), 0, 0
         );
+        applyDieMask(canvas, design, design.paper);
         return canvas.toDataURL();
     }
 
