@@ -12,7 +12,7 @@ code is not copied into BleWebler2.
 
 ## Catprinter / Tiny `51 78`
 
-Implementation: `packages/core/src/drivers/catprinter`
+Implementation: `packages/core/src/drivers/catprinter-tiny`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -28,7 +28,7 @@ above.
 
 ## Catprinter V5X / MXW01 `22 21`
 
-Implementation: `packages/core/src/drivers/catprinter/mxw01-driver.ts`
+Implementation: `packages/core/src/drivers/catprinter-mxw01/mxw01-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ driver contracts; no third-party source or assets are redistributed.
 
 ## Catprinter V5G `51 78`
 
-Implementation: `packages/core/src/drivers/catprinter/v5g-driver.ts`
+Implementation: `packages/core/src/drivers/catprinter-v5g/v5g-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ code, adaptive thermal-control logic and compression code are not copied.
 
 ## Catprinter V5C / YTB01 `56 88`
 
-Implementation: `packages/core/src/drivers/catprinter/v5c-driver.ts`
+Implementation: `packages/core/src/drivers/catprinter-v5c/v5c-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -71,7 +71,7 @@ vectors are used.
 
 ## Funny Print LX-D / BH-01
 
-Implementation: `packages/core/src/drivers/catprinter/funny-lx-driver.ts`
+Implementation: `packages/core/src/drivers/catprinter-funny-lx/funny-lx-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ Funny Print device types remain excluded.
 
 ## Phomemo D/Q rotated ESC/POS
 
-Implementation: `packages/core/src/drivers/phomemo`
+Implementation: `packages/core/src/drivers/phomemo-dq`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -98,7 +98,7 @@ is explicitly marked untested pending reports or captures from physical units.
 
 ## Phomemo M110/M120/M220
 
-Implementation: `packages/core/src/drivers/phomemo/phomemo-m110-driver.ts`
+Implementation: `packages/core/src/drivers/phomemo-m110/phomemo-m110-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ profiles remain explicitly untested. M220 uses its separately documented
 
 ## Phomemo M02
 
-Implementation: `packages/core/src/drivers/phomemo/phomemo-m02-driver.ts`
+Implementation: `packages/core/src/drivers/phomemo-m02/phomemo-m02-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -146,7 +146,7 @@ endpoint and packet-boundary behaviour have a public hardware report.
 
 ## Phomemo general M-series
 
-Implementation: `packages/core/src/drivers/phomemo/phomemo-m-series-driver.ts`
+Implementation: `packages/core/src/drivers/phomemo-m-series/phomemo-m-series-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -159,7 +159,7 @@ evidence rather than registering the same retail name under two wire protocols.
 
 ## Phomemo P12/P12 Pro/A30
 
-Implementation: `packages/core/src/drivers/phomemo/phomemo-p12-driver.ts`
+Implementation: `packages/core/src/drivers/phomemo-p12/phomemo-p12-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -172,7 +172,7 @@ remain ambiguous; the user must select the Phomemo P12/A30 family explicitly.
 
 ## Phomemo M04S/M04AS
 
-Implementation: `packages/core/src/drivers/phomemo/phomemo-m04-driver.ts`
+Implementation: `packages/core/src/drivers/phomemo-m04/phomemo-m04-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |
@@ -188,7 +188,7 @@ source or assets are included.
 
 ## Phomemo PM-241 / TSPL
 
-Implementation: `packages/core/src/drivers/phomemo/phomemo-tspl-driver.ts`
+Implementation: `packages/core/src/drivers/phomemo-tspl/phomemo-tspl-driver.ts`
 
 | Reference | Revision/licence | Facts used |
 | --- | --- | --- |

@@ -1,5 +1,4 @@
-import { packLineLsbFirst } from './packet-primitives';
-import { makePacket } from './protocol';
+import { makePacket, packLineLsbFirst } from './packet-primitives';
 
 /**
  * Catprinter V5G uses the common 51 78 packet envelope but has its own job

@@ -1,10 +1,27 @@
-# Adding a New Printer Driver
+# Driver folder contract
 
-Adding a new printer involves creating a class in this directory that implements the strictly enforced `IPrinterDriver` type contract. The `PrintManager` acts as the central orchestrator, and all bundled drivers must be registered there.
+Every immediate subfolder in this directory is one independently portable wire-protocol driver. A folder contains everything specific to that protocol: driver classes, model and rebrand profiles, packet builders, raster conversion, tests, and an `index.ts` entry point.
+
+A driver folder may import the shared core contracts, universal page and media types, transports, and dependencies declared by `packages/core/package.json`. It must never import implementation code from another driver folder. Small encoding routines are intentionally kept local so that copying or removing one driver cannot silently change another.
+
+Models and rebrands that use the same wire protocol belong in the same folder as profiles or aliases. A different marketing name alone is not a reason to duplicate a driver.
+
+For example:
+
+```text
+drivers/peripage/
+  index.ts
+  peripage-driver.ts
+  peripage-protocol.ts
+  peripage-raster.ts
+  *.spec.ts
+```
+
+The repository-wide boundary test rejects sibling-driver imports and missing folder entry points.
 
 ## Implementing `IPrinterDriver`
 
-A basic structure for a new driver looks like this:
+A basic driver class looks like this. Consumers import it through the folder's `index.ts`, not its private files.
 
 ```typescript
 import { IPrinterDriver, IDeviceTransport } from "universal-label-core";
@@ -55,14 +72,20 @@ export class CustomDriver implements IPrinterDriver {
 }
 ```
 
-## Registering the Driver
+The folder entry point should expose only its supported public surface:
 
-Once your driver is implemented, you must register it in the `PrintManager` so that it can be automatically detected when a user connects via Bluetooth.
+```typescript
+export { CustomDriver, CUSTOM_MODELS } from './custom-driver';
+```
+
+## Bundling the Driver
+
+The folder works without any other driver folder. To include it in BleWebler2's built-in catalogue, register it in `PrintManager`. The list is explicit because this core runs in browsers, Node.js, Capacitor, and Electron, where runtime filesystem discovery is not portable.
 
 Edit `src/core/print-manager.ts` and add your driver to the constructor:
 
 ```typescript
-import { CustomDriver } from "../drivers/custom/custom-driver";
+import { CustomDriver } from "../drivers/custom";
 
 constructor() {
     super();
