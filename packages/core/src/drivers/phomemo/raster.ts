@@ -37,3 +37,17 @@ export function encodeRotatedRaster(image: UniversalImageData, printheadDots: nu
     return { data: output, widthBytes, rows };
 }
 
+/** Build the standard GS v 0 header used by prefixed raw-raster families. */
+export function rasterHeader(widthBytes: number, rows: number, mode: number = 0): Uint8Array {
+    if (!Number.isInteger(widthBytes) || widthBytes < 1 || widthBytes > 0xffff) {
+        throw new RangeError('Raster width must be between 1 and 65535 bytes.');
+    }
+    if (!Number.isInteger(rows) || rows < 1 || rows > 0xffff) {
+        throw new RangeError('Raster height must be between 1 and 65535 rows.');
+    }
+    return new Uint8Array([
+        0x1d, 0x76, 0x30, mode & 0xff,
+        widthBytes & 0xff, (widthBytes >>> 8) & 0xff,
+        rows & 0xff, (rows >>> 8) & 0xff
+    ]);
+}

@@ -8,7 +8,7 @@ The printer-agnostic runtime behind BleWebler2. It separates byte transport, pri
 npm install universal-label-core
 ```
 
-All first-party drivers ship together in this package. Marklife, Niimbot, and the virtual printer therefore share one driver contract, one version, and one test pipeline; consumers do not assemble a set of manufacturer packages.
+All first-party drivers ship together in this package. Marklife, Niimbot, Catprinter, Phomemo, PeriPage, and the virtual printer therefore share one driver contract, one version, and one test pipeline; consumers do not assemble a set of manufacturer packages.
 
 ## Architecture
 
@@ -16,7 +16,7 @@ All first-party drivers ship together in this package. Marklife, Niimbot, and th
 - `IPrinterDriver` matches hardware, describes capabilities, and turns a `UniversalPage` into protocol operations.
 - `PrintManager` connects the two, resolves the driver, and owns print-job state.
 
-Marklife, Niimbot, and the virtual printer are registered by default. Applications can register an external driver explicitly with `PrintManager.registerDriver()`.
+The bundled hardware families and virtual printer are registered by default. Applications can register an external driver explicitly with `PrintManager.registerDriver()`.
 
 ## Runtime-specific transports
 

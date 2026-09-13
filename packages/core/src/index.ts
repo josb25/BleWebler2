@@ -84,6 +84,11 @@ export type OrgstaS001Driver = _OrgstaS001Driver;
 export const OrgstaS001Driver = _OrgstaS001Driver;
 export { ORGSTA_S001_MODELS };
 
+import { PeriPageDriver as _PeriPageDriver, PERIPAGE_MODELS } from "./drivers/peripage/peripage-driver";
+export type PeriPageDriver = _PeriPageDriver;
+export const PeriPageDriver = _PeriPageDriver;
+export { PERIPAGE_MODELS };
+
 import { NiimbotDriver as _NiimbotDriver } from "./drivers/niimbot/niimbot-driver";
 export type NiimbotDriver = _NiimbotDriver;
 export const NiimbotDriver = _NiimbotDriver;

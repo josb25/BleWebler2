@@ -124,6 +124,26 @@ The Pro profile uses 78 whole bytes (624 dots) per row. A public README calls
 the geometry 626 dots, which cannot be represented by that row width; the
 protocol-aligned value is used pending hardware validation.
 
+## PeriPage raw GS v 0
+
+Implementation: `packages/core/src/drivers/peripage`
+
+| Reference | Revision/licence | Facts used |
+| --- | --- | --- |
+| [PeriPage Android app 6.10.11](https://apkpure.net/peripage/com.ileadtek.peripage) | package `com.ileadtek.peripage`, version code 323, SHA-256 `a842d10c92dfd05bfe4100ff55538d4d5647c7741573a9174e8d70c9f3753495`; proprietary | Clean-room local inspection established raw versus compressed model routing, firmware advertising-name groups, 384/576-dot geometries, MSB-first raster packing, GS v 0 dimensions, density/paper/position/feed/stop commands, and the classic transport's chunk boundary. No application code, native library, resource, or asset is included. |
+| [ouor/my-bt-printers A6+ notes](https://github.com/ouor/my-bt-printers/blob/9c65351c457ac8d60300aba20f4c48d609aafd4a/docs/devices/Peripage.md) | `9c65351`; no licence declared | Hardware-observed A6+ name, 576-dot width, FF00/FF02/FF01 GATT path, MSB-first rows, reset/density/GS v 0 bytes, and the requirement to preserve a header and individual row write boundaries over BLE. Facts only; no source code copied. |
+| [bitrate16/peripage-python](https://github.com/bitrate16/peripage-python/tree/692c3cd7c500dc12933a944f4f29dfece5f2cb91) | `692c3cd`, GPL-3.0 | Independent A6/A6+ protocol provenance, 384/576-dot widths, concentration range and Classic Bluetooth/RFCOMM transport. Protocol facts only; no GPL source code copied. |
+| [PeriPage P21 product page](https://www.peripageglobal.com/products/photo-printer-bluetooth-thermal) | vendor documentation | P21 identity and separate 203/304-dpi retail variants. |
+| [P21 FCC filing](https://fccid.io/2ASPY-ALD-P210/User-Manual/Users-Manual-7813828) | FCC ID `2ASPY-ALD-P210`, applicant Xiamen iLead Tek Co., Ltd. | Manufacturer, P21/ALD-P210 product identity and Bluetooth radio certification. |
+
+The raw PeriPage family is registered once. Resolution-specific firmware names
+select geometry profiles inside that driver; they do not create duplicate
+drivers. Bare identifiers such as `A6`, `C6`, and `P21` are intentionally not
+matched because unrelated brands reuse them. `PPG_P21+` is also excluded: the
+inspected application routes it through a compressed encoder that is not part
+of this implementation. All profiles remain `Untested`; only the A6+ BLE
+endpoint and packet-boundary behaviour have a public hardware report.
+
 ## Phomemo general M-series
 
 Implementation: `packages/core/src/drivers/phomemo/phomemo-m-series-driver.ts`
