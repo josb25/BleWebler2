@@ -3,10 +3,11 @@ import type { UniversalImageData } from '../driver.interface';
 const INK_THRESHOLD = 200;
 
 /**
- * Turn the editor's horizontal RGBA canvas into MSB-first rows across the
- * printhead. The left edge of the design is emitted first as the paper feeds.
+ * Encode the editor's horizontal RGBA canvas as PeriPage's MSB-first rows.
+ * Kept family-local so future hardware findings cannot silently change another
+ * printer family that happens to use the same packing today.
  */
-export function encodeRotatedRaster(image: UniversalImageData, printheadDots: number): {
+export function encodePeriPageRaster(image: UniversalImageData, printheadDots: number): {
     data: Uint8Array;
     widthBytes: number;
     rows: number;
@@ -35,4 +36,19 @@ export function encodeRotatedRaster(image: UniversalImageData, printheadDots: nu
         }
     }
     return { data: output, widthBytes, rows };
+}
+
+/** Build the PeriPage raw-family GS v 0 image header. */
+export function peripageRasterHeader(widthBytes: number, rows: number, mode: number = 0): Uint8Array {
+    if (!Number.isInteger(widthBytes) || widthBytes < 1 || widthBytes > 0xffff) {
+        throw new RangeError('Raster width must be between 1 and 65535 bytes.');
+    }
+    if (!Number.isInteger(rows) || rows < 1 || rows > 0xffff) {
+        throw new RangeError('Raster height must be between 1 and 65535 rows.');
+    }
+    return new Uint8Array([
+        0x1d, 0x76, 0x30, mode & 0xff,
+        widthBytes & 0xff, (widthBytes >>> 8) & 0xff,
+        rows & 0xff, (rows >>> 8) & 0xff
+    ]);
 }

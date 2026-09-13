@@ -8,7 +8,7 @@ import type {
     UniversalPrintOptions,
 } from '../driver.interface';
 import { singlePlane, type UniversalPage } from '../../types/ink';
-import { encodeRotatedRaster, rasterHeader } from '../phomemo/raster';
+import { encodePeriPageRaster, peripageRasterHeader } from './peripage-raster';
 import {
     createDensityCommand,
     createEnableCommand,
@@ -27,7 +27,7 @@ import {
  * Clean-room driver for PeriPage raw-raster printers (A6, A6 HD, A6+, C6, C6+, P21 SD, P21 HD).
  *
  * Excludes compressed-protocol models such as P21+ / PPG_P21+.
- * Delegates raster conversion to the canonical Phomemo rotated raster encoder.
+ * Owns its raster encoder so PeriPage can evolve independently of other brands.
  */
 export class PeriPageDriver implements IPrinterDriver {
     readonly name = 'PeriPage raw GS v 0';
@@ -118,9 +118,9 @@ export class PeriPageDriver implements IPrinterDriver {
 
     /**
      * Encodes and sends raster page:
-     * Sequence: position (1D 0C) → ONE shared rasterHeader(widthBytes, rows) → each raster row write
+     * Sequence: position (1D 0C) → one GS v 0 header → each raster row write
      *
-     * Raster encoding is strictly delegated to the original Phomemo raster encoder.
+     * Raster packing and framing remain local to the PeriPage family.
      */
     async printPage(page: UniversalPage): Promise<void> {
         if (!this.jobActive) {
@@ -129,10 +129,10 @@ export class PeriPageDriver implements IPrinterDriver {
 
         const image = singlePlane(page);
         const printheadDots = this.getCapabilities().canvasHeightPx;
-        const { data, widthBytes, rows } = encodeRotatedRaster(image, printheadDots);
+        const { data, widthBytes, rows } = encodePeriPageRaster(image, printheadDots);
 
         await this.send(createPositionCommand());
-        await this.send(rasterHeader(widthBytes, rows));
+        await this.send(peripageRasterHeader(widthBytes, rows));
 
         for (let r = 0; r < rows; r++) {
             const rowBytes = data.subarray(r * widthBytes, (r + 1) * widthBytes);

@@ -1,4 +1,4 @@
-import { crc8, packLineLsbFirst } from './protocol';
+import { crc8, packLineLsbFirst } from './packet-primitives';
 
 export const CONTROL_WRITE = '0000ae01-0000-1000-8000-00805f9b34fb';
 export const NOTIFY = '0000ae02-0000-1000-8000-00805f9b34fb';
@@ -56,4 +56,3 @@ export function parseNotification(data: Uint8Array): Mxw01Notification | undefin
     if (data.length < 6 + length) return undefined;
     return { opcode: data[2], payload: data.slice(6, 6 + length) };
 }
-

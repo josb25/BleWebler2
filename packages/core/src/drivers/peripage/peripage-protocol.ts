@@ -1,5 +1,5 @@
 import type { PrinterModelProfile, SupportLevel } from '../driver.interface';
-export { rasterHeader } from '../phomemo/raster';
+export { peripageRasterHeader as rasterHeader } from './peripage-raster';
 
 /**
  * BLE endpoints for the PeriPage raw-raster family.

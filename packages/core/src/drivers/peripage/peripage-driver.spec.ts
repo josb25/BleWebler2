@@ -10,7 +10,7 @@ import {
     PERIPAGE_P21_PROFILE,
     rasterHeader,
 } from './peripage-protocol';
-import * as rasterModule from '../phomemo/raster';
+import * as rasterModule from './peripage-raster';
 import { monoPage } from '../../types/ink';
 import type { IDeviceTransport } from '../../core/transports/transport.interface';
 import type { TransportEventMap } from '../../core/transports/transport.interface';
@@ -156,9 +156,9 @@ describe('PeriPageDriver', () => {
         );
     });
 
-    it('delegates raster encoding and header creation without reimplementing', async () => {
-        const rasterSpy = vi.spyOn(rasterModule, 'encodeRotatedRaster');
-        const headerSpy = vi.spyOn(rasterModule, 'rasterHeader');
+    it('uses the family-local raster encoder and header', async () => {
+        const rasterSpy = vi.spyOn(rasterModule, 'encodePeriPageRaster');
+        const headerSpy = vi.spyOn(rasterModule, 'peripageRasterHeader');
         const driver = new PeriPageDriver(PERIPAGE_A6_PROFILE);
         const transport = new MockDeviceTransport('PeriPage_A6');
         await driver.bindTransport(transport);

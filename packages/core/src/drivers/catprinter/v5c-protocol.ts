@@ -1,4 +1,4 @@
-import { crc8, packLineLsbFirst } from './protocol';
+import { crc8, packLineLsbFirst } from './packet-primitives';
 
 /** Catprinter V5C wire facts, independently expressed for BleWebler2. */
 export const PRINTHEAD_DOTS = 384;

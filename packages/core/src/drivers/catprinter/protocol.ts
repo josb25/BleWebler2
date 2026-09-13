@@ -11,21 +11,13 @@
  * bundled here.
  */
 
+import { crc8, packLineLsbFirst } from './packet-primitives';
+export { crc8, packLineLsbFirst } from './packet-primitives';
+
 export type CatPrinterDialect = 'standard' | 'prefixed';
 
 export const STANDARD_PREFIX = new Uint8Array([0x51, 0x78]);
 export const PREFIXED_PREFIX = new Uint8Array([0x12, 0x51, 0x78]);
-
-export function crc8(payload: Uint8Array): number {
-    let crc = 0;
-    for (const byte of payload) {
-        crc ^= byte;
-        for (let bit = 0; bit < 8; bit += 1) {
-            crc = (crc & 0x80) !== 0 ? ((crc << 1) ^ 0x07) & 0xff : (crc << 1) & 0xff;
-        }
-    }
-    return crc;
-}
 
 export function makePacket(
     opcode: number,
@@ -117,14 +109,6 @@ export function encodeRleLine(pixels: Uint8Array): Uint8Array {
     return new Uint8Array(out);
 }
 
-export function packLineLsbFirst(pixels: Uint8Array): Uint8Array {
-    const packed = new Uint8Array(Math.ceil(pixels.length / 8));
-    for (let index = 0; index < pixels.length; index += 1) {
-        if (pixels[index]) packed[index >>> 3] |= 1 << (index & 7);
-    }
-    return packed;
-}
-
 export function printLine(pixels: Uint8Array, dialect: CatPrinterDialect): Uint8Array {
     const raw = packLineLsbFirst(pixels);
     const compressed = encodeRleLine(pixels);
@@ -143,4 +127,3 @@ export function concat(...parts: Uint8Array[]): Uint8Array {
     }
     return out;
 }
-
