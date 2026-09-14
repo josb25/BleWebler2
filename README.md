@@ -1,3 +1,10 @@
+> [!IMPORTANT]
+> ## BleWebler2 is now OpenTLP Studio
+>
+> This repository is retained for historical reference. Active development continues
+> in **[opentlp/opentlp](https://github.com/opentlp/opentlp)**, and the current web
+> application is **[OpenTLP Studio](https://opentlp.github.io/opentlp/studio/)**.
+
 <div align="center">
   <img src="apps/web-app/public/icon-192.png" width="96" height="96" alt="BleWebler2 icon">
   <h1>BleWebler2</h1>
@@ -10,7 +17,7 @@
   </p>
 </div>
 
-# [**Try BleWebler2 here →**](https://josb25.github.io/BleWebler2/)
+# [**Open OpenTLP Studio →**](https://opentlp.github.io/opentlp/studio/)
 
 ## Why BleWebler2
 
